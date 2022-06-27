@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:tv="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
+             xmlns:test="clr-namespace:SampleApp.Mvvm.ViewModels.TemplateTest"
+             
+             x:Class="SampleApp.Mvvm.Pages.MainPage">
+
+    <Grid RowDefinitions="Auto,*,*">
+
+        <Label 
+                Grid.Row="0"
+                Text="{Binding Count}"
+                VerticalOptions="Center" 
+                HorizontalOptions="Center" />
+
+        <tv:TreeViewZero Grid.Row="1" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleData}">
+            <tv:TreeViewZero.TreeItemTemplate>
+                <tv:TreeItemDataTemplate ChildrenPropertyName="Children" TargetType="{x:Type x:Object}" IsExpandedPropertyName="IsDataExpanded">
+                    <DataTemplate>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding Name}" BackgroundColor="Pink" />
+                        </StackLayout>
+                    </DataTemplate>
+                </tv:TreeItemDataTemplate>
+            </tv:TreeViewZero.TreeItemTemplate>
+        </tv:TreeViewZero>
+
+        <tv:TreeViewZero Grid.Row="2" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleTemplateTestData}" >
+            <tv:TreeViewZero.TreeItemTemplate>
+                <tv:TreeDataTemplateSelector>
+
+                    <tv:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Name}" BackgroundColor="Yellow" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </tv:TreeItemDataTemplate>
+
+                    <tv:TreeItemDataTemplate ChildrenPropertyName="LevelOneChildren" TargetType="{x:Type test:LevelOne}" IsExpandedPropertyName="IsLevelOneExpanded">
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Name}" BackgroundColor="Cyan" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </tv:TreeItemDataTemplate>
+
+                    <tv:TreeItemDataTemplate ChildrenPropertyName="LevelTwoChildren" TargetType="{x:Type test:LevelTwo}" IsExpandedPropertyName="IsLevelTwoExpanded">
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Name}" BackgroundColor="Pink" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </tv:TreeItemDataTemplate>
+
+                    <tv:TreeItemDataTemplate ChildrenPropertyName="LevelThreeChildren" TargetType="{x:Type test:LevelThree}" IsExpandedPropertyName="IsLevelThreeExpanded">
+                        <DataTemplate>
+                            <StackLayout Orientation="Horizontal">
+                                <Label Text="{Binding Name}" BackgroundColor="Crimson" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </tv:TreeItemDataTemplate>
+                </tv:TreeDataTemplateSelector>
+            </tv:TreeViewZero.TreeItemTemplate>
+        </tv:TreeViewZero>
+    </Grid>
+
+</ContentPage>
