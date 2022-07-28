@@ -44,7 +44,6 @@ namespace FunctionZero.Maui.Controls
                 {
                     Content = (View)template.ItemTemplate.CreateContent();
                 }
-
             }
 
         }

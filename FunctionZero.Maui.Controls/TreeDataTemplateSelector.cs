@@ -11,7 +11,7 @@ namespace FunctionZero.Maui.Controls
     {
         private List<TreeItemDataTemplate> _templateList = new List<TreeItemDataTemplate>();
 
-        public TreeItemDataTemplate OnSelectTemplate(object item)
+        public override TreeItemDataTemplate OnSelectTemplate(object item)
         {
             foreach (var template in _templateList)
                 if (template.TargetType.IsAssignableFrom(item.GetType()))
