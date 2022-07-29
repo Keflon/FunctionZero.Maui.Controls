@@ -16,7 +16,7 @@
 
         <cv:TreeViewZero Grid.Row="1" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleData}">
             <cv:TreeViewZero.TreeItemTemplate>
-                <cv:TreeItemDataTemplate ChildrenPropertyName="Children" TargetType="{x:Type x:Object}" IsExpandedPropertyName="IsDataExpanded">
+                <cv:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">
                     <DataTemplate>
                         <StackLayout Orientation="Horizontal">
                             <Label Text="{Binding Name}" BackgroundColor="Pink" />
