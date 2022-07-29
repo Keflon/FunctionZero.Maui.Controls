@@ -17,7 +17,7 @@
     <ContentView.ControlTemplate>
         <ControlTemplate>
             <HorizontalStackLayout 
-                Padding="{TemplateBinding BindingContext.NestLevel, Converter={StaticResource NestLevelConverter}, ConverterParameter=20, Mode=OneWay}" BackgroundColor="AliceBlue">
+                Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter=20, Mode=OneWay}" BackgroundColor="AliceBlue">
                 <CheckBox BackgroundColor="White" IsChecked="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" />
 
                 <controls:Chevron IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}"/>

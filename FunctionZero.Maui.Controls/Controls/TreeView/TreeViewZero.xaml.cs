@@ -24,7 +24,7 @@ namespace FunctionZero.Maui.Controls
     public partial class TreeViewZero
     {
         private static char[] _dot = new[] { '.' };
-        private static TreeItemsSourceManager<object> _rootContainer;
+        private TreeItemsSourceManager<object> _rootContainer;
 
         public TreeViewZero()
         {
@@ -69,26 +69,39 @@ namespace FunctionZero.Maui.Controls
         {
             var self = (TreeViewZero)bindable;
 
-            bool isTreeRootShown = true;        // We want the root node to be visible in our tree 
-
             if (oldValue != null)
             {
-                self.TryDetach(_rootContainer);
-                _rootContainer.NodeChanged -= self._rootContainer_NodeChanged;
+                self.TryDetach(self._rootContainer);
+                self._rootContainer.NodeChanged -= self._rootContainer_NodeChanged;
                 self.TheListView.ItemsSource = Enumerable.Empty<object>();
             }
 
             if (newValue != null)
             {
                 var rootNode = newValue;       // Get your tree data from somewhere
-                _rootContainer = new TreeItemsSourceManager<object>(isTreeRootShown, rootNode, self.GetCanHaveChildren, self.GetChildrenForNode);
-                _rootContainer.NodeChanged += self._rootContainer_NodeChanged;
-                self.TheListView.ItemsSource = _rootContainer.TreeNodeChildren;
+                self._rootContainer = new TreeItemsSourceManager<object>(self.IsRootVisible, rootNode, self.GetCanHaveChildren, self.GetChildrenForNode);
+                self._rootContainer.NodeChanged += self._rootContainer_NodeChanged;
+                self.TheListView.ItemsSource = self._rootContainer.TreeNodeChildren;
 
-                self.TryAttach(_rootContainer);
+                self.TryAttach(self._rootContainer);
 
-                ((INotifyCollectionChanged)_rootContainer.TreeNodeChildren).CollectionChanged += TreeViewZero_CollectionChanged;
+                ((INotifyCollectionChanged)self._rootContainer.TreeNodeChildren).CollectionChanged += TreeViewZero_CollectionChanged;
             }
+        }
+
+        public static readonly BindableProperty IsRootVisibleProperty = BindableProperty.Create(nameof(IsRootVisible), typeof(bool), typeof(TreeViewZero), true, propertyChanged: OnIsRootVisibleChanged);
+
+        public bool IsRootVisible
+        {
+            get { return (bool)GetValue(IsRootVisibleProperty); }
+            set { SetValue(IsRootVisibleProperty, value); }
+        }
+
+        private static void OnIsRootVisibleChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var self = (TreeViewZero)bindable;
+            if (self._rootContainer != null)
+                self._rootContainer.IsTreeRootShown = (bool)newValue;
         }
 
         private static void TreeViewZero_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -136,7 +149,7 @@ namespace FunctionZero.Maui.Controls
         {
             var treeNodeContainer = e.Node;
 
-            
+
             Debug.WriteLine($"Node Changed: {e.Node.Data}, {e.Action}");
 
             switch (e.Action)
@@ -227,19 +240,24 @@ namespace FunctionZero.Maui.Controls
             return Enumerable.Empty<object>();
         }
 
+        //private TreeItemDataTemplate GetTemplateForNode(object node)
+        //{
+        //    if (TreeItemTemplate is TreeItemDataTemplate treeItemTemplate)
+        //    {
+        //        return treeItemTemplate;
+        //    }
+        //    else if (TreeItemTemplate is TreeDataTemplateSelector selector)
+        //    {
+        //        TreeItemDataTemplate template = selector.OnSelectTemplate(node);
+        //        return template;
+        //    }
+        //    else
+        //        throw new InvalidOperationException("BROKEN!");
+        //}
+
         private TreeItemDataTemplate GetTemplateForNode(object node)
         {
-            if (TreeItemTemplate is TreeItemDataTemplate treeItemTemplate)
-            {
-                return treeItemTemplate;
-            }
-            else if (TreeItemTemplate is TreeDataTemplateSelector selector)
-            {
-                TreeItemDataTemplate template = selector.OnSelectTemplate(node);
-                return template;
-            }
-            else
-                throw new InvalidOperationException("BROKEN!");
+            return TreeItemTemplate.OnSelectTemplate(node);
         }
 
         protected (object host, PropertyInfo info) GetPropertyInfo(object host, string qualifiedName)

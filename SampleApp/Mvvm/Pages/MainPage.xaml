@@ -26,15 +26,13 @@
             </cv:TreeViewZero.TreeItemTemplate>
         </cv:TreeViewZero>
 
-        <cv:TreeViewZero Grid.Row="2" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleTemplateTestData}" >
+        <cv:TreeViewZero IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleTemplateTestData}" >
             <cv:TreeViewZero.TreeItemTemplate>
                 <cv:TreeDataTemplateSelector>
 
                     <cv:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
                         <DataTemplate>
-
-                                <Label Text="{Binding Name}" BackgroundColor="Green" />
-
+                            <Label Text="{Binding Name}" BackgroundColor="Green" />
                         </DataTemplate>
                     </cv:TreeItemDataTemplate>
 

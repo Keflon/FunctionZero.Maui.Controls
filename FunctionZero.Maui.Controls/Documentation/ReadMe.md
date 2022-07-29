@@ -2,14 +2,14 @@
 
 ## TreeViewZero
 
-This control can databind to a tree of data as long as each node has a property 
-that exposes the node children.  
-Given a hierarchy of `MyLovelyNode`
+This control can databind to a tree of data. Each *trunk* node provides its children using any public property that supports IEnumerable.  
+
+Given a hierarchy of `MyNode`
 ```csharp
-public class MyLovelyNode
+public class MyNode
 {
    public string Name {get; set;}
-   public IEnumerable<MyLovelyNode> Children {get; set;}
+   public IEnumerable<MyNode> MyNodeChildren {get; set;}
 }
 ```
 
@@ -18,25 +18,30 @@ Add the namespace:
 xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
 ```
 
-Instantiate the control and provide it with a root-node and a datatemplate for each node:
+You can display a tree of these nodes like this:
 ```xml
 <cz:TreeViewZero ItemsSource="{Binding RootNode}">
     <cz:TreeViewZero.TreeItemTemplate>
-        <tv:TreeItemDataTemplate ChildrenPropertyName="Children">
+        <cz:TreeItemDataTemplate ChildrenPropertyName="MyNodeChildren">
             <DataTemplate>
                 <Label Text="{Binding Name}" />
             </DataTemplate>
         </cz:TreeItemDataTemplate>
     </cz:TreeViewZero.TreeItemTemplate>
-</tv:TreeViewZero>
+</cz:TreeViewZero>
 ```
-
-
+## TreeItemDataTemplate
+This has 3 properties  
+put a grid here
+copy MS documentation.
+## Tracking changes in the data
+If the children of a node support `INotifyCollectionChanged`, the TreeView will track all changes automatically.  
+If a property called 
 DataBinding is fully supported.  
 TreeViewZero will track changes to `Name`, `IsExpanded` and any 
 modifications to the `Children` collection on the following node:
 ```csharp
-public class MyLovelyExpandyNode : BaseClassWithInpc
+public class MyObservableNode : BaseClassWithInpc
 {
    private string _name;
    public string Name
@@ -58,7 +63,7 @@ public class MyLovelyExpandyNode : BaseClassWithInpc
 
 If your tree of data consists of disparate nodes with different properties for their `Children`, 
 use a `TreeDataTemplateSelector` and set `TargetType` for each TreeItemDataTemplate.  
-For any node, the first `TreeItemDataTemplate` whose `TargetType` is assignable from the node is used.
+The first `TargetType` assignable from the node is used. Put another way, the first `TargetType` the node can be cast to, wins.
 ```xml
 <cv:TreeViewZero ItemsSource="{Binding SampleTemplateTestData}" >
     <cv:TreeViewZero.TreeItemTemplate>
@@ -90,9 +95,30 @@ For any node, the first `TreeItemDataTemplate` whose `TargetType` is assignable 
     </cv:TreeViewZero.TreeItemTemplate>
 </cv:TreeViewZero>
 ```
-
+## Customising TreeDataTemplateSelector
 If you want full-control over the `TreeItemTemplate` per node, you can implement your own 
-`TreeDataTemplateSelector` like this:
-```csharp
+`TreeDataTemplateSelector` and override `OnSelectTemplate`. Here's an example that chooses a template 
+based on whether the node has children or not:
 
+```csharp
+public class MyLovelyTreeDataTemplateSelector : TemplateProvider
+   {
+      /// These must be set in the xaml markup. (or code-behind, if that's how you roll)
+      public TreeItemDataTemplate TrunkTemplate{ get; set; }
+      public TreeItemDataTemplate LeafTemplate{ get; set; }
+
+      public override TreeItemDataTemplate OnSelectTemplate(object item)
+      {
+         var vm = (MyLovelyNode)item;
+         if((vm.Children != null) && (vm.Children.Count != 0))
+         {
+            return TrunkTemplate;
+         }
+         return LeafTemplate;
+      }
+   }
+}
 ```
+That's all there is to it.  
+Take a look at [TreeDataTemplateSelector.cs](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/FunctionZero.Maui.Controls/TreeDataTemplateSelector.cs) 
+for an example of how to provide a collection of `TreeItemDataTemplate` instances to your TemplateProvider.

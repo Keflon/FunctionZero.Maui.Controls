@@ -35,17 +35,12 @@ namespace FunctionZero.Maui.Controls
         {
             if (BindingContext != null)
             {
-                if (ContentTemplateProvider is TreeDataTemplateSelector selector)
+                if (ContentTemplateProvider != null)
                 {
-                    var template = selector.OnSelectTemplate(BindingContext);
-                    Content = (View)template.ItemTemplate.CreateContent();
-                }
-                else if (ContentTemplateProvider is TreeItemDataTemplate template)
-                {
+                    var template = ContentTemplateProvider.OnSelectTemplate(BindingContext);
                     Content = (View)template.ItemTemplate.CreateContent();
                 }
             }
-
         }
     }
 }

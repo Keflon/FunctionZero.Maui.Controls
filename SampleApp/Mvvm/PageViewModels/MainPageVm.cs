@@ -23,11 +23,14 @@ namespace SampleApp.Mvvm.PageViewModels
         }
 
         private int _count;
+        private bool _isRootVisible;
 
         public int Count { get => _count; set => SetProperty(ref _count, value); }
+        public bool IsRootVisible { get => _isRootVisible; set => SetProperty(ref _isRootVisible, value); }
 
         private bool Tick()
         {
+            IsRootVisible = (Count & 8)==0;
             if ((Count % 8) < 2)
             {
                 Device.BeginInvokeOnMainThread(() => ((TestNode)SampleData).IsDataExpanded = !((TestNode)SampleData).IsDataExpanded);
