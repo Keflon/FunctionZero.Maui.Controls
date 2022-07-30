@@ -69,7 +69,7 @@ namespace SampleApp.Mvvm.PageViewModels
                     {
                         _spareTemplateNode = node.LevelOneChildren[1];
                         node.LevelOneChildren.RemoveAt(1);
-                    }
+                    } 
                     else
                     {
                         node.LevelOneChildren.Insert(1, _spareTemplateNode);

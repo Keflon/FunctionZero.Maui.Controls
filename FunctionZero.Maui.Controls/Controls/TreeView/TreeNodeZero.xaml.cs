@@ -38,7 +38,7 @@ namespace FunctionZero.Maui.Controls
             DeadCount++;
         }
 
-        public static readonly BindableProperty IsExpandedProperty = BindableProperty.Create(nameof(IsExpanded), typeof(bool), typeof(TreeNodeZero), false, BindingMode.TwoWay, null, IsExpandedChanged);
+        public static readonly BindableProperty IsExpandedProperty = BindableProperty.Create(nameof(IsExpanded), typeof(bool), typeof(TreeNodeZero), false, BindingMode.TwoWay);
 
         public bool IsExpanded
         {
@@ -46,32 +46,15 @@ namespace FunctionZero.Maui.Controls
             set { SetValue(IsExpandedProperty, value); }
         }
 
-        private static void IsExpandedChanged(BindableObject bindable, object oldvalue, object newvalue)
-        {
-            
-        }
 
-        protected override void OnParentChanged()
+        protected async override void OnParentChanged()
         {
             Debug.WriteLine($"TreeNodeZero::ID:{MyId}, Parent:{Parent}, DeadCount:{DeadCount}");
-            if (Parent == null)
-                BindingContext = null;
             base.OnParentChanged();
-        }
-
-        protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        { 
-            base.OnPropertyChanged(propertyName);
-        }
-
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
-        }
-
-        protected override void OnBindingContextChanged()
-        {
-            base.OnBindingContextChanged();
+            if (Parent == null)
+            {
+                BindingContext = null;
+            }
         }
     }
 }

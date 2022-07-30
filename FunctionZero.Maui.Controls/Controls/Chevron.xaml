@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FunctionZero.Maui.Controls.Chevron" 
-             Padding="6"
-             BackgroundColor="Blue"
-             >
+             x:Class="FunctionZero.Maui.Controls.Chevron"
+            >
     <ContentView.GestureRecognizers>
         <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
     </ContentView.GestureRecognizers>
     <Image>
         <Image.Source>
-            <FontImageSource Glyph=">" Color="Black" Size="11" />
+            <FontImageSource Glyph=">" Color="Gray" Size="Default" />
         </Image.Source>
     </Image>
 </ContentView>

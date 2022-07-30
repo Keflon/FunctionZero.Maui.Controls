@@ -148,3 +148,28 @@ public class MyTreeDataTemplateSelector : TemplateProvider
 ```
 Take a look at [TreeDataTemplateSelector.cs](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/FunctionZero.Maui.Controls/TreeDataTemplateSelector.cs) 
 for an example of how to provide a *collection* of `TreeItemDataTemplate` instances to your TemplateProvider.
+
+
+### Styling the chevron
+
+This ought to be possible by replacing the `ControlTemplate` on `TreeNodeZero` instances as below, but it doesn't work. I'm either misunderstanding ControlTemplates 
+or I've found a bug in MAUI. Watch this space ...
+
+```xml
+<ContentPage.Resources>
+        
+    <ControlTemplate x:Key="alternateChevron">
+        <HorizontalStackLayout 
+            Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter=10, Mode=OneWay}">
+            <cv:Chevron IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+            <ContentPresenter HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
+        </HorizontalStackLayout>
+    </ControlTemplate>
+
+    <Style TargetType="cv:TreeNodeZero">
+        <Setter Property="ControlTemplate" Value="{StaticResource alternateChevron}" />
+    </Style>
+        
+</ContentPage.Resources>
+
+```

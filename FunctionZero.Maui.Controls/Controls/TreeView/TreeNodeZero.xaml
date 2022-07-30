@@ -1,46 +1,9 @@
 ﻿<ContentView  
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    
     xmlns:converters="clr-namespace:FunctionZero.Maui.Converters"
-        xmlns:controls="clr-namespace:FunctionZero.Maui.Controls"
-    
+    xmlns:controls="clr-namespace:FunctionZero.Maui.Controls"
     x:Class="FunctionZero.Maui.Controls.TreeNodeZero"
-    x:Name="Self2"
     >
-    <ContentView.Resources>
-        <ResourceDictionary>
-            <converters:NestLevelConverter x:Key="NestLevelConverter"/>
-        </ResourceDictionary>
-    </ContentView.Resources>
-
-    <ContentView.ControlTemplate>
-        <ControlTemplate>
-            <HorizontalStackLayout 
-                Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter=20, Mode=OneWay}" BackgroundColor="AliceBlue">
-                <!--<CheckBox BackgroundColor="White" IsChecked="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" />-->
-
-                <controls:Chevron IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}"/>
-
-                <!--<Label Text="{TemplateBinding BindingContext.IsExpanded}" />-->
-                <!--<Label Text="{Binding Content, Source={x:Reference cp}}" />
-                <Label Text="{Binding Content.BindingContext.Data.Name, Source={x:Reference cp}}" />-->
-                <ContentPresenter x:Name="cp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
-            </HorizontalStackLayout>
-        </ControlTemplate>
-        
-        
-        <!--<ControlTemplate>
-            <HorizontalStackLayout 
-                Padding="{TemplateBinding BindingContext.NestLevel, Converter={StaticResource NestLevelConverter}, ConverterParameter=20, Mode=OneWay}" BackgroundColor="AliceBlue">
-                <CheckBox BackgroundColor="White" IsChecked="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" />
-                
-                <ContentPresenter HorizontalOptions="StartAndExpand"/>
-            </HorizontalStackLayout>
-        </ControlTemplate>-->
-    </ContentView.ControlTemplate>
-
-    <ContentView.Content>
-        <Label Text="hello"/>
-    </ContentView.Content>
+<!--The parent TreeViewZero provides a ControlTemplate for this control-->
 </ContentView>

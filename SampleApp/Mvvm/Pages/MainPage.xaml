@@ -3,8 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cv="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
              xmlns:test="clr-namespace:SampleApp.Mvvm.ViewModels.TemplateTest"
-             
+             xmlns:converters="clr-namespace:FunctionZero.Maui.Converters;assembly=FunctionZero.Maui.Controls"
              x:Class="SampleApp.Mvvm.Pages.MainPage">
+    <ContentPage.Resources>
+        <converters:NestLevelConverter x:Key="NestLevelConverter"/>
+
+        <ControlTemplate x:Key="NodeTemplate">
+            <HorizontalStackLayout 
+                Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter=50, Mode=OneWay}">
+                <cv:Chevron IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+                <ContentPresenter HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
+            </HorizontalStackLayout>
+        </ControlTemplate>
+
+    </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*,*">
 
@@ -15,6 +27,12 @@
                 HorizontalOptions="Center" />
 
         <cv:TreeViewZero Grid.Row="1" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleData}">
+            <cv:TreeViewZero.TreeItemContainerStyle>
+                <Style TargetType="cv:TreeNodeZero">
+                    <Setter Property="ControlTemplate" Value="{DynamicResource NodeTemplate}"/>
+                </Style>
+            </cv:TreeViewZero.TreeItemContainerStyle>
+
             <cv:TreeViewZero.TreeItemTemplate>
                 <cv:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">
                     <DataTemplate>
@@ -38,25 +56,19 @@
 
                     <cv:TreeItemDataTemplate ChildrenPropertyName="LevelOneChildren" TargetType="{x:Type test:LevelOne}" IsExpandedPropertyName="IsLevelOneExpanded">
                         <DataTemplate>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding Name}" BackgroundColor="Cyan" />
-                            </StackLayout>
+                            <Label Text="{Binding Name}" BackgroundColor="Cyan" />
                         </DataTemplate>
                     </cv:TreeItemDataTemplate>
 
                     <cv:TreeItemDataTemplate ChildrenPropertyName="LevelTwoChildren" TargetType="{x:Type test:LevelTwo}" IsExpandedPropertyName="IsLevelTwoExpanded">
                         <DataTemplate>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding Name}" BackgroundColor="Pink" />
-                            </StackLayout>
+                            <Label Text="{Binding Name}" BackgroundColor="Pink" />
                         </DataTemplate>
                     </cv:TreeItemDataTemplate>
 
                     <cv:TreeItemDataTemplate ChildrenPropertyName="LevelThreeChildren" TargetType="{x:Type test:LevelThree}" IsExpandedPropertyName="IsLevelThreeExpanded">
                         <DataTemplate>
-                            <StackLayout Orientation="Horizontal">
-                                <Label Text="{Binding Name}" BackgroundColor="Crimson" />
-                            </StackLayout>
+                            <Label Text="{Binding Name}" BackgroundColor="Crimson" />
                         </DataTemplate>
                     </cv:TreeItemDataTemplate>
                 </cv:TreeDataTemplateSelector>

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace FunctionZero.Maui.Converters
 {
-    internal class NestLevelConverter : IValueConverter
+    public class NestLevelConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

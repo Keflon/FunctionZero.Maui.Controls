@@ -31,6 +31,7 @@ namespace FunctionZero.Maui.Controls
             InitializeComponent();
         }
 
+
         public static readonly BindableProperty TreeItemTemplateProperty = BindableProperty.Create("TreeItemTemplate", typeof(TemplateProvider), typeof(TreeViewZero), null, propertyChanged: OnItemTemplateChanged);
 
         public TemplateProvider TreeItemTemplate
@@ -42,19 +43,6 @@ namespace FunctionZero.Maui.Controls
         private static void OnItemTemplateChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var self = bindable as TreeViewZero;
-        }
-
-        public static readonly BindableProperty ItemContainerStyleProperty = BindableProperty.Create("ItemContainerStyle", typeof(Style), typeof(TreeViewZero), null, propertyChanged: OnItemContainerStyleChanged);
-
-        public Style ItemContainerStyle
-        {
-            get { return (Style)GetValue(ItemContainerStyleProperty); }
-            set { SetValue(ItemContainerStyleProperty, value); }
-        }
-
-        private static void OnItemContainerStyleChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var self = (TreeViewZero)bindable;
         }
 
         public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create("ItemsSource", typeof(object), typeof(TreeViewZero), null, propertyChanged: OnItemsSourceChanged);
@@ -102,6 +90,24 @@ namespace FunctionZero.Maui.Controls
             var self = (TreeViewZero)bindable;
             if (self._rootContainer != null)
                 self._rootContainer.IsTreeRootShown = (bool)newValue;
+        }
+
+
+
+
+
+        public static readonly BindableProperty TreeItemContainerStyleProperty = BindableProperty.Create("TreeItemContainerStyle", typeof(Style), typeof(TreeViewZero), null, propertyChanged: OnTreeItemContainerStyleChanged);
+
+        public Style TreeItemContainerStyle
+        {
+            get { return (Style)GetValue(TreeItemContainerStyleProperty); }
+            set { SetValue(TreeItemContainerStyleProperty, value); }
+        }
+
+        private static void OnTreeItemContainerStyleChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var self = (TreeViewZero)bindable;
+            self.Resources["FunctionZero.Maui.Controls.TreeNodeZero"] = newValue;
         }
 
         private static void TreeViewZero_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

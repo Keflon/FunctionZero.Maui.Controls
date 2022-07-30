@@ -2,22 +2,36 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
         xmlns:controls="clr-namespace:FunctionZero.Maui.Controls"
+        xmlns:converters="clr-namespace:FunctionZero.Maui.Converters"
         x:Class="FunctionZero.Maui.Controls.TreeViewZero"
     x:Name="Self">
+
+    <ContentView.Resources>
+        <ResourceDictionary>
+            <converters:NestLevelConverter x:Key="NestLevelConverter"/>
+        </ResourceDictionary>
+
+        <ControlTemplate x:Key="defaultControlTemplate">
+            <HorizontalStackLayout 
+                Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter=10, Mode=OneWay}">
+                <controls:Chevron IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
+                <ContentPresenter HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
+            </HorizontalStackLayout>
+        </ControlTemplate>
+
+        <Style TargetType="controls:TreeNodeZero">
+            <Setter Property="ControlTemplate" Value="{StaticResource defaultControlTemplate}"/>
+        </Style>
+    </ContentView.Resources>
+
     <ContentView.Content>
-        <CollectionView x:Name="TheListView" SelectionMode="Single" >
+        <CollectionView x:Name="TheListView" SelectionMode="None" >
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <controls:TreeNodeZero 
-                        Style="{Binding ItemContainerStyle, Source={x:Reference Self}}">
-                        <!--<VerticalStackLayout >
-                            <Label Text="{Binding Source={x:Reference Self}}"/>
-                            <Label Text="{Binding  Source={x:Reference cc}}"/>
-                            <Label Text="{Binding ContentTemplateProvider,Source={x:Reference cc}}"/>-->
-                        <controls:ContentControl x:Name="cc"
+                    <controls:TreeNodeZero>
+                        <controls:ContentControl 
                             BindingContext="{Binding Data, Mode=OneWay}" 
                             ContentTemplateProvider="{Binding TreeItemTemplate, Source={x:Reference Self}, Mode=OneWay}"/>
-                        <!--</VerticalStackLayout>-->
                     </controls:TreeNodeZero>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
