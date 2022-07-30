@@ -156,6 +156,14 @@ It is a two-step process.
 
 ### Step 1 - Create a `ControlTemplate` ...
 
+## Styling the TreeNodeContainer
+Do this if you want to change the way the whole Tree-Node is drawn, e.g. to change the *indent*, or replace the *chevron*. 
+It is a two-step process.
+1. Create a `ControlTemplate` for a `TreeNodeZero`
+1. Apply it to the `TreeViewZero`
+
+### Step 1 - Create a `ControlTemplate` ...
+
 The `BindingContext` of the templated parent is a `TreeNodeContainer` and has the following properties you can access: 
  
 
