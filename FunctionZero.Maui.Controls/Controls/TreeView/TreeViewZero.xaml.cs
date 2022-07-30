@@ -31,7 +31,6 @@ namespace FunctionZero.Maui.Controls
             InitializeComponent();
         }
 
-
         public static readonly BindableProperty TreeItemTemplateProperty = BindableProperty.Create("TreeItemTemplate", typeof(TemplateProvider), typeof(TreeViewZero), null, propertyChanged: OnItemTemplateChanged);
 
         public TemplateProvider TreeItemTemplate

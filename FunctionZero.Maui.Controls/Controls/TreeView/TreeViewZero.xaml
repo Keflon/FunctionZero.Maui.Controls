@@ -19,6 +19,7 @@
             </HorizontalStackLayout>
         </ControlTemplate>
 
+        <!--This Style can be replaced in the resource dictionary by code-behind that tracks self.TreeItemContainerStyle-->
         <Style TargetType="controls:TreeNodeZero">
             <Setter Property="ControlTemplate" Value="{StaticResource defaultControlTemplate}"/>
         </Style>
