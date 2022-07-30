@@ -5,8 +5,6 @@
 This control allows you to visualise a tree of any data. Each *trunk* node must provide its children using a public property that supports the IEnumerable interface.  
 If the children are in a collection that supports `INotifyCollectionChanged` the control will track changes to the underlying tree data.  
 Children are lazy-loaded and the UI is virtualised.  
-  
-asdfsd
 
 ### TreeViewZero exposes the following properties
 Property | Type | Bindable | Purpose
@@ -90,35 +88,35 @@ Note: In this example, the tree data can contain nodes of type `LevelZero`, `Lev
 
 The first `TargetType` assignable from the node is used. Put another way, the first `TargetType` the node can be cast to, wins.
 ```xml
-<cv:TreeViewZero ItemsSource="{Binding SampleTemplateTestData}" >
-    <cv:TreeViewZero.TreeItemTemplate>
-        <cv:TreeDataTemplateSelector>
-            <cv:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
+<cz:TreeViewZero ItemsSource="{Binding SampleTemplateTestData}" >
+    <cz:TreeViewZero.TreeItemTemplate>
+        <cz:TreeDataTemplateSelector>
+            <cz:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
                 <DataTemplate>
                     <Label Text="{Binding Name}" BackgroundColor="Yellow" />
                 </DataTemplate>
-            </cv:TreeItemDataTemplate>
+            </cz:TreeItemDataTemplate>
 
-            <cv:TreeItemDataTemplate ChildrenPropertyName="LevelOneChildren" TargetType="{x:Type test:LevelOne}" IsExpandedPropertyName="IsLevelOneExpanded">
+            <cz:TreeItemDataTemplate ChildrenPropertyName="LevelOneChildren" TargetType="{x:Type test:LevelOne}" IsExpandedPropertyName="IsLevelOneExpanded">
                 <DataTemplate>
                     <Label Text="{Binding Name}" BackgroundColor="Cyan" />
                 </DataTemplate>
-            </cv:TreeItemDataTemplate>
+            </cz:TreeItemDataTemplate>
 
-            <cv:TreeItemDataTemplate ChildrenPropertyName="LevelTwoChildren" TargetType="{x:Type test:LevelTwo}" IsExpandedPropertyName="IsLevelTwoExpanded">
+            <cz:TreeItemDataTemplate ChildrenPropertyName="LevelTwoChildren" TargetType="{x:Type test:LevelTwo}" IsExpandedPropertyName="IsLevelTwoExpanded">
                 <DataTemplate>
                     <Label Text="{Binding Name}" BackgroundColor="Pink" />
                 </DataTemplate>
-            </cv:TreeItemDataTemplate>
+            </cz:TreeItemDataTemplate>
 
-            <cv:TreeItemDataTemplate ChildrenPropertyName="LevelThreeChildren" TargetType="{x:Type test:LevelThree}" IsExpandedPropertyName="IsLevelThreeExpanded">
+            <cz:TreeItemDataTemplate ChildrenPropertyName="LevelThreeChildren" TargetType="{x:Type test:LevelThree}" IsExpandedPropertyName="IsLevelThreeExpanded">
                 <DataTemplate>
                     <Label Text="{Binding Name}" BackgroundColor="Crimson" />
                 </DataTemplate>
-            </cv:TreeItemDataTemplate>
-        </cv:TreeDataTemplateSelector>
-    </cv:TreeViewZero.TreeItemTemplate>
-</cv:TreeViewZero>
+            </cz:TreeItemDataTemplate>
+        </cz:TreeDataTemplateSelector>
+    </cz:TreeViewZero.TreeItemTemplate>
+</cz:TreeViewZero>
 ```
 ### Customising TreeDataTemplateSelector
 If you want **full-control** over the `TreeItemTemplate` per node, you can easily implement your own 
@@ -150,26 +148,50 @@ Take a look at [TreeDataTemplateSelector.cs](https://github.com/Keflon/FunctionZ
 for an example of how to provide a *collection* of `TreeItemDataTemplate` instances to your TemplateProvider.
 
 
-### Styling the chevron
+## Styling the TreeNodeContainer
+Do this if you want to change the way the whole Tree-Node is drawn, e.g. to change the *indent*, or replace the *chevron*. 
+It is a two-step process.
+1. Create a `ControlTemplate` for a `TreeNodeZero`
+1. Apply it to the `TreeViewZero`
 
-This ought to be possible by replacing the `ControlTemplate` on `TreeNodeZero` instances as below, but it doesn't work. I'm either misunderstanding ControlTemplates 
-or I've found a bug in MAUI. Watch this space ...
+### Step 1 - Create a `ControlTemplate` ...
+
+The `BindingContext` of the templated parent is a `TreeNodeContainer` and has the following properties you can access: 
+ 
+
+Property    | Type   | Purpose
+:----- | :----: | :-----
+Indent      | int    | How deep the node should be indented. It is equal to `NestLevel`, or `NestLevel-1` if the Tree Root is not shown.
+NestLevel   | int    | The depth of the node in the data.
+IsExpanded  | bool   | This property reflects whether the TreeNode is expanded.
+ShowChevron | bool   | Whether the chevron is drawn. True if the node has children.
+Data        | object | This is the tree-node data for this TreeViewZero instance, i.e. your data!
+
+You can base the `ControlTemplate` on the default, show here, or bake your own entirely.  
 
 ```xml
-<ContentPage.Resources>
-        
-    <ControlTemplate x:Key="alternateChevron">
-        <HorizontalStackLayout 
-            Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter=10, Mode=OneWay}">
-            <cv:Chevron IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
-            <ContentPresenter HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
-        </HorizontalStackLayout>
-    </ControlTemplate>
+<ControlTemplate x:Key="defaultControlTemplate">
+    <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}"
+        Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter=10, Mode=OneWay}">
+        <controls:Chevron 
+            IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
+            ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
+        />
+        <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
+    </HorizontalStackLayout>
+</ControlTemplate>
+```
+### Step 2 - give it to the TreeView ...
+```xml
+<cz:TreeViewZero ItemsSource="{Binding SampleData}">
+    <cz:TreeViewZero.TreeItemContainerStyle>
+        <Style TargetType="cz:TreeNodeZero">
+            <Setter Property="ControlTemplate" Value="{StaticResource NodeTemplate}"/>
+        </Style>
+    </cz:TreeViewZero.TreeItemContainerStyle>
 
-    <Style TargetType="cv:TreeNodeZero">
-        <Setter Property="ControlTemplate" Value="{StaticResource alternateChevron}" />
-    </Style>
-        
-</ContentPage.Resources>
-
+    <cz:TreeViewZero.TreeItemTemplate>
+       ...
+    </cz:TreeViewZero.TreeItemTemplate>
+</cz:TreeViewZero>
 ```
