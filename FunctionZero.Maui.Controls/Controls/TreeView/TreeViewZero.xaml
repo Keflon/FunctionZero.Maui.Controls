@@ -12,10 +12,14 @@
         </ResourceDictionary>
 
         <ControlTemplate x:Key="defaultControlTemplate">
-            <HorizontalStackLayout 
+            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}"
                 Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter=10, Mode=OneWay}">
-                <controls:Chevron IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand"/>
-                <ContentPresenter HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
+                <controls:Chevron 
+                                  
+                    IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
+                    ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
+                />
+                <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
             </HorizontalStackLayout>
         </ControlTemplate>
 
@@ -26,10 +30,10 @@
     </ContentView.Resources>
 
     <ContentView.Content>
-        <CollectionView x:Name="TheListView" SelectionMode="None" >
+        <CollectionView x:Name="TheListView" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <controls:TreeNodeZero>
+                    <controls:TreeNodeZero >
                         <controls:ContentControl 
                             BindingContext="{Binding Data, Mode=OneWay}" 
                             ContentTemplateProvider="{Binding TreeItemTemplate, Source={x:Reference Self}, Mode=OneWay}"/>

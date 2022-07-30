@@ -2,10 +2,17 @@ namespace FunctionZero.Maui.Controls;
 
 public partial class Chevron : ContentView
 {
-	public Chevron()
-	{
-		InitializeComponent();
-	}
+    public Chevron()
+    {
+        InitializeComponent();
+    }
+
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        base.OnSizeAllocated(width, height);
+        if (height > 0)
+            TheImage.Source = new FontImageSource() { Glyph = ">", Color = Colors.Gray, Size = height };
+    }
 
     public static readonly BindableProperty IsExpandedProperty = BindableProperty.Create(nameof(IsExpanded), typeof(bool), typeof(Chevron), false, BindingMode.TwoWay, null, IsExpandedChanged);
 
@@ -38,10 +45,15 @@ public partial class Chevron : ContentView
     {
         var self = (Chevron)bindable;
 
+        //if (self.ShowChevron)
+        //    self.FadeTo(1);
+        //else
+        //    self.FadeTo(0);
+
         if (self.ShowChevron)
-            self.FadeTo(1);
+            self.Opacity = 1;
         else
-            self.FadeTo(0);
+            self.Opacity = 0;
     }
 
 
