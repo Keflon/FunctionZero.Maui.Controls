@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleApp", "SampleApp\Samp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{45117D81-9959-4117-A4CA-4D5A86A5974A}"
 	ProjectSection(SolutionItems) = preProject
+		License.md = License.md
 		README.md = README.md
 		ReadMe.NuGet.md = ReadMe.NuGet.md
 	EndProjectSection
