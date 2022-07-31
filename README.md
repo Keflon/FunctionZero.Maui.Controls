@@ -11,7 +11,7 @@ Children are lazy-loaded and the UI is virtualised.
 ### TreeViewZero exposes the following properties
 Property | Type | Bindable | Purpose
 :----- | :---- | :----: | :-----
-ItemsSource        | string       | Yes | The name of the property used to find the node children
+ItemsSource        | object       | Yes | Set this to your root node  
 TreeItemTemplate   | TemplateProvider | Yes | Set this to a `TreeItemDataTemplate` or a `TreeDataTemplateSelector`
 ItemContainerStyle | Style            | Yes | An optional `Style` that can be applied to the `TreeNodeZero` objects that represent each node.
 IsRootVisible      | bool             | Yes | Specifies whether the root node should be shown or omitted.
