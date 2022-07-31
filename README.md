@@ -1,4 +1,5 @@
 ﻿# Controls
+[NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls/1.0.0)
 
 ## TreeViewZero
 
@@ -47,12 +48,14 @@ Then declare a `TreeViewZero` like this:
     <cz:TreeViewZero.TreeItemTemplate>
         <cz:TreeItemDataTemplate ChildrenPropertyName="MyNodeChildren">
             <DataTemplate>
-                <Label Text="{Binding Name}" />
+                <!--Tip: The HeightRequest ensures the chevrons aren't too small to tap with your finger-->
+                <Label Text="{Binding Name}" HeightRequest="100" />
             </DataTemplate>
         </cz:TreeItemDataTemplate>
     </cz:TreeViewZero.TreeItemTemplate>
 </cz:TreeViewZero>
 ```
+
 
 ## Tracking changes in the data
 If the children of a node support `INotifyCollectionChanged`, the TreeView will track all changes automatically.  
@@ -203,3 +206,11 @@ You can base the `ControlTemplate` on the default, show here, or bake your own e
     </cz:TreeViewZero.TreeItemTemplate>
 </cz:TreeViewZero>
 ```
+
+## Known issues:
+There are two known issues, both in the **WinUI** platform, both relating to the underlying `CollectionView` used by `TreeViewZero`.  
+1. The `CollectionView` has a minimum item-spacing bug, reported [here](https://github.com/dotnet/maui/issues/4520)
+2. The `CollectionView` is not recycling containers, reported [here](https://github.com/dotnet/maui/issues/8151)  
+
+I'll update the source and [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls/1.0.0) once these bugs are fixed, if necessary.
+  
