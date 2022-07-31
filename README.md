@@ -2,6 +2,7 @@
 [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls/1.0.0)
 
 ## TreeViewZero
+![Sample image](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/AndroidTree.png?raw=true)
 
 This control allows you to visualise a tree of any data. Each *trunk* node must provide its children using a public property that supports the IEnumerable interface.  
 If the children are in a collection that supports `INotifyCollectionChanged` the control will track changes to the underlying tree data.  
