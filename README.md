@@ -57,7 +57,6 @@ Then declare a `TreeViewZero` like this:
 </cz:TreeViewZero>
 ```
 
-
 ## Tracking changes in the data
 If the children of a node support `INotifyCollectionChanged`, the TreeView will track all changes automatically.  
 If the properties on your node support `INotifyPropertyChanged` then they too will be tracked.  
@@ -74,15 +73,27 @@ public class MyObservableNode : BaseClassWithInpc
       set => SetProperty(ref _name, value);
    }
 
-   private bool _isExpanded;
-   public bool IsExpanded
+   private bool _isMyNodeExpanded;
+   public bool IsMyNodeExpanded
    {
-      get => _isExpanded;
-      set => SetProperty(ref _isExpanded, value);
+      get => _isMyNodeExpanded;
+      set => SetProperty(ref _isMyNodeExpanded, value);
    }
 
    public ObservableCollection<MyObservableNode> Children {get; set;}
 }
+```
+This is how to bind the `IsMyNodeExpanded` from our data, to `IsExpanded` on the TreeNode ...
+
+```xml
+<cz:TreeViewZero.TreeItemTemplate>
+    <cz:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsMyNodeExpanded">
+        <DataTemplate>
+            ...
+        </DataTemplate>
+    </cz:TreeItemDataTemplate>
+</cz:TreeViewZero.TreeItemTemplate>
+
 ```
 ### TreeDataTemplateSelector
 If your tree of data consists of disparate nodes with different properties for their `Children`, 
@@ -150,15 +161,6 @@ public class MyTreeDataTemplateSelector : TemplateProvider
 ```
 Take a look at [TreeDataTemplateSelector.cs](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/FunctionZero.Maui.Controls/TreeDataTemplateSelector.cs) 
 for an example of how to provide a *collection* of `TreeItemDataTemplate` instances to your TemplateProvider.
-
-
-## Styling the TreeNodeContainer
-Do this if you want to change the way the whole Tree-Node is drawn, e.g. to change the *indent*, or replace the *chevron*. 
-It is a two-step process.
-1. Create a `ControlTemplate` for a `TreeNodeZero`
-1. Apply it to the `TreeViewZero`
-
-### Step 1 - Create a `ControlTemplate` ...
 
 ## Styling the TreeNodeContainer
 Do this if you want to change the way the whole Tree-Node is drawn, e.g. to change the *indent*, or replace the *chevron*. 
