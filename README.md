@@ -15,6 +15,7 @@ ItemsSource        | string       | Yes | The name of the property used to find 
 TreeItemTemplate   | TemplateProvider | Yes | Set this to a `TreeItemDataTemplate` or a `TreeDataTemplateSelector`
 ItemContainerStyle | Style            | Yes | An optional `Style` that can be applied to the `TreeNodeZero` objects that represent each node.
 IsRootVisible      | bool             | Yes | Specifies whether the root node should be shown or omitted.
+IndentMultiplier   | double           | Yes (OneTime) | How far the TreeNode should be indented for each nest level. Default is 15.0
 
 ### TreeItemDataTemplate
 `TreeItemDataTemplate` tells a tree-node how to draw itself, how to get its children and whether it should bind `IsExpanded` to the underlying data.  
@@ -93,7 +94,6 @@ This is how to bind the `IsMyNodeExpanded` from our data, to `IsExpanded` on the
         </DataTemplate>
     </cz:TreeItemDataTemplate>
 </cz:TreeViewZero.TreeItemTemplate>
-
 ```
 ### TreeDataTemplateSelector
 If your tree of data consists of disparate nodes with different properties for their `Children`, 
@@ -163,7 +163,7 @@ Take a look at [TreeDataTemplateSelector.cs](https://github.com/Keflon/FunctionZ
 for an example of how to provide a *collection* of `TreeItemDataTemplate` instances to your TemplateProvider.
 
 ## Styling the TreeNodeContainer
-Do this if you want to change the way the whole Tree-Node is drawn, e.g. to change the *indent*, or replace the *chevron*. 
+Do this if you want to change the way the whole Tree-Node is drawn, e.g. to replace the *chevron*. 
 It is a two-step process.
 1. Create a `ControlTemplate` for a `TreeNodeZero`
 1. Apply it to the `TreeViewZero`
@@ -182,11 +182,10 @@ ShowChevron | bool   | Whether the chevron is drawn. True if the node has childr
 Data        | object | This is the tree-node data for this TreeViewZero instance, i.e. your data!
 
 You can base the `ControlTemplate` on the default, show here, or bake your own entirely.  
-
 ```xml
 <ControlTemplate x:Key="defaultControlTemplate">
     <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}"
-        Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter=10, Mode=OneWay}">
+        Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter={x:Reference tcp}, Mode=OneWay}">
         <controls:Chevron 
             IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
             ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
@@ -195,6 +194,11 @@ You can base the `ControlTemplate` on the default, show here, or bake your own e
     </HorizontalStackLayout>
 </ControlTemplate>
 ```
+**Note:** The `NestLevelConverter` in this example is given a `ConverterParameter` set to 'any control within the template', 
+so it can look up the visual-tree to find the `TreeViewZero`, so it can get access to the `IndentMultiplier` property. 
+If you know a better way please let me know.  
+If you give it a hard-coded number it'll use that instead, or you could TemplateBind to BindingContext.Data to get 
+access to the underlying data. or you could write your own converter.
 ### Step 2 - give it to the TreeView ...
 ```xml
 <cz:TreeViewZero ItemsSource="{Binding SampleData}">

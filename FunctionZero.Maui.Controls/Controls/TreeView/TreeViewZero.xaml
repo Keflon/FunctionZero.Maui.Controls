@@ -13,7 +13,7 @@
 
         <ControlTemplate x:Key="defaultControlTemplate">
             <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}"
-                Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter=10, Mode=OneWay}">
+                Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter={x:Reference tcp}, Mode=OneWay}">
                 <controls:Chevron 
                                   
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 

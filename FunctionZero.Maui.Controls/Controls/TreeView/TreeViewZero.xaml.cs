@@ -109,6 +109,21 @@ namespace FunctionZero.Maui.Controls
             self.Resources["FunctionZero.Maui.Controls.TreeNodeZero"] = newValue;
         }
 
+
+
+        public static readonly BindableProperty IndentMultiplierProperty = BindableProperty.Create("IndentMultiplier", typeof(double), typeof(TreeViewZero), 15D, propertyChanged: OnIndentMultiplierChanged);
+
+        public double IndentMultiplier
+        {
+            get { return (double)GetValue(IndentMultiplierProperty); }
+            set { SetValue(IndentMultiplierProperty, value); }
+        }
+
+        private static void OnIndentMultiplierChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var self = (TreeViewZero)bindable;
+        }
+
         private static void TreeViewZero_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var thing = (ReadOnlyObservableCollection<TreeNodeContainer<object>>)sender;

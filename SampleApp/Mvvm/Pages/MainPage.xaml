@@ -10,7 +10,7 @@
         
         <ControlTemplate x:Key="NodeTemplate">
             <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" 
-                Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter=20, Mode=OneWay}">
+                Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter={x:Reference tcp}, Mode=OneWay}">
                 <cz:Chevron 
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
                     ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
@@ -29,7 +29,7 @@
                 VerticalOptions="Center" 
                 HorizontalOptions="Center" />
 
-        <cz:TreeViewZero Grid.Row="1" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleData}">
+        <cz:TreeViewZero Grid.Row="1" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleData}" IndentMultiplier="40">
             <cz:TreeViewZero.TreeItemContainerStyle>
                 <Style TargetType="cz:TreeNodeZero">
                     <Setter Property="ControlTemplate" Value="{StaticResource NodeTemplate}"/>
@@ -45,10 +45,9 @@
             </cz:TreeViewZero.TreeItemTemplate>
         </cz:TreeViewZero>
 
-        <cz:TreeViewZero IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleTemplateTestData}" >
+        <cz:TreeViewZero IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleTemplateTestData}" IndentMultiplier="20" >
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeDataTemplateSelector>
-
                     <cz:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
                         <DataTemplate>
                             <Label Text="{Binding Name}" BackgroundColor="Green" />
