@@ -20,16 +20,28 @@
 		<Title>FunctionZero Controls library including TreeViewZero</Title>
 		<Authors>Keith Pickford</Authors>
 		<Company>FunctionZero Ltd</Company>
-		<Description>A MAUI Controls library featuring a cross-platform TreeView</Description>
+		<Description>A MAUI Controls library featuring a cross-platform TreeView for WinUI, iOS, Mac and Android.</Description>
 		<Copyright>FunctionZero Ltd</Copyright>
 		<PackageProjectUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</RepositoryUrl>
-		<PackageTags>MAUI TreeView TreeViewZero Control </PackageTags>
-		<PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+		<PackageTags>MAUI TreeView TreeViewZero iOS WinUI Android Control </PackageTags>
+		<PackageReleaseNotes>Tree node indent is configurable.</PackageReleaseNotes>
 		<PackageLicenseFile>License.md</PackageLicenseFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<Version>1.0.1</Version>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Include="..\License.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\ReadMe.NuGet.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="FunctionZero.TreeListItemsSourceZero" Version="1.1.0-beta" />
