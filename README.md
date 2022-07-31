@@ -1,5 +1,5 @@
 ﻿# Controls
-[NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls/1.0.0)
+[NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)
 
 ## TreeViewZero
 ![Sample image](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/AndroidTree.png?raw=true)
@@ -219,5 +219,5 @@ There are two known issues, both in the **WinUI** platform, both relating to the
 1. The `CollectionView` has a minimum item-spacing bug, reported [here](https://github.com/dotnet/maui/issues/4520)
 2. The `CollectionView` is not recycling containers, reported [here](https://github.com/dotnet/maui/issues/8151)  
 
-I'll update the source and [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls/1.0.0) once these bugs are fixed, if necessary.
+I'll update the source and [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls) once these bugs are fixed, if necessary.
   
