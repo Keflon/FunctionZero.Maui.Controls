@@ -151,15 +151,6 @@ public class MyTreeDataTemplateSelector : TemplateProvider
 Take a look at [TreeDataTemplateSelector.cs](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/FunctionZero.Maui.Controls/TreeDataTemplateSelector.cs) 
 for an example of how to provide a *collection* of `TreeItemDataTemplate` instances to your TemplateProvider.
 
-
-## Styling the TreeNodeContainer
-Do this if you want to change the way the whole Tree-Node is drawn, e.g. to change the *indent*, or replace the *chevron*. 
-It is a two-step process.
-1. Create a `ControlTemplate` for a `TreeNodeZero`
-1. Apply it to the `TreeViewZero`
-
-### Step 1 - Create a `ControlTemplate` ...
-
 ## Styling the TreeNodeContainer
 Do this if you want to change the way the whole Tree-Node is drawn, e.g. to change the *indent*, or replace the *chevron*. 
 It is a two-step process.
