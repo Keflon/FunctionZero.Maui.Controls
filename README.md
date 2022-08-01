@@ -194,7 +194,7 @@ You can base the `ControlTemplate` on the default, show here, or bake your own e
     </HorizontalStackLayout>
 </ControlTemplate>
 ```
-**Note:** The `NestLevelConverter` in this example is given a `ConverterParameter` set to 'any control within the template', 
+**Note:** The [`NestLevelConverter`](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/FunctionZero.Maui.Controls/Converters/NestLevelConverter.cs) in this example is given a `ConverterParameter` set to 'any control within the template', 
 so it can look up the visual-tree to find the `TreeViewZero`, so it can get access to the `IndentMultiplier` property. 
 If you know a better way please let me know.  
 If you give it a hard-coded number it'll use that instead, or you could TemplateBind to BindingContext.Data to get 
