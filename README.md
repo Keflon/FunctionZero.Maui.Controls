@@ -101,7 +101,7 @@ use a `TreeDataTemplateSelector` and set `TargetType` for each `TreeItemDataTemp
 
 Note: In this example, the tree data can contain nodes of type `LevelZero`, `LevelOne` and `LevelTwo` where each type has a different property to provide its children.  
 
-The first `TargetType` assignable from the node is used. Put another way, the first `TargetType` the node can be cast to, wins.
+The first `TargetType` your data-node can be assigned to is used. Put another way, the first `TargetType` the data-node can be cast to, wins.
 ```xml
 <cz:TreeViewZero ItemsSource="{Binding SampleTemplateTestData}" >
     <cz:TreeViewZero.TreeItemTemplate>
@@ -179,7 +179,7 @@ Indent      | int    | How deep the node should be indented. It is equal to `Nes
 NestLevel   | int    | The depth of the node in the data.
 IsExpanded  | bool   | This property reflects whether the TreeNode is expanded.
 ShowChevron | bool   | Whether the chevron is drawn. True if the node has children.
-Data        | object | This is the tree-node data for this TreeViewZero instance, i.e. your data!
+Data        | object | This is the tree-node data for this TreeNodeZero instance, i.e. your data!
 
 You can base the `ControlTemplate` on the default, show here, or bake your own entirely.  
 ```xml
