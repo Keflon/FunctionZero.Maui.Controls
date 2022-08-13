@@ -1,4 +1,8 @@
-﻿# Controls
+# Breaking news (literally)
+It seems the indent of tree nodes is broken after updating to VS 17.4.0 Preview 1.0.  
+I will update this text when things change. 
+
+# Controls
 [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)
 
 ## TreeViewZero
