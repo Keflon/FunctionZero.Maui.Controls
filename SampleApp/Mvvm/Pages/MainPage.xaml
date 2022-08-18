@@ -30,11 +30,11 @@
                 HorizontalOptions="Center" />
 
         <cz:TreeViewZero Grid.Row="1" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleData}" IndentMultiplier="40">
-            <cz:TreeViewZero.TreeItemContainerStyle>
+            <!--<cz:TreeViewZero.TreeItemContainerStyle>
                 <Style TargetType="cz:TreeNodeZero">
                     <Setter Property="ControlTemplate" Value="{StaticResource NodeTemplate}"/>
                 </Style>
-            </cz:TreeViewZero.TreeItemContainerStyle>
+            </cz:TreeViewZero.TreeItemContainerStyle>-->
 
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">

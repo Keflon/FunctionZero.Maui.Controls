@@ -13,18 +13,32 @@ namespace FunctionZero.Maui.Converters
 {
     public class NestLevelConverter : IValueConverter
     {
+        //public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        //{
+        //    try
+        //    {
+        //        // The nest-level starts at 1. Oops!
+        //        var nestLevel = (int)value-1;
+        //        double multiplier;
+        //        if (parameter is Element element)
+        //            multiplier = GetMultiplier((Element)parameter);
+        //        else if (double.TryParse(parameter as string, out multiplier) == false)
+        //            multiplier = 30;
+        //        return new Thickness(nestLevel * multiplier, 0, 0, 0);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine(ex);
+        //    }
+        //    return null;
+        //}
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             try
             {
-                // The nest-level starts at 1. Oops!
-                var nestLevel = (int)value-1;
-                double multiplier;
-                if (parameter is Element element)
-                    multiplier = GetMultiplier((Element)parameter);
-                else if (double.TryParse(parameter as string, out multiplier) == false)
-                    multiplier = 30;
-                return new Thickness(nestLevel * multiplier, 0, 0, 0);
+                var nestLevel = (float)value;
+                return new Thickness(nestLevel, 0, 0, 0);
             }
             catch (Exception ex)
             {

@@ -32,6 +32,11 @@ namespace FunctionZero.Maui.Controls
             InitializeComponent();
 
             MyId = nextId++;
+
+            // TODO: When Parent changes, manage TreeViewZero and update Actual Indent = indent * multiplier
+            // TODO: When BindingContext changes, manage Indent and update Actual Indent = indent * multiplier
+            // TODO: 
+            // TODO: 
         }
         ~TreeNodeZero()
         {
@@ -46,14 +51,57 @@ namespace FunctionZero.Maui.Controls
             set { SetValue(IsExpandedProperty, value); }
         }
 
+        public static readonly BindableProperty ActualIndentProperty = BindableProperty.Create(nameof(ActualIndent), typeof(float), typeof(TreeNodeZero), (float)0.0, BindingMode.OneWay);
 
+        public float ActualIndent
+        {
+            get { return (float)GetValue(ActualIndentProperty); }
+            set { SetValue(ActualIndentProperty, value); }
+        }
+
+
+
+        private TreeViewZero _ownerTree;
         protected async override void OnParentChanged()
         {
             Debug.WriteLine($"TreeNodeZero::ID:{MyId}, Parent:{Parent}, DeadCount:{DeadCount}");
             base.OnParentChanged();
             if (Parent == null)
             {
-                BindingContext = null;
+                // TODO: Why was I doing this? If it is necessary, clear it rather than null it.
+                //BindingContext = null;
+
+                _ownerTree = null;
+            }
+            else
+            {
+                _ownerTree = (TreeViewZero)Parent.Parent;
+
+                if ((BindingContext != null) && (_ownerTree != null))
+                {
+                    var thing = (TreeNodeContainer<object>)BindingContext;
+
+                    var result = (thing.Indent - 1) * (float)_ownerTree.IndentMultiplier;
+
+                    ActualIndent = 0;
+
+                    for (int c = 0; c < 20; c++)
+                    {
+                        await Task.Delay(10);
+                        ActualIndent += result / (float)20.0;
+                    }
+                }
+            }
+        }
+
+        protected override void OnBindingContextChanged()
+        {
+            base.OnBindingContextChanged();
+
+            if ((BindingContext != null) && (_ownerTree != null))
+            {
+                var thing = (TreeNodeContainer<object>)BindingContext;
+                ActualIndent = thing.Indent * (float)_ownerTree.IndentMultiplier;
             }
         }
     }
