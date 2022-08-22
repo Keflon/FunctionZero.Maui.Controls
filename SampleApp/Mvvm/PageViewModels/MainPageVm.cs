@@ -19,7 +19,7 @@ namespace SampleApp.Mvvm.PageViewModels
 
             SampleTemplateTestData = new LevelZero("Root") { IsLevelZeroExpanded = true };
 
-            Device.StartTimer(TimeSpan.FromMilliseconds(700), Tick);
+            Device.StartTimer(TimeSpan.FromMilliseconds(2000), Tick);
         }
 
         private int _count;
