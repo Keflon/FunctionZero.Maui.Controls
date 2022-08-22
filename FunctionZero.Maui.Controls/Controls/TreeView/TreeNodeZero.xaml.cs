@@ -69,7 +69,7 @@ namespace FunctionZero.Maui.Controls
             if (Parent == null)
             {
                 // TODO: Why was I doing this? If it is necessary, clear it rather than null it.
-                //BindingContext = null;
+                BindingContext = null;
 
                 _ownerTree = null;
             }
@@ -80,28 +80,25 @@ namespace FunctionZero.Maui.Controls
                 if ((BindingContext != null) && (_ownerTree != null))
                 {
                     var thing = (TreeNodeContainer<object>)BindingContext;
-
-                    var result = (thing.Indent - 1) * (float)_ownerTree.IndentMultiplier;
-
-                    ActualIndent = 0;
-
-                    for (int c = 0; c < 20; c++)
-                    {
-                        await Task.Delay(10);
-                        ActualIndent += result / (float)20.0;
-                    }
+                    ActualIndent = (thing.Indent - 1) * (float)_ownerTree.IndentMultiplier;
                 }
             }
         }
+
 
         protected override void OnBindingContextChanged()
         {
             base.OnBindingContextChanged();
 
+            if (BindingContext == null)
+            {
+                Debug.WriteLine("Null BindingContext");
+            }
+
             if ((BindingContext != null) && (_ownerTree != null))
             {
                 var thing = (TreeNodeContainer<object>)BindingContext;
-                ActualIndent = thing.Indent * (float)_ownerTree.IndentMultiplier;
+                ActualIndent = (thing.Indent - 1) * (float)_ownerTree.IndentMultiplier;
             }
         }
     }

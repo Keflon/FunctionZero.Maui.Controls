@@ -88,12 +88,16 @@ namespace FunctionZero.Maui.Controls
         {
             var self = (TreeViewZero)bindable;
             if (self._rootContainer != null)
+            {
                 self._rootContainer.IsTreeRootShown = (bool)newValue;
+                if (self._rootContainer.IsExpanded)
+                {
+                    // If the root visibility changes, re-align any children if they are visible.
+                    self._rootContainer.IsExpanded = false;
+                    self._rootContainer.IsExpanded = true;
+                }
+            }
         }
-
-
-
-
 
         public static readonly BindableProperty TreeItemContainerStyleProperty = BindableProperty.Create("TreeItemContainerStyle", typeof(Style), typeof(TreeViewZero), null, propertyChanged: OnTreeItemContainerStyleChanged);
 
