@@ -8,19 +8,19 @@
 
     <ContentView.Resources>
         <ResourceDictionary>
-            <converters:NestLevelConverter x:Key="NestLevelConverter"/>
+            <converters:NestLevelToPaddingConverter x:Key="NestLevelToPaddingConverter"/>
         </ResourceDictionary>
 
-        <ControlTemplate x:Key="defaultControlTemplate">
-            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}"
-                Padding="{TemplateBinding ActualIndent, Converter={StaticResource NestLevelConverter}, Mode=OneWay}">
-                <controls:Chevron 
-                    IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
-                    ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
-                />
-                <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
-            </HorizontalStackLayout>
-        </ControlTemplate>
+<ControlTemplate x:Key="defaultControlTemplate">
+    <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}"
+        Padding="{TemplateBinding ActualIndent, Converter={StaticResource NestLevelToPaddingConverter}, Mode=OneWay}">
+        <controls:Chevron 
+            IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
+            ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
+        />
+        <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
+    </HorizontalStackLayout>
+</ControlTemplate>
 
         <!--This Style can be replaced in the resource dictionary by code-behind that tracks self.TreeItemContainerStyle-->
         <Style TargetType="controls:TreeNodeZero">

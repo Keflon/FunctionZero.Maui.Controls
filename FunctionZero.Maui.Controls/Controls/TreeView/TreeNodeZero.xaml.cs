@@ -80,7 +80,6 @@ namespace FunctionZero.Maui.Controls
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
-
             }
         }
 

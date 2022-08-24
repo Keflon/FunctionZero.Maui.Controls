@@ -1,7 +1,7 @@
-# Breaking news (literally)
-It seems the indent of tree nodes is broken after updating to VS 17.4.0 Preview 1.0.  
-I will update this text when things change. 
-
+# ~~Breaking news (literally)~~
+~~It seems the indent of tree nodes is broken after updating to VS 17.4.0 Preview 1.0.  
+I will update this text when things change.~~  
+Everything is [fixed](https://www.nuget.org/packages/FunctionZero.Maui.Controls) :smile:  
 # Controls
 [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)
 
@@ -172,10 +172,16 @@ It is a two-step process.
 1. Create a `ControlTemplate` for a `TreeNodeZero`
 1. Apply it to the `TreeViewZero`
 
-### Step 1 - Create a `ControlTemplate` ...
+The *templated parent* for the `ControlTemplate` is a `TreeNodeZero`. It exposes these properties:  
 
-The `BindingContext` of the templated parent is a `TreeNodeContainer` and has the following properties you can access: 
- 
+
+Property    | Type   | Purpose
+:----- | :----: | :-----
+ActualIndent      | float    | How deep the node should be indented. Value is `IndentMultiplier * (Indent-1)`.
+IsExpanded  | bool   | This property reflects whether the TreeNode is expanded.
+
+The `BindingContext` of the *templated parent* is a `TreeNodeContainer`. It exposes these properties: 
+
 
 Property    | Type   | Purpose
 :----- | :----: | :-----
@@ -185,11 +191,16 @@ IsExpanded  | bool   | This property reflects whether the TreeNode is expanded.
 ShowChevron | bool   | Whether the chevron is drawn. True if the node has children.
 Data        | object | This is the tree-node data for this TreeNodeZero instance, i.e. your data!
 
+
+
+
+### Step 1 - Create a `ControlTemplate` ...
+
 You can base the `ControlTemplate` on the default, show here, or bake your own entirely.  
 ```xml
 <ControlTemplate x:Key="defaultControlTemplate">
     <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}"
-        Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter={x:Reference tcp}, Mode=OneWay}">
+        Padding="{TemplateBinding ActualIndent, Converter={StaticResource NestLevelToPaddingConverter}, Mode=OneWay}">
         <controls:Chevron 
             IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
             ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
@@ -198,17 +209,19 @@ You can base the `ControlTemplate` on the default, show here, or bake your own e
     </HorizontalStackLayout>
 </ControlTemplate>
 ```
-**Note:** The [`NestLevelConverter`](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/FunctionZero.Maui.Controls/Converters/NestLevelConverter.cs) in this example is given a `ConverterParameter` set to 'any control within the template', 
-so it can look up the visual-tree to find the `TreeViewZero`, so it can get access to the `IndentMultiplier` property. 
-If you know a better way please let me know.  
-If you give it a hard-coded number it'll use that instead, or you could TemplateBind to BindingContext.Data to get 
-access to the underlying data. or you could write your own converter.
+~~**Note:** The [`NestLevelConverter`](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/FunctionZero.Maui.Controls/Converters/NestLevelConverter.cs) in this example is given a `ConverterParameter` set to 'any control within the template', 
+so it can look up the visual-tree to find the `TreeViewZero`, so it can get access to the `IndentMultiplier` property.
+If you know a better way please let me know.~~  
+
+If you want to control e.g. the `Padding` from your *ViewModel*, you could `TemplateBind` to `BindingContext.Data.MyVmPadding` and perhaps 
+write your own converter.  
+
 ### Step 2 - give it to the TreeView ...
 ```xml
 <cz:TreeViewZero ItemsSource="{Binding SampleData}">
     <cz:TreeViewZero.TreeItemContainerStyle>
         <Style TargetType="cz:TreeNodeZero">
-            <Setter Property="ControlTemplate" Value="{StaticResource NodeTemplate}"/>
+            <Setter Property="ControlTemplate" Value="{StaticResource YourNodeControlTemplate}"/>
         </Style>
     </cz:TreeViewZero.TreeItemContainerStyle>
 
