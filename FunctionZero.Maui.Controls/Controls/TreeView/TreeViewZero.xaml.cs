@@ -264,21 +264,6 @@ namespace FunctionZero.Maui.Controls
             return Enumerable.Empty<object>();
         }
 
-        //private TreeItemDataTemplate GetTemplateForNode(object node)
-        //{
-        //    if (TreeItemTemplate is TreeItemDataTemplate treeItemTemplate)
-        //    {
-        //        return treeItemTemplate;
-        //    }
-        //    else if (TreeItemTemplate is TreeDataTemplateSelector selector)
-        //    {
-        //        TreeItemDataTemplate template = selector.OnSelectTemplate(node);
-        //        return template;
-        //    }
-        //    else
-        //        throw new InvalidOperationException("BROKEN!");
-        //}
-
         private TreeItemDataTemplate GetTemplateForNode(object node)
         {
             return TreeItemTemplate.OnSelectTemplate(node);

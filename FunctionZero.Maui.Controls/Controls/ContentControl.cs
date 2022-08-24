@@ -17,7 +17,16 @@ namespace FunctionZero.Maui.Controls
             //    );
         }
 
-        public static readonly BindableProperty ContentTemplateProviderProperty = BindableProperty.Create(nameof(ContentTemplateProvider), typeof(TemplateProvider), typeof(ContentControl), null, BindingMode.OneWay, null, TemplateProviderChanged);
+        public static readonly BindableProperty ContentTemplateProviderProperty = 
+            BindableProperty.Create(
+                nameof(ContentTemplateProvider), 
+                typeof(TemplateProvider), 
+                typeof(ContentControl), 
+                null, 
+                BindingMode.OneWay, 
+                null, 
+                TemplateProviderChanged
+            );
 
         public TemplateProvider ContentTemplateProvider
         {

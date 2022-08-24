@@ -68,9 +68,9 @@ namespace FunctionZero.Maui.Controls
             base.OnParentChanged();
             if (Parent == null)
             {
-                // TODO: Why was I doing this? If it is necessary, clear it rather than null it.
+                // NOTE: Is this necessary?
                 // NOTE: Not hit on all platforms.
-                BindingContext = null;
+                this.ClearValue(BindingContextProperty);
                 _ownerTree = null;
             }
             else

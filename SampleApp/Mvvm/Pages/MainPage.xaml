@@ -9,33 +9,55 @@
         <converters:NestLevelConverter x:Key="NestLevelConverter"/>
         
         <ControlTemplate x:Key="NodeTemplate">
-            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" 
+            <!--<HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" 
                 Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelConverter}, ConverterParameter={x:Reference tcp}, Mode=OneWay}">
                 <cz:Chevron 
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
                     ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
                 />
                 <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
+            </HorizontalStackLayout>-->
+            
+            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" 
+                Padding="{TemplateBinding ActualIndent, Converter={StaticResource NestLevelConverter}, Mode=OneWay}">
+                <cz:Chevron 
+                    IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
+                    ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
+                />
+                <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
             </HorizontalStackLayout>
+            
         </ControlTemplate>
 
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*,*">
-
-        <Label 
-                Grid.Row="0"
+        <HorizontalStackLayout Grid.Row="0">
+                    <Label 
                 Text="{Binding Count}"
                 VerticalOptions="Center" 
                 HorizontalOptions="Center" />
+            <Switch IsToggled="{Binding TreeDance}"/>
+        </HorizontalStackLayout>
 
-        <cz:TreeViewZero Grid.Row="1" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleData}" IndentMultiplier="40">
-            <!--<cz:TreeViewZero.TreeItemContainerStyle>
+
+        <!--<cz:TreeViewZero Grid.Row="1" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleData}" IndentMultiplier="40">
+            <cz:TreeViewZero.TreeItemContainerStyle>
                 <Style TargetType="cz:TreeNodeZero">
                     <Setter Property="ControlTemplate" Value="{StaticResource NodeTemplate}"/>
                 </Style>
-            </cz:TreeViewZero.TreeItemContainerStyle>-->
+            </cz:TreeViewZero.TreeItemContainerStyle>
 
+            <cz:TreeViewZero.TreeItemTemplate>
+                <cz:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">
+                    <DataTemplate>
+                        <Label Text="{Binding Name}" BackgroundColor="Pink" HeightRequest="50" />
+                    </DataTemplate>
+                </cz:TreeItemDataTemplate>
+            </cz:TreeViewZero.TreeItemTemplate>
+        </cz:TreeViewZero>-->
+
+        <cz:TreeViewZero Grid.Row="1" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleData}" IndentMultiplier="40">
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">
                     <DataTemplate>
@@ -45,7 +67,7 @@
             </cz:TreeViewZero.TreeItemTemplate>
         </cz:TreeViewZero>
 
-        <cz:TreeViewZero IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleTemplateTestData}" IndentMultiplier="20" >
+        <!--<cz:TreeViewZero  IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleTemplateTestData}" IndentMultiplier="20" >
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeDataTemplateSelector>
                     <cz:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
@@ -73,7 +95,8 @@
                     </cz:TreeItemDataTemplate>
                 </cz:TreeDataTemplateSelector>
             </cz:TreeViewZero.TreeItemTemplate>
-        </cz:TreeViewZero>
+        </cz:TreeViewZero>-->
     </Grid>
 
 </ContentPage>
+ 

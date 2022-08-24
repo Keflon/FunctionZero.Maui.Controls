@@ -13,13 +13,20 @@ namespace SampleApp.Mvvm.PageViewModels
         private TestNode _spareNode;
         private LevelTwo _spareTemplateNode;
 
+        private bool _treeDance;
+        public bool TreeDance
+        {
+            get => _treeDance;
+            set=> SetProperty(ref _treeDance, value);
+        }
+
         public MainPageVm()
         {
             SampleData = GetSampleTree();
 
             SampleTemplateTestData = new LevelZero("Root") { IsLevelZeroExpanded = true };
 
-            Device.StartTimer(TimeSpan.FromMilliseconds(2000), Tick);
+            Device.StartTimer(TimeSpan.FromMilliseconds(250), Tick);
         }
 
         private int _count;
@@ -30,6 +37,9 @@ namespace SampleApp.Mvvm.PageViewModels
 
         private bool Tick()
         {
+            if (TreeDance == false)
+                return true;
+
             IsRootVisible = (Count & 8)==0;
             if ((Count % 8) < 2)
             {
