@@ -6,7 +6,7 @@
              xmlns:converters="clr-namespace:FunctionZero.Maui.Converters;assembly=FunctionZero.Maui.Controls"
              x:Class="SampleApp.Mvvm.Pages.MainPage">
     <ContentPage.Resources>
-        <converters:NestLevelConverter x:Key="NestLevelConverter"/>
+        <converters:NestLevelToPaddingConverter x:Key="NestLevelConverter"/>
         
         <ControlTemplate x:Key="NodeTemplate">
             <!--<HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" 
@@ -18,7 +18,7 @@
                 <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
             </HorizontalStackLayout>-->
             
-            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" 
+            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}"
                 Padding="{TemplateBinding ActualIndent, Converter={StaticResource NestLevelConverter}, Mode=OneWay}">
                 <cz:Chevron 
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
