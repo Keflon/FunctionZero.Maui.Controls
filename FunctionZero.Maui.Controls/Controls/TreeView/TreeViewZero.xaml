@@ -32,11 +32,7 @@
         <CollectionView x:Name="TheListView" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <controls:TreeNodeZero >
-                        <controls:ContentControl 
-                            BindingContext="{Binding Data, Mode=OneWay}" 
-                            ContentTemplateProvider="{Binding TreeItemTemplate, Source={x:Reference Self}, Mode=OneWay}"/>
-                    </controls:TreeNodeZero>
+                    <controls:TreeNodeZero/>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

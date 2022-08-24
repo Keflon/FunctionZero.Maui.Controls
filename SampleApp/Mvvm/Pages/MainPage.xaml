@@ -67,7 +67,7 @@
             </cz:TreeViewZero.TreeItemTemplate>
         </cz:TreeViewZero>
 
-        <!--<cz:TreeViewZero  IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleTemplateTestData}" IndentMultiplier="20" >
+        <cz:TreeViewZero  IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleTemplateTestData}" IndentMultiplier="20" >
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeDataTemplateSelector>
                     <cz:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
@@ -95,7 +95,7 @@
                     </cz:TreeItemDataTemplate>
                 </cz:TreeDataTemplateSelector>
             </cz:TreeViewZero.TreeItemTemplate>
-        </cz:TreeViewZero>-->
+        </cz:TreeViewZero>
     </Grid>
 
 </ContentPage>

@@ -300,17 +300,6 @@ namespace FunctionZero.Maui.Controls
             return false;
         }
 
-        private void HorizontalStackLayout_BindingContextChanged(object sender, EventArgs e)
-        {
-            //ForceLayout();
-        }
-
-        private void HorizontalStackLayout_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            Debug.WriteLine($"XXX "+e.PropertyName);
-            //ForceLayout();
-        }
-
         protected bool TryGetPropertyValue<T>(object host, string qualifiedName, out T result)
         {
             var info = GetPropertyInfo(host, qualifiedName);

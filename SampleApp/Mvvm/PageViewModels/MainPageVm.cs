@@ -26,7 +26,8 @@ namespace SampleApp.Mvvm.PageViewModels
 
             SampleTemplateTestData = new LevelZero("Root") { IsLevelZeroExpanded = true };
 
-            Device.StartTimer(TimeSpan.FromMilliseconds(250), Tick);
+            //Device.StartTimer(TimeSpan.FromMilliseconds(1250), Tick);
+            Device.StartTimer(TimeSpan.FromMilliseconds(15), Tick);
         }
 
         private int _count;
@@ -40,7 +41,7 @@ namespace SampleApp.Mvvm.PageViewModels
             if (TreeDance == false)
                 return true;
 
-            IsRootVisible = (Count & 8)==0;
+            //IsRootVisible = (Count & 8)==0;
             if ((Count % 8) < 2)
             {
                 Device.BeginInvokeOnMainThread(() => ((TestNode)SampleData).IsDataExpanded = !((TestNode)SampleData).IsDataExpanded);
