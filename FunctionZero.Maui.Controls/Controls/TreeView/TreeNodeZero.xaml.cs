@@ -133,7 +133,6 @@ namespace FunctionZero.Maui.Controls
             {
                 var thing = (TreeNodeContainer<object>)BindingContext;
                 DoTheThing(thing);
-                //ActualIndent = (thing.Indent - 1) * (float)_ownerTree.IndentMultiplier;
             }
         }
     }

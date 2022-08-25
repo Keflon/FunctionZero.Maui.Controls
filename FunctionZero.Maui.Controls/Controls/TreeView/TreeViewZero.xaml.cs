@@ -299,7 +299,6 @@ namespace FunctionZero.Maui.Controls
             }
             return false;
         }
-
         protected bool TryGetPropertyValue<T>(object host, string qualifiedName, out T result)
         {
             var info = GetPropertyInfo(host, qualifiedName);
