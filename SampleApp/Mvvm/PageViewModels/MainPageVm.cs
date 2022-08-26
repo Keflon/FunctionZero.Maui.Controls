@@ -1,7 +1,9 @@
 ﻿using SampleApp.Mvvm.ViewModels;
 using SampleApp.Mvvm.ViewModels.TemplateTest;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,14 +22,46 @@ namespace SampleApp.Mvvm.PageViewModels
             set=> SetProperty(ref _treeDance, value);
         }
 
+        private float _listViewScrollOffset;
+        public float ListViewScrollOffset
+        {
+            get => _listViewScrollOffset;
+            set => SetProperty(ref _listViewScrollOffset, value);
+        }
+
+        public record ListItem(string name, float offset);
         public MainPageVm()
         {
             SampleData = GetSampleTree();
 
+            SampleListData = new ObservableCollection<ListItem>();
+
+            for (int c = 0; c < 400; c++)
+                SampleListData.Add(new ListItem($"Hello {c}", (float)110.0 + (float)Math.Sin(c/9.0)*40));
+
+
+
+
             SampleTemplateTestData = new LevelZero("Root") { IsLevelZeroExpanded = true };
 
-            //Device.StartTimer(TimeSpan.FromMilliseconds(1250), Tick);
-            Device.StartTimer(TimeSpan.FromMilliseconds(15), Tick);
+            //Device.StartTimer(TimeSpan.FromMilliseconds(300), Tick);
+            //Device.StartTimer(TimeSpan.FromMilliseconds(15), Tick);
+
+            Device.StartTimer(TimeSpan.FromMilliseconds(16), Tick2);
+
+        }
+
+        private int _listCount;
+        private bool Tick2()
+        {
+            if (TreeDance == false)
+                return true;
+            _listCount++;
+            //var scale = (Math.Sin(_listCount / 223.0 * Math.Cos(_listCount / 337.0))) / 2.0 + 1.0;
+            var scale = Math.Sin(_listCount / 223.0) / 2.0 + 1.0;
+            ListViewScrollOffset = (float)scale * SampleListData.Count * 25;
+
+            return true;
         }
 
         private int _count;
@@ -95,6 +129,7 @@ namespace SampleApp.Mvvm.PageViewModels
         }
 
         public object SampleData { get; }
+        public IList SampleListData { get; }
         public LevelZero SampleTemplateTestData { get; }
 
         private object GetSampleTree()

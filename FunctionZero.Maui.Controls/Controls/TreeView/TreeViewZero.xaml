@@ -29,7 +29,7 @@
     </ContentView.Resources>
 
     <ContentView.Content>
-        <CollectionView x:Name="TheListView" SelectionMode="None" Scrolled="TheListView_Scrolled">
+        <CollectionView x:Name="TheListView" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <controls:TreeNodeZero/>

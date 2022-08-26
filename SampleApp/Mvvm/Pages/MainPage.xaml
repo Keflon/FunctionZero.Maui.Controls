@@ -32,6 +32,7 @@
                 Text="{Binding Count}"
                 VerticalOptions="Center" 
                 HorizontalOptions="Center" />
+            <Label x:Name="TestLabel" Text="BANANA"/>
             <Switch IsToggled="{Binding TreeDance}"/>
         </HorizontalStackLayout>
 
@@ -52,28 +53,18 @@
             </cz:TreeViewZero.TreeItemTemplate>
         </cz:TreeViewZero>-->
 
-        <cz:TreeViewZero x:Name="tree0" Grid.Row="1" Grid.Column="0" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleData}" IndentMultiplier="40"
-                         
-                         ScrollOffset="{Binding ScrollOffset, Source={x:Reference tree1}}"
-                         
-                         
-                         
-                         >
-            
-            <cz:TreeViewZero.TreeItemTemplate>
-                <cz:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">
-                    <DataTemplate>
-                        <Label Text="{Binding Name}" BackgroundColor="Pink" HeightRequest="50" />
-                    </DataTemplate>
-                </cz:TreeItemDataTemplate>
-            </cz:TreeViewZero.TreeItemTemplate>
-        </cz:TreeViewZero>
+        <cz:ListViewZero Grid.Row="1" Grid.Column="0" ItemsSource="{Binding SampleListData}" ScrollOffset="{Binding ListViewScrollOffset}" ItemHeight="40">
+            <cz:ListViewZero.ItemTemplate>
+                <DataTemplate>
+                    <HorizontalStackLayout Margin="2">
+                        <Label Text="{Binding name}" WidthRequest="{Binding offset}" />
+                        <Button Text="{Binding name}" Clicked="Button_Clicked"/>
+                    </HorizontalStackLayout>
+                </DataTemplate>
+            </cz:ListViewZero.ItemTemplate>
+        </cz:ListViewZero>
 
-        <cz:TreeViewZero x:Name="tree1" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampleData}" IndentMultiplier="40"
-                         
-                         ScrollOffset="{Binding ScrollOffset, Source={x:Reference tree0}}"
-                         
-                         >
+        <cz:TreeViewZero x:Name="tree1" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampleData}" IndentMultiplier="40">
             <cz:TreeViewZero.TreeItemContainerStyle>
                 <Style TargetType="cz:TreeNodeZero">
                     <Setter Property="ControlTemplate" Value="{StaticResource CellTemplate}"/>

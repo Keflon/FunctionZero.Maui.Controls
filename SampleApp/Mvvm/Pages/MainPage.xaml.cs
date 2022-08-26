@@ -1,5 +1,6 @@
 ﻿using SampleApp.Mvvm.PageViewModels;
 using System;
+using System.Diagnostics;
 
 namespace SampleApp.Mvvm.Pages
 {
@@ -9,6 +10,11 @@ namespace SampleApp.Mvvm.Pages
         {
             InitializeComponent();
             BindingContext = new MainPageVm();
+        }
+
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            TestLabel.Text=((Button)sender).Text;
         }
     }
 }

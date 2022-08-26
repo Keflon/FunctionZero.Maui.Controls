@@ -52,6 +52,12 @@ Performance improvement.</PackageReleaseNotes>
 	  <MauiXaml Update="Controls\Chevron.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Controls\ListView\ListItemZero.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Controls\ListView\ListViewZero.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\TreeView\TreeNodeZero.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
