@@ -13,7 +13,8 @@
                 Padding="{TemplateBinding ActualIndent, Converter={StaticResource NestLevelConverter}, Mode=OneWay}">
                 <cz:Chevron
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
-                    ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" />
+                    ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
+                    />
 
                 <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
             </HorizontalStackLayout>
@@ -27,7 +28,7 @@
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*,*" ColumnDefinitions="*,*">
-        <HorizontalStackLayout Grid.Row="0">
+        <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="2">
             <Label 
                 Text="{Binding Count}"
                 VerticalOptions="Center" 
@@ -61,8 +62,8 @@
             <cz:ListViewZero.ItemTemplate>
                 <DataTemplate>
                     <HorizontalStackLayout Margin="2">
-                        <Label Text="{Binding name}" WidthRequest="{Binding offset}" />
-                        <Button Text="{Binding name}" Clicked="Button_Clicked"/>
+                        <Label Text="{Binding Name}" WidthRequest="{Binding Offset}" />
+                        <Button Text="{Binding Name}" Clicked="Button_Clicked"/>
                     </HorizontalStackLayout>
                 </DataTemplate>
             </cz:ListViewZero.ItemTemplate>

@@ -23,6 +23,8 @@ namespace FunctionZero.Maui.Controls
     public partial class TreeNodeZero
     {
         static int nextId = 0;
+        private TreeViewZero _ownerTree;
+        private TreeNodeContainer<object> _oldNodeData;
 
         int MyId { get; }
         static int DeadCount { get; set; }
@@ -39,7 +41,7 @@ namespace FunctionZero.Maui.Controls
             DeadCount++;
         }
 
-        public static readonly BindableProperty IsExpandedProperty = BindableProperty.Create(nameof(IsExpanded), typeof(bool), typeof(TreeNodeZero), false, BindingMode.TwoWay);
+        public static readonly BindableProperty IsExpandedProperty = BindableProperty.Create(nameof(IsExpanded), typeof(bool), typeof(TreeNodeZero), false, BindingMode.OneWay);
 
         public bool IsExpanded
         {
@@ -54,8 +56,6 @@ namespace FunctionZero.Maui.Controls
             get { return (float)GetValue(ActualIndentProperty); }
             set { SetValue(ActualIndentProperty, value); }
         }
-
-        private TreeViewZero _ownerTree;
         protected override void OnParentChanged()
         {
             return;
@@ -83,8 +83,6 @@ namespace FunctionZero.Maui.Controls
                 Debug.WriteLine(ex);
             }
         }
-
-        private TreeNodeContainer<object> _oldNodeData;
 
         private void DoTheThing(TreeNodeContainer<object> nodeData)
         {
@@ -147,11 +145,6 @@ namespace FunctionZero.Maui.Controls
 
                 }
             }
-        }
-
-        protected override void OnApplyTemplate()
-        {
-            base.OnApplyTemplate();
         }
     }
 }

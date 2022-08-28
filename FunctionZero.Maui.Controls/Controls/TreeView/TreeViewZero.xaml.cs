@@ -115,17 +115,12 @@ namespace FunctionZero.Maui.Controls
 
 
 
-        public static readonly BindableProperty IndentMultiplierProperty = BindableProperty.Create("IndentMultiplier", typeof(double), typeof(TreeViewZero), 15D, propertyChanged: OnIndentMultiplierChanged);
+        public static readonly BindableProperty IndentMultiplierProperty = BindableProperty.Create("IndentMultiplier", typeof(double), typeof(TreeViewZero), 15D);
 
         public double IndentMultiplier
         {
             get { return (double)GetValue(IndentMultiplierProperty); }
             set { SetValue(IndentMultiplierProperty, value); }
-        }
-
-        private static void OnIndentMultiplierChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var self = (TreeViewZero)bindable;
         }
 
         private static void TreeViewZero_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -135,8 +130,13 @@ namespace FunctionZero.Maui.Controls
             Debug.WriteLine($"Count:{thing.Count}");
         }
 
+        private static int _diff = 0;
+
         private (bool setValue, bool attachedInpc) TryAttach(TreeNodeContainer<object> treeNodeContainer)
         {
+            _diff++;
+
+
             bool didSetValue = false;
             bool didattachInpc = false;
 
@@ -159,6 +159,9 @@ namespace FunctionZero.Maui.Controls
 
         private bool TryDetach(TreeNodeContainer<object> treeNodeContainer)
         {
+            _diff--;
+
+            Debug.WriteLine($"Diff:{_diff}");
             if (treeNodeContainer.Data is INotifyPropertyChanged inpc)
             {
                 _lookup.Remove(inpc);

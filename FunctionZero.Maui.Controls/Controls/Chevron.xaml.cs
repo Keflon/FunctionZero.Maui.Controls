@@ -5,13 +5,7 @@ public partial class Chevron : ContentView
     public Chevron()
     {
         InitializeComponent();
-    }
-
-    protected override void OnSizeAllocated(double width, double height)
-    {
-        base.OnSizeAllocated(width, height);
-        if (height > 0)
-            TheImage.Source = new FontImageSource() { Glyph = ">", Color = Colors.Gray, Size = height };
+            TheImage.Source = new FontImageSource() { Glyph = ">", Color = Colors.Gray, Size = 40 };
     }
 
     public static readonly BindableProperty IsExpandedProperty = BindableProperty.Create(nameof(IsExpanded), typeof(bool), typeof(Chevron), false, BindingMode.TwoWay, null, IsExpandedChanged);
@@ -26,10 +20,12 @@ public partial class Chevron : ContentView
     {
         var self = (Chevron)bindable;
 
-        if (self.IsExpanded)
-            self.RotateTo(90);
-        else
-            self.RotateTo(0);
+        //if (self.IsExpanded)
+        //    self.RotateTo(90);
+        //else
+        //    self.RotateTo(0);
+
+        self.Rotation = self.IsExpanded ? 90 : 0;
     }
 
 

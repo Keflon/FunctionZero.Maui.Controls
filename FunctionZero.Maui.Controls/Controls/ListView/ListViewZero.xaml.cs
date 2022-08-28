@@ -110,6 +110,9 @@ public partial class ListViewZero : ContentView
 
         if (canvas.Height <= 0)
             return;
+
+        if (ItemsSource == null)
+            return;
         // Generate item-containers ...
 
         // Step 1 -> Determine how many items are coming into view and create them.
@@ -181,6 +184,11 @@ public partial class ListViewZero : ContentView
 
     private void AddToCache(DataTemplate template, ListItemZero item)
     {
+        //GC.Collect();
+        //GC.WaitForPendingFinalizers();
+        //GC.Collect();
+
+
         if (_cache.TryGetValue(template, out var stack))
         {
             stack.Push(item);

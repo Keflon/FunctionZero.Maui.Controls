@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,7 +20,7 @@ namespace SampleApp.Mvvm.PageViewModels
         public bool TreeDance
         {
             get => _treeDance;
-            set=> SetProperty(ref _treeDance, value);
+            set => SetProperty(ref _treeDance, value);
         }
 
         private bool _listDance;
@@ -36,15 +37,52 @@ namespace SampleApp.Mvvm.PageViewModels
             set => SetProperty(ref _listViewScrollOffset, value);
         }
 
-        public record ListItem(string name, float offset);
+        public class ListItem : INotifyPropertyChanged
+        {
+            private string _name;
+            private float _offset;
+
+            public ListItem(string name, float offset)
+            {
+                Name = name;
+                Offset = offset;
+            }
+
+            public string Name
+            {
+                get => _name;
+                set
+                {
+                    if (_name != value)
+                    {
+                        _name = value;
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Name)));
+                    }
+                }
+            }
+            public float Offset
+            {
+                get => _offset;
+                set
+                {
+                    if (_offset != value)
+                    {
+                        _offset = value;
+                        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Offset)));
+                    }
+                }
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+        }
         public MainPageVm()
         {
             SampleData = GetSampleTree();
 
             SampleListData = new ObservableCollection<ListItem>();
 
-            for (int c = 0; c < 400; c++)
-                SampleListData.Add(new ListItem($"Hello {c}", (float)110.0 + (float)Math.Sin(c/9.0)*40));
+            for (int c = 0; c < 7; c++)
+                SampleListData.Add(new ListItem($"Hello {c}", (float)110.0 + (float)Math.Sin(c / 9.0) * 40));
 
 
 
@@ -54,22 +92,41 @@ namespace SampleApp.Mvvm.PageViewModels
             Device.StartTimer(TimeSpan.FromMilliseconds(77), Tick);
             //Device.StartTimer(TimeSpan.FromMilliseconds(15), Tick);
 
-            Device.StartTimer(TimeSpan.FromMilliseconds(16), Tick2);
+            Device.StartTimer(TimeSpan.FromMilliseconds(20), Tick2);
 
         }
 
         private int _listCount;
         private bool Tick2()
         {
+
+#if false
             if (ListDance == false)
                 return true;
 
-            _listCount++;
+            if (_listCount % 2 == 0)
+                for (int c = 1; c < 6; c++)
+                    SampleListData.RemoveAt(0);
+            else
+                for (int c = 1; c < 6; c++)
+                    SampleListData.Insert(c, new ListItem($"BORG {_listCount}", (float)110.0 + (float)Math.Sin(_listCount / 9.0) * 40));
+
+            ((ListItem)SampleListData[0]).Name = _listCount.ToString();
+            ((ListItem)SampleListData[0]).Offset = (float)110.0 + (float)Math.Sin(_listCount / 9.0) * 40;
+
+
+            return true;
+
+#else
+
             //var scale = (Math.Sin(_listCount / 223.0 * Math.Cos(_listCount / 337.0))) / 2.0 + 1.0;
             var scale = Math.Sin(_listCount / 223.0) / 2.0 + 1.0;
             ListViewScrollOffset = (float)scale * SampleListData.Count * 25;
 
             return true;
+
+#endif
+            _listCount++;
         }
 
         private int _count;
@@ -86,51 +143,44 @@ namespace SampleApp.Mvvm.PageViewModels
             //IsRootVisible = (Count & 8)==0;
             if ((Count % 8) < 2)
             {
-                Device.BeginInvokeOnMainThread(() => ((TestNode)SampleData).IsDataExpanded = !((TestNode)SampleData).IsDataExpanded);
-                Device.BeginInvokeOnMainThread(() => SampleTemplateTestData.IsLevelZeroExpanded = !SampleTemplateTestData.IsLevelZeroExpanded);
+                ((TestNode)SampleData).IsDataExpanded = !((TestNode)SampleData).IsDataExpanded;
+                SampleTemplateTestData.IsLevelZeroExpanded = !SampleTemplateTestData.IsLevelZeroExpanded;
             }
 
             if ((Count % 3) != 0)
             {
-                Device.BeginInvokeOnMainThread(() => ((TestNode)SampleData).Children[1].IsDataExpanded = !((TestNode)SampleData).Children[1].IsDataExpanded);
-                Device.BeginInvokeOnMainThread(() => SampleTemplateTestData.LevelZeroChildren[1].IsLevelOneExpanded = !SampleTemplateTestData.LevelZeroChildren[1].IsLevelOneExpanded);
+                ((TestNode)SampleData).Children[1].IsDataExpanded = !((TestNode)SampleData).Children[1].IsDataExpanded;
+                SampleTemplateTestData.LevelZeroChildren[1].IsLevelOneExpanded = !SampleTemplateTestData.LevelZeroChildren[1].IsLevelOneExpanded;
             }
             else
             {
-                Device.BeginInvokeOnMainThread(() =>
+                var node = ((TestNode)SampleData).Children[1];
+
+                if (node.Children.Count == 3)
                 {
-                    var node = ((TestNode)SampleData).Children[1];
-
-                    if (node.Children.Count == 3)
-                    {
-                        _spareNode = node.Children[1];
-                        node.Children.RemoveAt(1);
-                    }
-                    else
-                    {
-                        node.Children.Insert(1, _spareNode);
-                    }
-
+                    _spareNode = node.Children[1];
+                    node.Children.RemoveAt(1);
                 }
-                );
-
-                Device.BeginInvokeOnMainThread(() =>
+                else
                 {
-                    var node = SampleTemplateTestData.LevelZeroChildren[1];
-
-                    if (node.LevelOneChildren.Count == 3)
-                    {
-                        _spareTemplateNode = node.LevelOneChildren[1];
-                        node.LevelOneChildren.RemoveAt(1);
-                    } 
-                    else
-                    {
-                        node.LevelOneChildren.Insert(1, _spareTemplateNode);
-                    }
-
+                    node.Children.Insert(1, _spareNode);
                 }
-                );
             }
+
+            {
+                var node = SampleTemplateTestData.LevelZeroChildren[1];
+
+                if (node.LevelOneChildren.Count == 3)
+                {
+                    _spareTemplateNode = node.LevelOneChildren[1];
+                    node.LevelOneChildren.RemoveAt(1);
+                }
+                else
+                {
+                    node.LevelOneChildren.Insert(1, _spareTemplateNode);
+                }
+            }
+
             Count++;
 
             return true;
