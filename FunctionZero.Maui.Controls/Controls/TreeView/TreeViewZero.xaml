@@ -29,12 +29,22 @@
     </ContentView.Resources>
 
     <ContentView.Content>
-        <CollectionView x:Name="TheListView" SelectionMode="None">
+        <!--<CollectionView x:Name="TheListView" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <controls:TreeNodeZero/>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
-        </CollectionView>
+        </CollectionView>-->
+
+
+        <controls:ListViewZero x:Name="TheListView"  ItemHeight="40">
+            <controls:ListViewZero.ItemTemplate>
+                <DataTemplate>
+                    <controls:TreeNodeZero />
+
+                </DataTemplate>
+            </controls:ListViewZero.ItemTemplate>
+        </controls:ListViewZero>
     </ContentView.Content>
 </ContentView>

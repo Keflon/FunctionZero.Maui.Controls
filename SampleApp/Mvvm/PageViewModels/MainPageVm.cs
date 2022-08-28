@@ -22,6 +22,13 @@ namespace SampleApp.Mvvm.PageViewModels
             set=> SetProperty(ref _treeDance, value);
         }
 
+        private bool _listDance;
+        public bool ListDance
+        {
+            get => _listDance;
+            set => SetProperty(ref _listDance, value);
+        }
+
         private float _listViewScrollOffset;
         public float ListViewScrollOffset
         {
@@ -44,7 +51,7 @@ namespace SampleApp.Mvvm.PageViewModels
 
             SampleTemplateTestData = new LevelZero("Root") { IsLevelZeroExpanded = true };
 
-            //Device.StartTimer(TimeSpan.FromMilliseconds(300), Tick);
+            Device.StartTimer(TimeSpan.FromMilliseconds(77), Tick);
             //Device.StartTimer(TimeSpan.FromMilliseconds(15), Tick);
 
             Device.StartTimer(TimeSpan.FromMilliseconds(16), Tick2);
@@ -54,8 +61,9 @@ namespace SampleApp.Mvvm.PageViewModels
         private int _listCount;
         private bool Tick2()
         {
-            if (TreeDance == false)
+            if (ListDance == false)
                 return true;
+
             _listCount++;
             //var scale = (Math.Sin(_listCount / 223.0 * Math.Cos(_listCount / 337.0))) / 2.0 + 1.0;
             var scale = Math.Sin(_listCount / 223.0) / 2.0 + 1.0;

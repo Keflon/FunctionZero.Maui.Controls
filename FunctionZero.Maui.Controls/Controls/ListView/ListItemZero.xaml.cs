@@ -8,4 +8,5 @@ public partial class ListItemZero : ContentView
 	}
 
 	public int ItemIndex { get; set; }
+	public DataTemplate ItemTemplate { get; set; }
 }

@@ -60,7 +60,7 @@ namespace FunctionZero.Maui.Controls
             {
                 self.TryDetach(self._rootContainer);
                 self._rootContainer.NodeChanged -= self._rootContainer_NodeChanged;
-                self.TheListView.ItemsSource = Enumerable.Empty<object>();
+                self.TheListView.ItemsSource = null;
             }
 
             if (newValue != null)

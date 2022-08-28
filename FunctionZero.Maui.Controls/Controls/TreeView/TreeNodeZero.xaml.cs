@@ -58,17 +58,18 @@ namespace FunctionZero.Maui.Controls
         private TreeViewZero _ownerTree;
         protected override void OnParentChanged()
         {
+            return;
             try
             {
                 Debug.WriteLine($"TreeNodeZero::ID:{MyId}, Parent:{Parent}, DeadCount:{DeadCount}");
                 base.OnParentChanged();
-                if (Parent == null)
+                if (Parent.Parent == null)
                 {
                     _ownerTree = null;
                 }
                 else
                 {
-                    _ownerTree = (TreeViewZero)Parent.Parent;
+                    _ownerTree = (TreeViewZero)Parent.Parent.Parent.Parent;
 
                     if ((BindingContext != null) && (_ownerTree != null))
                     {
@@ -111,29 +112,46 @@ namespace FunctionZero.Maui.Controls
         {
             base.OnBindingContextChanged();
 
-            if (_oldBindingContext != (TreeNodeContainer<object>)BindingContext)
-            {
-                if (_oldBindingContext != null)
-                {
-                    if (BindingContext != null)
-                    {
-                        Debug.WriteLine("Swapped BindingContext");
-                    }
-                }
-                _oldBindingContext = (TreeNodeContainer<object>)BindingContext;
-            }
+            //if (_oldBindingContext != (TreeNodeContainer<object>)BindingContext)
+            //{
+            //    if (_oldBindingContext != null)
+            //    {
+            //        if (BindingContext != null)
+            //        {
+            //            Debug.WriteLine("Swapped BindingContext");
+            //        }
+            //    }
+            //    _oldBindingContext = (TreeNodeContainer<object>)BindingContext;
+            //}
             if (BindingContext == null)
             {
                 Debug.WriteLine("Null BindingContext");
                 //if (Content != null)
                 //    Content.BindingContext = null;
             }
+            else
+            {
+                _ownerTree = (TreeViewZero)Parent.Parent.Parent.Parent;
+
+            }
 
             if ((BindingContext != null) && (_ownerTree != null))
             {
-                var thing = (TreeNodeContainer<object>)BindingContext;
-                DoTheThing(thing);
+                try
+                {
+                    var thing = (TreeNodeContainer<object>)BindingContext;
+                    DoTheThing(thing);
+                }
+                catch
+                {
+
+                }
             }
+        }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
         }
     }
 }
