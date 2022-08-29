@@ -32,13 +32,36 @@ namespace FunctionZero.Maui.Controls
         public TreeNodeZero()
         {
             InitializeComponent();
-
             MyId = nextId++;
+            ParentChanged += TreeNodeZero_ParentChanged;
         }
 
         ~TreeNodeZero()
         {
             DeadCount++;
+
+        }
+
+        private void TreeNodeZero_ParentChanged(object sender, EventArgs e)
+        {
+            var node = (Element)sender;
+
+            node.ParentChanged -= TreeNodeZero_ParentChanged;
+
+            while (node.Parent != null)
+            {
+                if (node.Parent is TreeViewZero treeView)
+                {
+                    _ownerTree = treeView;
+
+                    var thing = (TreeNodeContainer<object>)BindingContext;
+                    DoTheThing(thing);
+
+                    return;
+                }
+                node = node.Parent;
+            }
+            node.ParentChanged += TreeNodeZero_ParentChanged;
         }
 
         public static readonly BindableProperty IsExpandedProperty = BindableProperty.Create(nameof(IsExpanded), typeof(bool), typeof(TreeNodeZero), false, BindingMode.OneWay);
@@ -56,8 +79,44 @@ namespace FunctionZero.Maui.Controls
             get { return (float)GetValue(ActualIndentProperty); }
             set { SetValue(ActualIndentProperty, value); }
         }
+
+        Element _oldParent;
         protected override void OnParentChanged()
         {
+            base.OnParentChanged();
+            return;
+
+            _ownerTree = GetTreeView(this);
+
+            if (Parent == null)
+            {
+                Debug.WriteLine("Parent is null in TreeNodeZero::OnParentChanged");
+                return;
+            }
+
+            if ((Parent != null) && (_oldParent != null))
+            {
+                Debug.WriteLine("Parent recycled is null in TreeNodeZero::OnParentChanged");
+            }
+
+            if (_ownerTree == null)
+            {
+                Debug.WriteLine("_ownerTree is null in TreeNodeZero::OnParentChanged");
+            }
+            if (BindingContext == null)
+            {
+                Debug.WriteLine("BindingContext is null in TreeNodeZero::OnParentChanged");
+            }
+            try
+            {
+                var thing = (TreeNodeContainer<object>)BindingContext;
+                DoTheThing(thing);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"TreeNodeZero::OnBindingContextChanged exception: {ex}");
+            }
+
             return;
             try
             {
@@ -83,6 +142,33 @@ namespace FunctionZero.Maui.Controls
                 Debug.WriteLine(ex);
             }
         }
+        public DataTemplate _contentTemplate;
+
+        //private void DoTheThing(TreeNodeContainer<object> nodeData)
+        //{
+        //    try
+        //    {
+        //        if (_oldNodeData != nodeData)
+        //        {
+        //            ActualIndent = (nodeData.Indent - 1) * (float)_ownerTree.IndentMultiplier;
+        //            var template = _ownerTree.TreeItemTemplate.OnSelectTemplate(nodeData.Data).ItemTemplate;
+
+        //            if (_contentTemplate != template)
+        //            {
+        //                _contentTemplate = template;
+        //                var content = (View)template.CreateContent();
+        //                content.BindingContext = null;
+        //                this.Content = content;
+        //            }
+        //            this.Content.BindingContext = nodeData.Data;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine(ex);
+        //    }
+        //    _oldNodeData = nodeData;
+        //}
 
         private void DoTheThing(TreeNodeContainer<object> nodeData)
         {
@@ -91,10 +177,19 @@ namespace FunctionZero.Maui.Controls
                 if (_oldNodeData != nodeData)
                 {
                     ActualIndent = (nodeData.Indent - 1) * (float)_ownerTree.IndentMultiplier;
-                    var template = _ownerTree.TreeItemTemplate.OnSelectTemplate(nodeData.Data);
-                    var content = (View)template.ItemTemplate.CreateContent();
-                    this.Content = content;
-                    content.BindingContext = nodeData.Data;
+                    var template = _ownerTree.TreeItemTemplate.OnSelectTemplate(nodeData.Data).ItemTemplate;
+
+                    if (_contentTemplate != template)
+                    {
+                        _contentTemplate = template;
+                        var content = (View)template.CreateContent();
+                        if (Content != null)
+                            Content.BindingContext = null;
+                        //this.UnapplyBindings();
+                        this.Content = null;
+                        this.Content = content;
+                    }
+                    this.Content.BindingContext = nodeData.Data;
                 }
             }
             catch (Exception ex)
@@ -110,17 +205,6 @@ namespace FunctionZero.Maui.Controls
         {
             base.OnBindingContextChanged();
 
-            //if (_oldBindingContext != (TreeNodeContainer<object>)BindingContext)
-            //{
-            //    if (_oldBindingContext != null)
-            //    {
-            //        if (BindingContext != null)
-            //        {
-            //            Debug.WriteLine("Swapped BindingContext");
-            //        }
-            //    }
-            //    _oldBindingContext = (TreeNodeContainer<object>)BindingContext;
-            //}
             if (BindingContext == null)
             {
                 Debug.WriteLine("Null BindingContext");
@@ -129,8 +213,13 @@ namespace FunctionZero.Maui.Controls
             }
             else
             {
-                _ownerTree = (TreeViewZero)Parent.Parent.Parent.Parent;
+                //_ownerTree = GetTreeView(this);
 
+            }
+
+            if (_ownerTree != null)
+            {
+                Debug.WriteLine("_ownerTree isn't null in TreeNodeZero::OnBindingContextChanged");
             }
 
             if ((BindingContext != null) && (_ownerTree != null))
@@ -140,11 +229,28 @@ namespace FunctionZero.Maui.Controls
                     var thing = (TreeNodeContainer<object>)BindingContext;
                     DoTheThing(thing);
                 }
-                catch
+                catch (Exception ex)
                 {
-
+                    Debug.WriteLine($"TreeNodeZero::OnBindingContextChanged exception: {ex}");
                 }
             }
+        }
+
+        private TreeViewZero GetTreeView(Element current)
+        {
+            while (current != null)
+            {
+                if (current is TreeViewZero treeView)
+                    return treeView;
+
+                current = current.Parent;
+            }
+            return null;
+        }
+
+        protected override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
         }
     }
 }

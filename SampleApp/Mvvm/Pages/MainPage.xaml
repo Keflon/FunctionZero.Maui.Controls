@@ -84,7 +84,10 @@
             </cz:TreeViewZero.TreeItemTemplate>
         </cz:TreeViewZero>-->
 
-        <!--<cz:TreeViewZero IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleTemplateTestData}" IndentMultiplier="20" >
+        <cz:TreeViewZero 
+            ItemHeight="20"
+            
+            IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" BackgroundColor="AliceBlue" ItemsSource="{Binding SampleTemplateTestData}" IndentMultiplier="20" >
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeDataTemplateSelector>
                     <cz:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
@@ -112,9 +115,16 @@
                     </cz:TreeItemDataTemplate>
                 </cz:TreeDataTemplateSelector>
             </cz:TreeViewZero.TreeItemTemplate>
-        </cz:TreeViewZero>-->
+        </cz:TreeViewZero>
 
-        <cz:TreeViewZero x:Name="tree12" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding SampleData}" IndentMultiplier="40">
+        <cz:TreeViewZero 
+            x:Name="tree12" 
+            Grid.Row="2" 
+            Grid.Column="1" 
+            ItemsSource="{Binding SampleData}" 
+            IndentMultiplier="40"
+            ItemHeight="20"
+            >
             <cz:TreeViewZero.TreeItemContainerStyle>
                 <Style TargetType="cz:TreeNodeZero">
                     <Setter Property="ControlTemplate" Value="{StaticResource NodeTemplate}"/>
@@ -123,7 +133,7 @@
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">
                     <DataTemplate>
-                        <Label Text="{Binding Name}" BackgroundColor="Magenta" HeightRequest="40" />
+                        <Label Text="{Binding Name}" BackgroundColor="Magenta" />
                     </DataTemplate>
                 </cz:TreeItemDataTemplate>
             </cz:TreeViewZero.TreeItemTemplate>

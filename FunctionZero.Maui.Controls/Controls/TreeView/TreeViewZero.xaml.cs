@@ -1,4 +1,5 @@
 ﻿using FunctionZero.Maui.Controls;
+using FunctionZero.Maui.Services.Cache;
 using FunctionZero.TreeListItemsSourceZero;
 using FunctionZero.TreeZero;
 using Microsoft.Maui.Controls;
@@ -26,9 +27,41 @@ namespace FunctionZero.Maui.Controls
         private static char[] _dot = new[] { '.' };
         private TreeItemsSourceManager<object> _rootContainer;
 
+        public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(float), typeof(TreeViewZero), (float)40.0, BindingMode.OneWay, null);
+
+        public float ItemHeight
+        {
+            get { return (float)GetValue(ItemHeightProperty); }
+            set { SetValue(ItemHeightProperty, value); }
+        }
+
+
         public TreeViewZero()
         {
             InitializeComponent();
+
+            if(TheListView is ListViewZero)
+                TheListView._cache = 
+                    new BucketDictionary<DataTemplate, ListItemZero>(CacheAction, RetrieveAction); 
+        }
+        private void CacheAction(DataTemplate template, ListItemZero item)
+        {
+
+        }
+
+        private bool RetrieveAction(DataTemplate template, ListItemZero item, object data)
+        {
+            var treeNodeData = (TreeNodeContainer<object>)data;
+
+            var treeItemTemplate = TreeItemTemplate.OnSelectTemplate(treeNodeData.Data).ItemTemplate;
+
+            var treeNode = (TreeNodeZero)item.Content;
+
+            if (treeNode._contentTemplate != treeItemTemplate)
+            {
+                return false;
+            }
+            return true;
         }
 
         public static readonly BindableProperty TreeItemTemplateProperty = BindableProperty.Create("TreeItemTemplate", typeof(TemplateProvider), typeof(TreeViewZero), null, propertyChanged: OnItemTemplateChanged);
@@ -113,8 +146,6 @@ namespace FunctionZero.Maui.Controls
             self.Resources["FunctionZero.Maui.Controls.TreeNodeZero"] = newValue;
         }
 
-
-
         public static readonly BindableProperty IndentMultiplierProperty = BindableProperty.Create("IndentMultiplier", typeof(double), typeof(TreeViewZero), 15D);
 
         public double IndentMultiplier
@@ -135,7 +166,6 @@ namespace FunctionZero.Maui.Controls
         private (bool setValue, bool attachedInpc) TryAttach(TreeNodeContainer<object> treeNodeContainer)
         {
             _diff++;
-
 
             bool didSetValue = false;
             bool didattachInpc = false;
@@ -172,6 +202,7 @@ namespace FunctionZero.Maui.Controls
         }
 
         //bool _isBusy = false;
+
         private void _rootContainer_NodeChanged(object sender, TreeNodeContainerEventArgs<object> e)
         {
             var treeNodeContainer = e.Node;
