@@ -1,4 +1,5 @@
 using FunctionZero.Maui.Controls;
+using FunctionZero.Maui.Services.Cache;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -10,7 +11,9 @@ public partial class ListViewZero : ContentView
     float _anchor;
     int _firstVisibleItemIndex = int.MaxValue;
     int _lastVisibleItemIndex = -1;
-    private Dictionary<DataTemplate, Stack<ListItemZero>> _cache;
+    //private Dictionary<DataTemplate, Stack<ListItemZero>> _cache;
+
+    internal BucketDictionary<DataTemplate, ListItemZero> _cache;
 
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource), typeof(IList), typeof(ListViewZero), null, BindingMode.OneWay, null, ItemsSourceChanged);
 
@@ -26,16 +29,29 @@ public partial class ListViewZero : ContentView
 
         if (oldValue is INotifyCollectionChanged oldCollection)
             oldCollection.CollectionChanged -= self.Collection_CollectionChanged;
-        
+
         if (newValue is INotifyCollectionChanged newCollection)
             newCollection.CollectionChanged += self.Collection_CollectionChanged;
-        
+
         self.UpdateItemContainers();
     }
 
+    bool _pendingUpdate = false;
+
     private void Collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        UpdateItemContainers();
+        if (_pendingUpdate == false)
+        {
+            _pendingUpdate = true;
+            // The underlying collection can have items added / removed in a foreach,
+            // and this buffers that down to 1 call to UpdateItemContainers.
+            Dispatcher.Dispatch(() =>
+            {
+                UpdateItemContainers();
+                _pendingUpdate = false;
+            }
+            );
+        }
     }
 
     public static readonly BindableProperty ItemTemplateProperty = BindableProperty.Create(nameof(ItemTemplate), typeof(DataTemplate), typeof(ListViewZero), null, BindingMode.OneWay, null);
@@ -139,6 +155,9 @@ public partial class ListViewZero : ContentView
             if ((c < _firstVisibleItemIndex) || (c > _lastVisibleItemIndex))
             {
                 ListItemZero itemContainer = GetView(c);
+                //itemContainer.BindingContext = null;
+                itemContainer.BindingContext = ItemsSource[c];
+
                 canvas.Add(itemContainer);
                 //var animation = new Animation(v => itemContainer.TranslationX = v, -100, 0);
                 //animation.Commit(this, c.ToString(), 16, 200, Easing.Linear, (v, c) => itemContainer.TranslationX = 0, () => false);
@@ -163,43 +182,44 @@ public partial class ListViewZero : ContentView
                 else
                 {
                     item.BindingContext = ItemsSource[item.ItemIndex];
+
                     item.TranslationY = itemOffset;
 
                     _firstVisibleItemIndex = Math.Min(_firstVisibleItemIndex, item.ItemIndex);
                     _lastVisibleItemIndex = Math.Max(_lastVisibleItemIndex, item.ItemIndex);
-
                 }
             }
         }
 
         foreach (ListItemZero item in killList)
         {
-            item.BindingContext = null;
+            //item.BindingContext = null;
             canvas.Remove(item);
-            AddToCache(item.ItemTemplate, item);
+            item.ClearValue(ListItemZero.BindingContextProperty);
+            _cache.PushToBucket(item.ItemTemplate, item);
         }
 
         TestLabel.Text = $"Active: {canvas.Count}";
     }
 
-    private void AddToCache(DataTemplate template, ListItemZero item)
-    {
-        //GC.Collect();
-        //GC.WaitForPendingFinalizers();
-        //GC.Collect();
+    //private void AddToCache(DataTemplate template, ListItemZero item)
+    //{
+    //    //GC.Collect();
+    //    //GC.WaitForPendingFinalizers();
+    //    //GC.Collect();
 
 
-        if (_cache.TryGetValue(template, out var stack))
-        {
-            stack.Push(item);
-        }
-        else
-        {
-            var newStack = new Stack<ListItemZero>();
-            newStack.Push(item);
-            _cache.Add(template, newStack);
-        }
-    }
+    //    if (_cache.TryGetValue(template, out var stack))
+    //    {
+    //        stack.Push(item);
+    //    }
+    //    else
+    //    {
+    //        var newStack = new Stack<ListItemZero>();
+    //        newStack.Push(item);
+    //        _cache.Add(template, newStack);
+    //    }
+    //}
 
     private ListItemZero GetView(int itemIndex)
     {
@@ -213,10 +233,15 @@ public partial class ListViewZero : ContentView
         else
             template = ItemTemplate;
 
-        if (_cache.TryGetValue(template, out var typeStack))
+        //if (_cache.TryGetValue(template, out var typeStack))
+        //{
+        //    if (typeStack.TryPop(out var view))
+        //        retVal = view;
+        //}
+
+        if (_cache.TryPopFromBucket(template, out var cachedThing, ItemsSource[itemIndex]))
         {
-            if (typeStack.TryPop(out var view))
-                retVal = view;
+            retVal = cachedThing;
         }
 
         if (retVal == null)
@@ -225,7 +250,8 @@ public partial class ListViewZero : ContentView
 
             retVal.ItemTemplate = template;
             retVal.Content = (View)template.CreateContent();
-            retVal.BindingContext = null;       // Stop it inheriting an unsuitable value.
+            //retVal.BindingContext = null;       // Stop it inheriting an unsuitable value.
+
         }
 
         retVal.HeightRequest = ItemHeight;

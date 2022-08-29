@@ -12,7 +12,7 @@
         </ResourceDictionary>
 
         <ControlTemplate x:Key="defaultControlTemplate">
-            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" Background="Blue"
+            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}"
                 Padding="{TemplateBinding ActualIndent, Converter={StaticResource NestLevelToPaddingConverter}, Mode=OneWay}">
                 <controls:Chevron 
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
@@ -29,20 +29,19 @@
     </ContentView.Resources>
 
     <ContentView.Content>
-        <!--<CollectionView x:Name="TheListView" SelectionMode="None">
+        <!--<CollectionView x:Name="TheListView" SelectionMode="None" >
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <controls:TreeNodeZero/>
+                    <controls:TreeNodeZero HeightRequest="20"/>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>-->
 
 
-        <controls:ListViewZero x:Name="TheListView"  ItemHeight="40">
+        <controls:ListViewZero x:Name="TheListView" ItemHeight="{Binding ItemHeight, Source={x:Reference Self}}">
             <controls:ListViewZero.ItemTemplate>
                 <DataTemplate>
                     <controls:TreeNodeZero />
-
                 </DataTemplate>
             </controls:ListViewZero.ItemTemplate>
         </controls:ListViewZero>

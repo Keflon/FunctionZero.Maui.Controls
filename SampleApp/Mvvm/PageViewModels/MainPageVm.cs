@@ -81,7 +81,7 @@ namespace SampleApp.Mvvm.PageViewModels
 
             SampleListData = new ObservableCollection<ListItem>();
 
-            for (int c = 0; c < 7; c++)
+            for (int c = 0; c < 400; c++)
                 SampleListData.Add(new ListItem($"Hello {c}", (float)110.0 + (float)Math.Sin(c / 9.0) * 40));
 
 
@@ -99,10 +99,10 @@ namespace SampleApp.Mvvm.PageViewModels
         private int _listCount;
         private bool Tick2()
         {
-
-#if false
             if (ListDance == false)
                 return true;
+#if false
+
 
             if (_listCount % 2 == 0)
                 for (int c = 1; c < 6; c++)
@@ -123,10 +123,10 @@ namespace SampleApp.Mvvm.PageViewModels
             var scale = Math.Sin(_listCount / 223.0) / 2.0 + 1.0;
             ListViewScrollOffset = (float)scale * SampleListData.Count * 25;
 
-            return true;
-
 #endif
             _listCount++;
+            return true;
+
         }
 
         private int _count;
@@ -154,31 +154,31 @@ namespace SampleApp.Mvvm.PageViewModels
             }
             else
             {
-                var node = ((TestNode)SampleData).Children[1];
+                //var node = ((TestNode)SampleData).Children[1];
 
-                if (node.Children.Count == 3)
-                {
-                    _spareNode = node.Children[1];
-                    node.Children.RemoveAt(1);
-                }
-                else
-                {
-                    node.Children.Insert(1, _spareNode);
-                }
+                //if (node.Children.Count == 3)
+                //{
+                //    _spareNode = node.Children[1];
+                //    node.Children.RemoveAt(1);
+                //}
+                //else
+                //{
+                //    node.Children.Insert(1, _spareNode);
+                //}
             }
 
             {
-                var node = SampleTemplateTestData.LevelZeroChildren[1];
+                //var node = SampleTemplateTestData.LevelZeroChildren[1];
 
-                if (node.LevelOneChildren.Count == 3)
-                {
-                    _spareTemplateNode = node.LevelOneChildren[1];
-                    node.LevelOneChildren.RemoveAt(1);
-                }
-                else
-                {
-                    node.LevelOneChildren.Insert(1, _spareTemplateNode);
-                }
+                //if (node.LevelOneChildren.Count == 3)
+                //{
+                //    _spareTemplateNode = node.LevelOneChildren[1];
+                //    node.LevelOneChildren.RemoveAt(1);
+                //}
+                //else
+                //{
+                //    node.LevelOneChildren.Insert(1, _spareTemplateNode);
+                //}
             }
 
             Count++;

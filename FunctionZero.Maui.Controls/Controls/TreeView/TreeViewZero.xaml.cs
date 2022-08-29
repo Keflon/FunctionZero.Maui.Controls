@@ -1,4 +1,5 @@
 ﻿using FunctionZero.Maui.Controls;
+using FunctionZero.Maui.Services.Cache;
 using FunctionZero.TreeListItemsSourceZero;
 using FunctionZero.TreeZero;
 using Microsoft.Maui.Controls;
@@ -26,9 +27,52 @@ namespace FunctionZero.Maui.Controls
         private static char[] _dot = new[] { '.' };
         private TreeItemsSourceManager<object> _rootContainer;
 
+        public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(float), typeof(TreeViewZero), (float)40.0, BindingMode.OneWay, null);
+
+        public float ItemHeight
+        {
+            get { return (float)GetValue(ItemHeightProperty); }
+            set { SetValue(ItemHeightProperty, value); }
+        }
+
+
         public TreeViewZero()
         {
             InitializeComponent();
+
+            if(TheListView is ListViewZero lvz)
+                lvz._cache = 
+                    new BucketDictionary<DataTemplate, ListItemZero>(CacheAction, CacheRetrievePredicate); 
+        }
+        private void CacheAction(DataTemplate template, ListItemZero item)
+        {
+            // 'item' is about to enter the cache.
+        }
+
+        private bool CacheRetrievePredicate(DataTemplate template, ListItemZero item, object data)
+        {
+            // When the cache is asked for a ListItemZero matching a List Item's DataTemplate,
+            // this method is called on every matching ListItemZero in the cache until we return true, or the list is exhausted.
+
+            // Since we know that the items Content is a TreeNodeZero, we can optionally only return true for items whose TreeNodeZero
+            // is already suitable to display the 'data'.
+            // This speeds things up by avoiding the need to re-inflate the TreeNodeZero Content, at a cost to memory consumption
+            // by the cache.
+
+            // If we just return true, the existing Content will be replaced, at the expense of DataTemplate inflation
+            // and a memory leak that I suspect is related to a bug in handling TemplateBindings.
+
+            var treeNodeData = (TreeNodeContainer<object>)data;
+
+            // Get the DataTemplate that defines the TreeNodeZero Content ...
+            var treeItemTemplate = TreeItemTemplate.OnSelectTemplate(treeNodeData.Data).ItemTemplate;
+
+            // We know the item Content is a TreeNodeZero.
+            var treeNode = (TreeNodeZero)item.Content;
+
+            // If the treeNode's Content was created by the treeItemTemplate then this item is a perfect match
+            // that just needs it's BindingContext set!
+            return treeNode._contentTemplate == treeItemTemplate;
         }
 
         public static readonly BindableProperty TreeItemTemplateProperty = BindableProperty.Create("TreeItemTemplate", typeof(TemplateProvider), typeof(TreeViewZero), null, propertyChanged: OnItemTemplateChanged);
@@ -113,8 +157,6 @@ namespace FunctionZero.Maui.Controls
             self.Resources["FunctionZero.Maui.Controls.TreeNodeZero"] = newValue;
         }
 
-
-
         public static readonly BindableProperty IndentMultiplierProperty = BindableProperty.Create("IndentMultiplier", typeof(double), typeof(TreeViewZero), 15D);
 
         public double IndentMultiplier
@@ -135,7 +177,6 @@ namespace FunctionZero.Maui.Controls
         private (bool setValue, bool attachedInpc) TryAttach(TreeNodeContainer<object> treeNodeContainer)
         {
             _diff++;
-
 
             bool didSetValue = false;
             bool didattachInpc = false;
@@ -172,6 +213,7 @@ namespace FunctionZero.Maui.Controls
         }
 
         //bool _isBusy = false;
+
         private void _rootContainer_NodeChanged(object sender, TreeNodeContainerEventArgs<object> e)
         {
             var treeNodeContainer = e.Node;
@@ -200,22 +242,6 @@ namespace FunctionZero.Maui.Controls
                 case NodeAction.IsVisibleChanged:
                     break;
             }
-
-            #region 
-
-            //if(_isBusy == false)
-            //{
-            //    TheListView.BatchBegin();
-            //    _isBusy = true;
-            //    Device.BeginInvokeOnMainThread(() =>
-            //    {
-            //        TheListView.BatchCommit();
-            //        _isBusy = false;
-            //    });
-
-            //}
-
-            #endregion
         }
 
         record Target(TreeNodeContainer<object> container, string qualifiedIsExpandedPropertyName);
@@ -232,15 +258,6 @@ namespace FunctionZero.Maui.Controls
                 }
             }
         }
-
-        //private void InpcChanged(TreeNodeContainer<object> container, PropertyChangedEventArgs e, string qualifiedIsExpandedPropertyName)
-        //{
-        //    if (e.PropertyName == qualifiedIsExpandedPropertyName)
-        //    {
-        //        if (TryGetPropertyValue<bool>(container.Data, qualifiedIsExpandedPropertyName, out var newDataValue))
-        //            container.IsExpanded = newDataValue;
-        //    }
-        //}
 
         private bool GetCanHaveChildren(object node)
         {

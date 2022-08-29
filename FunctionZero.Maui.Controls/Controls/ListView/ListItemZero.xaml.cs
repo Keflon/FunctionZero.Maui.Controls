@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace FunctionZero.Maui.Controls;
 
 public partial class ListItemZero : ContentView
