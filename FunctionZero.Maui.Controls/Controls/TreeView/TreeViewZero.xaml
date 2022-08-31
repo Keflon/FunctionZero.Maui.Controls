@@ -44,6 +44,10 @@
                     <controls:TreeNodeZero />
                 </DataTemplate>
             </controls:ListViewZero.ItemTemplate>
+            <!--<controls:ListViewZero.ControlTemplate>
+                
+            </controls:ListViewZero.ControlTemplate>-->
+
         </controls:ListViewZero>
     </ContentView.Content>
 </ContentView>

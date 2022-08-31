@@ -1,8 +1,10 @@
 using FunctionZero.Maui.Controls;
 using FunctionZero.Maui.Services.Cache;
+using Microsoft.Maui.Controls;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 
 namespace FunctionZero.Maui.Controls;
 
@@ -75,6 +77,27 @@ public partial class ListViewZero : ContentView
         var self = (ListViewZero)bindable;
         self.UpdateItemContainers();
     }
+
+
+
+    public static readonly BindableProperty ScrollVelocityProperty = BindableProperty.Create(nameof(ScrollVelocity), typeof(double), typeof(ListViewZero), (double)0.0, BindingMode.OneWay, null, null, ScrollVelocityChanged);
+
+    public double ScrollVelocity
+    {
+        get { return (double)GetValue(ScrollVelocityProperty); }
+        set { SetValue(ScrollVelocityProperty, value); }
+    }
+
+    private static void ScrollVelocityChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (ListViewZero)bindable;
+
+    }
+
+
+
+
+
     public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(float), typeof(ListViewZero), (float)40.0, BindingMode.OneWay, null);
 
     public float ItemHeight
@@ -86,20 +109,29 @@ public partial class ListViewZero : ContentView
     public ListViewZero()
     {
         _cache = new();
+        _sw = new();
 
         InitializeComponent();
 
         canvas.SizeChanged += Canvas_SizeChanged;
 
-        var gr = new PanGestureRecognizer();
-        gr.PanUpdated += Gr_PanUpdated;
-        this.GestureRecognizers.Add(gr);
+        var pgr = new PanGestureRecognizer();
+        pgr.PanUpdated += Gr_PanUpdated;
+        this.GestureRecognizers.Add(pgr);
+
+        var tgr = new TapGestureRecognizer();
+        tgr.Tapped += (s, e) => this.AbortAnimation("SimpleAnimation");
+        this.GestureRecognizers.Add(tgr);
+
     }
 
     private void Canvas_SizeChanged(object sender, EventArgs e)
     {
         UpdateItemContainers();
     }
+    Stopwatch _sw;
+
+    double _totalY = 0;
 
     private void Gr_PanUpdated(object sender, PanUpdatedEventArgs e)
     {
@@ -107,20 +139,84 @@ public partial class ListViewZero : ContentView
         switch (e.StatusType)
         {
             case GestureStatus.Started:
+            this.AbortAnimation("SimpleAnimation");
                 _anchor = ScrollOffset;
+                _sw.Start();
                 break;
             case GestureStatus.Running:
                 ScrollOffset = _anchor - (float)(e.TotalY);
+                _totalY = e.TotalY;
                 break;
             case GestureStatus.Completed:
+
+                double timeDelta = _sw.Elapsed.TotalMilliseconds;
+                _sw.Reset();
+                double motionDelta = _totalY;
+
+                uint millisecondRate = 16;
+
+                _animationDelta = -(motionDelta / timeDelta) * millisecondRate;
+
+
+                var animation = new Animation(PanAnimate, 1, 0);
+
+                animation.Commit(this, "SimpleAnimation", millisecondRate, 2000, Easing.Linear, (v, c) => { }, () => false);
+
                 break;
             case GestureStatus.Canceled:
                 ScrollOffset = _anchor;
                 break;
         }
     }
+    double _animationDelta;
+    private void PanAnimate(double elapsed)
+    {
+        this.ScrollOffset += (float)(_animationDelta * elapsed);
+
+        if (ScrollOffset < 0)
+        {
+            this.AbortAnimation("SimpleAnimation");
+            ScrollOffset = 0;
+            UpdateItemContainers();
+            PanBounce();
 
 
+        }
+    }
+
+    private void PanBounce()
+    {
+        double direction = 1;
+        uint duration = 250;
+
+        foreach (object obj in canvas)
+        {
+            if (obj is ListItemZero item)
+            {
+                direction = -direction;
+
+                //item.TranslateTo(item.TranslationY * direction * _animationDelta / 120, item.TranslationY *= 1.15, duration, Easing.CubicOut);
+                item.RotateTo(direction * 10, duration, Easing.SpringOut);
+                //item.RotateXTo(direction * item.TranslationY / item.Height, duration, Easing.CubicOut);
+
+                //item.TranslationY *= 1.02;
+                //item.Rotation = direction * item.TranslationY / item.Height * 5;
+            }
+        }
+        Task.Delay((int)duration).ContinueWith(async (a) =>
+        {
+            foreach (object obj in canvas)
+            {
+                if (obj is ListItemZero item)
+                {
+                    //item.TranslateTo(0, item.ItemIndex * ItemHeight - ScrollOffset, duration, Easing.BounceOut);
+                    item.RotateTo(0, duration, Easing.BounceOut);
+                    //item.RotateXTo(0, 1000, Easing.BounceOut);
+                }
+            }
+
+        });
+    }
     private void UpdateItemContainers()
     {
 
