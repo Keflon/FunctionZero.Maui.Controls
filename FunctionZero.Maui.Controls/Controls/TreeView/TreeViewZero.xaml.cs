@@ -40,40 +40,40 @@ namespace FunctionZero.Maui.Controls
         {
             InitializeComponent();
 
-            if(TheListView is ListViewZero lvz)
-                lvz._cache = 
-                    new BucketDictionary<DataTemplate, ListItemZero>(CacheAction, CacheRetrievePredicate); 
+            //if(TheListView is ListViewZero lvz)
+            //    lvz._cache = 
+            //        new BucketDictionary<DataTemplate, ListItemZero>(CacheAction, CacheRetrievePredicate); 
         }
-        private void CacheAction(DataTemplate template, ListItemZero item)
-        {
-            // 'item' is about to enter the cache.
-        }
+        //private void CacheAction(DataTemplate template, ListItemZero item)
+        //{
+        //    // 'item' is about to enter the cache.
+        //}
 
-        private bool CacheRetrievePredicate(DataTemplate template, ListItemZero item, object data)
-        {
-            // When the cache is asked for a ListItemZero matching a List Item's DataTemplate,
-            // this method is called on every matching ListItemZero in the cache until we return true, or the list is exhausted.
+        //private bool CacheRetrievePredicate(DataTemplate template, ListItemZero item, object data)
+        //{
+        //    // When the cache is asked for a ListItemZero matching a List Item's DataTemplate,
+        //    // this method is called on every matching ListItemZero in the cache until we return true, or the list is exhausted.
 
-            // Since we know that the items Content is a TreeNodeZero, we can optionally only return true for items whose TreeNodeZero
-            // is already suitable to display the 'data'.
-            // This speeds things up by avoiding the need to re-inflate the TreeNodeZero Content, at a cost to memory consumption
-            // by the cache.
+        //    // Since we know that the items Content is a TreeNodeZero, we can optionally only return true for items whose TreeNodeZero
+        //    // is already suitable to display the 'data'.
+        //    // This speeds things up by avoiding the need to re-inflate the TreeNodeZero Content, at a cost to memory consumption
+        //    // by the cache.
 
-            // If we just return true, the existing Content will be replaced, at the expense of DataTemplate inflation
-            // and a memory leak that I suspect is related to a bug in handling TemplateBindings.
+        //    // If we just return true, the existing Content will be replaced, at the expense of DataTemplate inflation
+        //    // and a memory leak that I suspect is related to a bug in handling TemplateBindings.
 
-            var treeNodeData = (TreeNodeContainer<object>)data;
+        //    var treeNodeData = (TreeNodeContainer<object>)data;
 
-            // Get the DataTemplate that defines the TreeNodeZero Content ...
-            var treeItemTemplate = TreeItemTemplate.OnSelectTemplate(treeNodeData.Data).ItemTemplate;
+        //    // Get the DataTemplate that defines the TreeNodeZero Content ...
+        //    var treeItemTemplate = TreeItemTemplate.OnSelectTemplate(treeNodeData.Data).ItemTemplate;
 
-            // We know the item Content is a TreeNodeZero.
-            var treeNode = (TreeNodeZero)item.Content;
+        //    // We know the item Content is a TreeNodeZero.
+        //    var treeNode = (TreeNodeZero)item.Content;
 
-            // If the treeNode's Content was created by the treeItemTemplate then this item is a perfect match
-            // that just needs it's BindingContext set!
-            return treeNode._contentTemplate == treeItemTemplate;
-        }
+        //    // If the treeNode's Content was created by the treeItemTemplate then this item is a perfect match
+        //    // that just needs it's BindingContext set!
+        //    return treeNode._contentTemplate == treeItemTemplate;
+        //}
 
         public static readonly BindableProperty TreeItemTemplateProperty = BindableProperty.Create("TreeItemTemplate", typeof(TemplateProvider), typeof(TreeViewZero), null, propertyChanged: OnItemTemplateChanged);
 
@@ -168,7 +168,7 @@ namespace FunctionZero.Maui.Controls
         private static void TreeViewZero_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var thing = (ReadOnlyObservableCollection<TreeNodeContainer<object>>)sender;
-
+            
             Debug.WriteLine($"Count:{thing.Count}");
         }
 

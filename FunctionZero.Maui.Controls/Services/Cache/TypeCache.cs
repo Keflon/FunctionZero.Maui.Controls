@@ -57,7 +57,7 @@ namespace FunctionZero.Maui.Services.Cache
             TContent contentValue = default;
 
             if (_cache.TryGetValue(template, out var typeList))
-            {
+            { 
                 foreach (var item in typeList)
                 {
                     if (CacheRetrievePredicate(template, item, data))

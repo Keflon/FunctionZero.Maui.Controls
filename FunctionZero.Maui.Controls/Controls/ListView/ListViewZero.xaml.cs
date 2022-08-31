@@ -298,24 +298,6 @@ public partial class ListViewZero : ContentView
         TestLabel.Text = $"Active: {canvas.Count}";
     }
 
-    //private void AddToCache(DataTemplate template, ListItemZero item)
-    //{
-    //    //GC.Collect();
-    //    //GC.WaitForPendingFinalizers();
-    //    //GC.Collect();
-
-
-    //    if (_cache.TryGetValue(template, out var stack))
-    //    {
-    //        stack.Push(item);
-    //    }
-    //    else
-    //    {
-    //        var newStack = new Stack<ListItemZero>();
-    //        newStack.Push(item);
-    //        _cache.Add(template, newStack);
-    //    }
-    //}
 
     private ListItemZero GetView(int itemIndex)
     {
@@ -328,12 +310,6 @@ public partial class ListViewZero : ContentView
             template = selector.SelectTemplate(item, this);
         else
             template = ItemTemplate;
-
-        //if (_cache.TryGetValue(template, out var typeStack))
-        //{
-        //    if (typeStack.TryPop(out var view))
-        //        retVal = view;
-        //}
 
         if (_cache.TryPopFromBucket(template, out var cachedThing, ItemsSource[itemIndex]))
         {

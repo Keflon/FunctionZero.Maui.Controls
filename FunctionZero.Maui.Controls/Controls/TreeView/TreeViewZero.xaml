@@ -4,6 +4,7 @@
         xmlns:controls="clr-namespace:FunctionZero.Maui.Controls"
         xmlns:converters="clr-namespace:FunctionZero.Maui.Converters"
         x:Class="FunctionZero.Maui.Controls.TreeViewZero"
+    VerticalOptions="Fill"
     x:Name="Self">
 
     <ContentView.Resources>
@@ -23,9 +24,15 @@
         </ControlTemplate>
 
         <!--This Style can be replaced in the resource dictionary by code-behind that tracks self.TreeItemContainerStyle-->
-        <Style TargetType="controls:TreeNodeZero">
+        <!--<Style TargetType="controls:TreeNodeZero">
+            <Setter Property="ControlTemplate" Value="{StaticResource defaultControlTemplate}"/>
+        </Style>-->
+
+        <Style TargetType="controls:ListItemZero">
             <Setter Property="ControlTemplate" Value="{StaticResource defaultControlTemplate}"/>
         </Style>
+
+
     </ContentView.Resources>
 
     <ContentView.Content>
@@ -38,15 +45,18 @@
         </CollectionView>-->
 
 
-        <controls:ListViewZero x:Name="TheListView" ItemHeight="{Binding ItemHeight, Source={x:Reference Self}}">
+        <controls:ListViewZero 
+            x:Name="TheListView"
+            ItemHeight="{Binding ItemHeight, Source={x:Reference Self}}"
+            
+            >
             <controls:ListViewZero.ItemTemplate>
                 <DataTemplate>
-                    <controls:TreeNodeZero />
+                    <!--<controls:TreeNodeZero />-->
+                    <Label Text="X" />
                 </DataTemplate>
             </controls:ListViewZero.ItemTemplate>
-            <!--<controls:ListViewZero.ControlTemplate>
-                
-            </controls:ListViewZero.ControlTemplate>-->
+
 
         </controls:ListViewZero>
     </ContentView.Content>
