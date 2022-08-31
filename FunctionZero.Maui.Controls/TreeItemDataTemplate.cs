@@ -1,7 +1,7 @@
 ﻿namespace FunctionZero.Maui.Controls
 {
     [ContentProperty("ItemTemplate")]
-    public class TreeItemDataTemplate : TemplateProvider
+    public class TreeItemDataTemplate : DataTemplateSelector
     {
         public string ChildrenPropertyName { get; set; }
         public string IsExpandedPropertyName { get; set; }
@@ -9,9 +9,14 @@
 
         public Type TargetType { get; set; }
 
-        public override TreeItemDataTemplate OnSelectTemplate(object item)
+        public TreeItemDataTemplate OnSelectTemplate(object item)
         {
             return this;
+        }
+
+        protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
+        {
+            return ItemTemplate;
         }
     }
 }

@@ -16,7 +16,7 @@ Children are lazy-loaded and the UI is virtualised.
 Property | Type | Bindable | Purpose
 :----- | :---- | :----: | :-----
 ItemsSource        | object       | Yes | Set this to your root node  
-TreeItemTemplate   | TemplateProvider | Yes | Set this to a `TreeItemDataTemplate` or a `TreeDataTemplateSelector`
+TreeItemTemplate   | TemplateProvider | Yes | Set this to a `TreeItemDataTemplate` or a `TreeItemDataTemplateSelector`
 ItemContainerStyle | Style            | Yes | An optional `Style` that can be applied to the `TreeNodeZero` objects that represent each node.
 IsRootVisible      | bool             | Yes | Specifies whether the root node should be shown or omitted.
 IndentMultiplier   | double           | Yes (OneTime) | How far the TreeNode should be indented for each nest level. Default is 15.0
@@ -30,7 +30,7 @@ Property | Type | Purpose
 ChildrenPropertyName    | string       | The name of the property used to find the node children
 IsExpandedPropertyName  | string       | The name of the property used to store whether the node is expanded
 ItemTemplate            | DataTemplate | The DataTemplate used to draw this node
-TargetType              | Type         | When used in a `TreeDataTemplateSelector`, identifies the least-derived nodes the ItemTemplate can be applied to.
+TargetType              | Type         | When used in a `TreeItemDataTemplateSelector`, identifies the least-derived nodes the ItemTemplate can be applied to.
 
 ### Create a TreeViewZero
 
@@ -99,9 +99,9 @@ This is how to bind the `IsMyNodeExpanded` from our data, to `IsExpanded` on the
     </cz:TreeItemDataTemplate>
 </cz:TreeViewZero.TreeItemTemplate>
 ```
-### TreeDataTemplateSelector
+### TreeItemDataTemplateSelector
 If your tree of data consists of disparate nodes with different properties for their `Children`, 
-use a `TreeDataTemplateSelector` and set `TargetType` for each `TreeItemDataTemplate`.  
+use a `TreeItemDataTemplateSelector` and set `TargetType` for each `TreeItemDataTemplate`.  
 
 Note: In this example, the tree data can contain nodes of type `LevelZero`, `LevelOne` and `LevelTwo` where each type has a different property to provide its children.  
 
@@ -109,7 +109,7 @@ The first `TargetType` your data-node can be assigned to is used. Put another wa
 ```xml
 <cz:TreeViewZero ItemsSource="{Binding SampleTemplateTestData}" >
     <cz:TreeViewZero.TreeItemTemplate>
-        <cz:TreeDataTemplateSelector>
+        <cz:TreeItemDataTemplateSelector>
             <cz:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
                 <DataTemplate>
                     <Label Text="{Binding Name}" BackgroundColor="Yellow" />
@@ -133,17 +133,17 @@ The first `TargetType` your data-node can be assigned to is used. Put another wa
                     <Label Text="{Binding Name}" BackgroundColor="Crimson" />
                 </DataTemplate>
             </cz:TreeItemDataTemplate>
-        </cz:TreeDataTemplateSelector>
+        </cz:TreeItemDataTemplateSelector>
     </cz:TreeViewZero.TreeItemTemplate>
 </cz:TreeViewZero>
 ```
-### Customising TreeDataTemplateSelector
+### Customising TreeItemDataTemplateSelector
 If you want **full-control** over the `TreeItemTemplate` per node, you can easily implement your own 
-`TreeDataTemplateSelector` and override `OnSelectTemplate`. Here's an example that chooses a template 
+`TreeItemDataTemplateSelector` and override `OnSelectTemplate`. Here's an example that chooses a template 
 based on whether the node has children or not:
 
 ```csharp
-public class MyTreeDataTemplateSelector : TemplateProvider
+public class MyTreeItemDataTemplateSelector : TemplateProvider
 {
    /// These should be set in the xaml markup. (or code-behind, if that's how you roll)
    public TreeItemDataTemplate TrunkTemplate{ get; set; }
@@ -163,7 +163,7 @@ public class MyTreeDataTemplateSelector : TemplateProvider
    }
 }
 ```
-Take a look at [TreeDataTemplateSelector.cs](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/FunctionZero.Maui.Controls/TreeDataTemplateSelector.cs) 
+Take a look at [TreeItemDataTemplateSelector.cs](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/FunctionZero.Maui.Controls/TreeItemDataTemplateSelector.cs) 
 for an example of how to provide a *collection* of `TreeItemDataTemplate` instances to your TemplateProvider.
 
 ## Styling the TreeNodeContainer

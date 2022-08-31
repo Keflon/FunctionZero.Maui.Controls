@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace FunctionZero.Maui.Controls
 {
     [ContentProperty("Children")]
-    public class TreeDataTemplateSelector : DataTemplateSelector
+    public class TreeItemDataTemplateSelector : DataTemplateSelector
     {
         public IList<TreeItemDataTemplate> Children { get; set; } = new List<TreeItemDataTemplate>();
 
