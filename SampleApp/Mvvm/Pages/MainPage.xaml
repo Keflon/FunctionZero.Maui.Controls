@@ -16,7 +16,8 @@
                     ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
                     />
 
-                <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
+                <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{Binding BindingContext.Data}" />
+                <!--<ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" />-->
             </HorizontalStackLayout>
 
         </ControlTemplate>
@@ -92,32 +93,32 @@
                 <cz:TreeDataTemplateSelector>
                     <cz:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
                         <DataTemplate>
-                            <Label Text="{Binding Name}" BackgroundColor="Green" />
+                            <Label Text="{Binding Data.Name}" BackgroundColor="Green" />
                         </DataTemplate>
                     </cz:TreeItemDataTemplate>
 
                     <cz:TreeItemDataTemplate ChildrenPropertyName="LevelOneChildren" TargetType="{x:Type test:LevelOne}" IsExpandedPropertyName="IsLevelOneExpanded">
                         <DataTemplate>
-                            <Label Text="{Binding Name}" BackgroundColor="Cyan" />
+                            <Label Text="{Binding Data.Name}" BackgroundColor="Cyan" />
                         </DataTemplate>
                     </cz:TreeItemDataTemplate>
 
                     <cz:TreeItemDataTemplate ChildrenPropertyName="LevelTwoChildren" TargetType="{x:Type test:LevelTwo}" IsExpandedPropertyName="IsLevelTwoExpanded">
                         <DataTemplate>
-                            <Label Text="{Binding Name}" BackgroundColor="Pink" />
+                            <Label Text="{Binding Data.Name}" BackgroundColor="Pink" />
                         </DataTemplate>
                     </cz:TreeItemDataTemplate>
 
                     <cz:TreeItemDataTemplate ChildrenPropertyName="LevelThreeChildren" TargetType="{x:Type test:LevelThree}" IsExpandedPropertyName="IsLevelThreeExpanded">
                         <DataTemplate>
-                            <Label Text="{Binding Name}" BackgroundColor="Crimson" />
+                            <Label Text="{Binding Data.Name}" BackgroundColor="Crimson" />
                         </DataTemplate>
                     </cz:TreeItemDataTemplate>
                 </cz:TreeDataTemplateSelector>
             </cz:TreeViewZero.TreeItemTemplate>
         </cz:TreeViewZero>
 
-        <cz:TreeViewZero 
+        <!--<cz:TreeViewZero 
             x:Name="tree12" 
             Grid.Row="2" 
             Grid.Column="1" 
@@ -137,7 +138,7 @@
                     </DataTemplate>
                 </cz:TreeItemDataTemplate>
             </cz:TreeViewZero.TreeItemTemplate>
-        </cz:TreeViewZero>
+        </cz:TreeViewZero>-->
     </Grid>
 
 </ContentPage>

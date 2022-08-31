@@ -14,12 +14,13 @@
 
         <ControlTemplate x:Key="defaultControlTemplate">
             <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}"
-                Padding="{TemplateBinding ActualIndent, Converter={StaticResource NestLevelToPaddingConverter}, Mode=OneWay}">
+                Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelToPaddingConverter}, ConverterParameter={x:Reference Self}, Mode=OneWay}">
                 <controls:Chevron 
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
-                    ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
+                    ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=OneWay}" 
                 />
-                <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
+                <Label Text="{TemplateBinding BindingContext.Data.Name}"/>
+                <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data, Mode=OneWay}" />
             </HorizontalStackLayout>
         </ControlTemplate>
 
@@ -48,14 +49,14 @@
         <controls:ListViewZero 
             x:Name="TheListView"
             ItemHeight="{Binding ItemHeight, Source={x:Reference Self}}"
-            
+            ItemTemplate="{Binding TreeItemTemplate, Source={x:Reference Self}}"
             >
-            <controls:ListViewZero.ItemTemplate>
+            <!--<controls:ListViewZero.ItemTemplate>
                 <DataTemplate>
-                    <!--<controls:TreeNodeZero />-->
+                    --><!--<controls:TreeNodeZero />--><!--
                     <Label Text="X" />
                 </DataTemplate>
-            </controls:ListViewZero.ItemTemplate>
+            </controls:ListViewZero.ItemTemplate>-->
 
 
         </controls:ListViewZero>

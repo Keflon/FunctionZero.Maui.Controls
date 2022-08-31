@@ -17,7 +17,11 @@ namespace FunctionZero.Maui.Converters
         {
             try
             {
-                var nestLevel = (float)value;
+                var treeView = (TreeViewZero)parameter;
+                var nestValue = (int)value-1;
+
+                var nestLevel = nestValue * treeView.IndentMultiplier;
+
                 return new Thickness(nestLevel, 0, 0, 0);
             }
             catch (Exception ex)

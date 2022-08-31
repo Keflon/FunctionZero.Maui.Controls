@@ -170,32 +170,61 @@ namespace FunctionZero.Maui.Controls
         //    _oldNodeData = nodeData;
         //}
 
+        //private void DoTheThing(TreeNodeContainer<object> nodeData)
+        //{
+        //    try
+        //    {
+        //        if (_oldNodeData != nodeData)
+        //        {
+        //            ActualIndent = (nodeData.Indent - 1) * (float)_ownerTree.IndentMultiplier;
+        //            var template = _ownerTree.TreeItemTemplate.OnSelectTemplate(nodeData.Data).ItemTemplate;
+
+        //            if (_contentTemplate != template)
+        //            {
+        //                _contentTemplate = template;
+        //                var content = (View)template.CreateContent();
+        //                if (Content != null)
+        //                    Content.BindingContext = null;
+        //                //this.UnapplyBindings();
+        //                this.Content = null;
+        //                this.Content = content;
+        //            }
+        //            this.Content.BindingContext = nodeData.Data;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine(ex);
+        //    }
+        //    _oldNodeData = nodeData;
+        //}
+
         private void DoTheThing(TreeNodeContainer<object> nodeData)
         {
-            try
-            {
-                if (_oldNodeData != nodeData)
-                {
-                    ActualIndent = (nodeData.Indent - 1) * (float)_ownerTree.IndentMultiplier;
-                    var template = _ownerTree.TreeItemTemplate.OnSelectTemplate(nodeData.Data).ItemTemplate;
+            //try
+            //{
+            //    if (_oldNodeData != nodeData)
+            //    {
+            //        ActualIndent = (nodeData.Indent - 1) * (float)_ownerTree.IndentMultiplier;
+            //        var template = _ownerTree.TreeItemTemplate.OnSelectTemplate(nodeData.Data).ItemTemplate;
 
-                    if (_contentTemplate != template)
-                    {
-                        _contentTemplate = template;
-                        var content = (View)template.CreateContent();
-                        if (Content != null)
-                            Content.BindingContext = null;
-                        //this.UnapplyBindings();
-                        this.Content = null;
-                        this.Content = content;
-                    }
-                    this.Content.BindingContext = nodeData.Data;
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-            }
+            //        if (_contentTemplate != template)
+            //        {
+            //            _contentTemplate = template;
+            //            var content = (View)template.CreateContent();
+            //            if (Content != null)
+            //                Content.BindingContext = null;
+            //            //this.UnapplyBindings();
+            //            this.Content = null;
+            //            this.Content = content;
+            //        }
+            //        this.Content.BindingContext = nodeData.Data;
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Debug.WriteLine(ex);
+            //}
             _oldNodeData = nodeData;
         }
 

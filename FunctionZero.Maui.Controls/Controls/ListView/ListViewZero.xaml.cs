@@ -306,6 +306,9 @@ public partial class ListViewZero : ContentView
 
         DataTemplate template;
 
+        //if (item is TreeListItemsSourceZero.TreeNodeContainer<object> blorg)
+        //    item = blorg.Data;
+
         if (ItemTemplate is DataTemplateSelector selector)
             template = selector.SelectTemplate(item, this);
         else
