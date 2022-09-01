@@ -8,10 +8,6 @@
     x:Name="Self">
 
     <ContentView.Resources>
-        <ResourceDictionary>
-            <converters:NestLevelToPaddingConverter x:Key="NestLevelToPaddingConverter"/>
-        </ResourceDictionary>
-
         <ControlTemplate x:Key="defaultControlTemplate">
 
             <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" >
