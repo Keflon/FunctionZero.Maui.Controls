@@ -311,6 +311,7 @@ public partial class ListViewZero : ContentView
             if (itemContainer == null)
             {
                 itemContainer = GetView(ItemsSource[c]);
+                itemContainer.BindingContext = null;
                 canvas.Add(itemContainer);
                 itemContainer.BindingContext = ItemsSource[c];
             }

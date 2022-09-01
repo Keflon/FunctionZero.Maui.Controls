@@ -13,15 +13,23 @@
         </ResourceDictionary>
 
         <ControlTemplate x:Key="defaultControlTemplate">
+
             <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}"
+                                  BindingContext="{x:Null}" 
                 Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelToPaddingConverter}, ConverterParameter={x:Reference Self}, Mode=OneWay}">
                 <controls:Chevron 
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
                     ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=OneWay}" 
                 />
-                <Label Text="{TemplateBinding BindingContext.Data.Name}"/>
+                <Label Text="{TemplateBinding BindingContext.Data.Name}" BackgroundColor="Green" TextColor="Yellow"/>
                 <!--<ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext, Mode=OneWay}" />-->
-                <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" />
+                <controls:TreeContentPresenter 
+                    VerticalOptions="Start" 
+                    x:Name="tcp" 
+                    HorizontalOptions="Fill"   
+                    BindingContext="{TemplateBinding BindingContext.Data, Mode=OneWay}"
+                    >
+                </controls:TreeContentPresenter>
             </HorizontalStackLayout>
         </ControlTemplate>
 
@@ -38,28 +46,10 @@
     </ContentView.Resources>
 
     <ContentView.Content>
-        <!--<CollectionView x:Name="TheListView" SelectionMode="None" >
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <controls:TreeNodeZero HeightRequest="20"/>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>-->
-
-
         <controls:ListViewZero 
             x:Name="TheListView"
             ItemHeight="{Binding ItemHeight, Source={x:Reference Self}}"
             ItemTemplate="{Binding TreeItemTemplate, Source={x:Reference Self}}"
-            >
-            <!--<controls:ListViewZero.ItemTemplate>
-                <DataTemplate>
-                    --><!--<controls:TreeNodeZero />--><!--
-                    <Label Text="X" />
-                </DataTemplate>
-            </controls:ListViewZero.ItemTemplate>-->
-
-
-        </controls:ListViewZero>
+        />
     </ContentView.Content>
 </ContentView>
