@@ -41,11 +41,11 @@ namespace FunctionZero.Maui.Controls
             InitializeComponent(); 
         }
 
-        public static readonly BindableProperty TreeItemTemplateProperty = BindableProperty.Create("TreeItemTemplate", typeof(TreeItemDataTemplateSelector), typeof(TreeViewZero), null, propertyChanged: OnItemTemplateChanged);
+        public static readonly BindableProperty TreeItemTemplateProperty = BindableProperty.Create("TreeItemTemplate", typeof(TemplateProvider), typeof(TreeViewZero), null, propertyChanged: OnItemTemplateChanged);
 
-        public TreeItemDataTemplateSelector TreeItemTemplate
+        public TemplateProvider TreeItemTemplate
         {
-            get { return (TreeItemDataTemplateSelector)GetValue(TreeItemTemplateProperty); }
+            get { return (TemplateProvider)GetValue(TreeItemTemplateProperty); }
             set { SetValue(TreeItemTemplateProperty, value); }
         }
 

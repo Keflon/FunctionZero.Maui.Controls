@@ -70,7 +70,7 @@
             </cz:ListViewZero.ItemTemplate>
         </cz:ListViewZero>
 
-        <!--<cz:TreeViewZero x:Name="tree1" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampleData}" IndentMultiplier="40">
+        <cz:TreeViewZero x:Name="tree1" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampleData}" IndentMultiplier="40">
             <cz:TreeViewZero.TreeItemContainerStyle>
                 <Style TargetType="cz:TreeNodeZero">
                     <Setter Property="ControlTemplate" Value="{StaticResource CellTemplate}"/>
@@ -79,11 +79,11 @@
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">
                     <DataTemplate>
-                        <Label Text="{Binding Name}" BackgroundColor="Magenta" HeightRequest="50" />
+                        <Label Text="{Binding Data.Name}" BackgroundColor="Magenta" HeightRequest="50" />
                     </DataTemplate>
                 </cz:TreeItemDataTemplate>
             </cz:TreeViewZero.TreeItemTemplate>
-        </cz:TreeViewZero>-->
+        </cz:TreeViewZero>
 
         <cz:TreeViewZero 
             ItemHeight="20"

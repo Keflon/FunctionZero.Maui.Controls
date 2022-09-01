@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace FunctionZero.Maui.Controls
 {
     [ContentProperty("Children")]
-    public class TreeItemDataTemplateSelector : DataTemplateSelector
+    public class TreeItemDataTemplateSelector : TemplateProvider
     {
         public IList<TreeItemDataTemplate> Children { get; set; } = new List<TreeItemDataTemplate>();
 
@@ -19,16 +19,16 @@ namespace FunctionZero.Maui.Controls
 
             foreach (var template in Children)
                 if (template.TargetType.IsAssignableFrom(itemData.GetType()))
-                    return template.OnSelectTemplate(itemData).ItemTemplate;
+                    return template.OnSelectTemplateProvider(itemData).ItemTemplate;
 
             return null;
         }
 
-        public TreeItemDataTemplate OnSelectTemplateProvider(object item)
+        public override TreeItemDataTemplate OnSelectTemplateProvider(object item)
         {
             foreach (var template in Children)
                 if (template.TargetType.IsAssignableFrom(item.GetType()))
-                    return template.OnSelectTemplate(item);
+                    return template.OnSelectTemplateProvider(item);
 
             return null;
         }

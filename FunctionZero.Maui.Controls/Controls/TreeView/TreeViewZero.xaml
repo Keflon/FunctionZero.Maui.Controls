@@ -20,7 +20,8 @@
                     ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=OneWay}" 
                 />
                 <Label Text="{TemplateBinding BindingContext.Data.Name}"/>
-                <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data, Mode=OneWay}" />
+                <!--<ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext, Mode=OneWay}" />-->
+                <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" />
             </HorizontalStackLayout>
         </ControlTemplate>
 
