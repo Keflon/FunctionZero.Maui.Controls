@@ -1,7 +1,7 @@
 ﻿<ContentView  
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-        xmlns:controls="clr-namespace:FunctionZero.Maui.Controls"
+        xmlns:cz="clr-namespace:FunctionZero.Maui.Controls"
         xmlns:converters="clr-namespace:FunctionZero.Maui.Converters"
         x:Class="FunctionZero.Maui.Controls.TreeViewZero"
     VerticalOptions="Fill"
@@ -14,42 +14,39 @@
 
         <ControlTemplate x:Key="defaultControlTemplate">
 
-            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}"
-                                  BindingContext="{x:Null}" 
-                Padding="{TemplateBinding BindingContext.Indent, Converter={StaticResource NestLevelToPaddingConverter}, ConverterParameter={x:Reference Self}, Mode=OneWay}">
-                <controls:Chevron 
+            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" >
+
+                <cz:TreeNodeSpacer />
+
+                <cz:Chevron
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
-                    ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=OneWay}" 
-                />
-                <Label Text="{TemplateBinding BindingContext.Data.Name}" BackgroundColor="Green" TextColor="Yellow"/>
-                <!--<ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext, Mode=OneWay}" />-->
-                <controls:TreeContentPresenter 
-                    VerticalOptions="Start" 
+                    ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
+                    />
+
+                <!--<ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand"  />-->
+                <cz:TreeContentPresenter 
+                    VerticalOptions="Fill" 
                     x:Name="tcp" 
                     HorizontalOptions="Fill"   
                     BindingContext="{TemplateBinding BindingContext.Data, Mode=OneWay}"
-                    >
-                </controls:TreeContentPresenter>
+                    />
             </HorizontalStackLayout>
         </ControlTemplate>
 
         <!--This Style can be replaced in the resource dictionary by code-behind that tracks self.TreeItemContainerStyle-->
-        <!--<Style TargetType="controls:TreeNodeZero">
-            <Setter Property="ControlTemplate" Value="{StaticResource defaultControlTemplate}"/>
-        </Style>-->
-
-        <Style TargetType="controls:ListItemZero">
+        <Style x:Name ="ListItemStyle" TargetType="cz:ListItemZero">
             <Setter Property="ControlTemplate" Value="{StaticResource defaultControlTemplate}"/>
         </Style>
-
 
     </ContentView.Resources>
 
     <ContentView.Content>
-        <controls:ListViewZero 
+        <cz:ListViewZero 
             x:Name="TheListView"
             ItemHeight="{Binding ItemHeight, Source={x:Reference Self}}"
             ItemTemplate="{Binding TreeItemTemplate, Source={x:Reference Self}}"
-        />
+        >
+            
+        </cz:ListViewZero>
     </ContentView.Content>
 </ContentView>

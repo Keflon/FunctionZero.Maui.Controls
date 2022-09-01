@@ -11,11 +11,11 @@ namespace FunctionZero.Maui.Controls;
 public partial class ListViewZero : ContentView
 {
     float _anchor;
-    int _firstVisibleItemIndex = int.MaxValue;
-    int _lastVisibleItemIndex = -1;
-    //private Dictionary<DataTemplate, Stack<ListItemZero>> _cache;
-
-    internal BucketDictionary<DataTemplate, ListItemZero> _cache;
+    private BucketDictionary<DataTemplate, ListItemZero> _cache;
+    Stopwatch _sw;
+    private readonly List<ListItemZero> _killList;
+    double _totalY = 0;
+    bool _pendingUpdate = false;
 
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource), typeof(IList), typeof(ListViewZero), null, BindingMode.OneWay, null, ItemsSourceChanged);
 
@@ -37,8 +37,6 @@ public partial class ListViewZero : ContentView
 
         self.UpdateItemContainers();
     }
-
-    bool _pendingUpdate = false;
 
     private void Collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
@@ -78,8 +76,6 @@ public partial class ListViewZero : ContentView
         self.UpdateItemContainers();
     }
 
-
-
     public static readonly BindableProperty ScrollVelocityProperty = BindableProperty.Create(nameof(ScrollVelocity), typeof(double), typeof(ListViewZero), (double)0.0, BindingMode.OneWay, null, null, ScrollVelocityChanged);
 
     public double ScrollVelocity
@@ -93,10 +89,6 @@ public partial class ListViewZero : ContentView
         var self = (ListViewZero)bindable;
 
     }
-
-
-
-
 
     public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(float), typeof(ListViewZero), (float)40.0, BindingMode.OneWay, null);
 
@@ -123,20 +115,15 @@ public partial class ListViewZero : ContentView
         var tgr = new TapGestureRecognizer();
         tgr.Tapped += (s, e) => this.AbortAnimation("SimpleAnimation");
         this.GestureRecognizers.Add(tgr);
-
     }
-
     private void Canvas_SizeChanged(object sender, EventArgs e)
     {
         UpdateItemContainers();
     }
-    Stopwatch _sw;
-    private readonly List<ListItemZero> _killList;
-    double _totalY = 0;
 
     private void Gr_PanUpdated(object sender, PanUpdatedEventArgs e)
     {
-        // TODO: Introduce inertia.
+        // TODO: Improve inertia.
         switch (e.StatusType)
         {
             case GestureStatus.Started:
@@ -215,67 +202,8 @@ public partial class ListViewZero : ContentView
                     //item.RotateXTo(0, 1000, Easing.BounceOut);
                 }
             }
-
         });
     }
-    //private void UpdateItemContainers()
-    //{
-
-    //    if (canvas.Height <= 0)
-    //        return;
-
-    //    if (ItemsSource == null)
-    //        return;
-
-    //    // Find the first item that is to be in view
-    //    int firstVisibleIndex = Math.Max(0, (int)(ScrollOffset / ItemHeight));
-
-    //    // Maximum number of ListItem instances that can be at least partially seen.
-    //    int maxVisibleContainers = (int)(canvas.Height / ItemHeight) + 1;
-
-    //    int lastVisibleIndex = Math.Min(ItemsSource.Count - 1, firstVisibleIndex + maxVisibleContainers);
-
-    //    for (int c = firstVisibleIndex; c <= lastVisibleIndex; c++)
-    //    {
-    //        if ((c < _firstVisibleItemIndex) || (c > _lastVisibleItemIndex))
-    //        {
-    //            ListItemZero itemContainer = GetView(c);
-    //            itemContainer.BindingContext = null;
-
-    //            canvas.Add(itemContainer);
-    //            itemContainer.BindingContext = ItemsSource[c];
-    //            //var animation = new Animation(v => itemContainer.TranslationX = v, -100, 0);
-    //            //animation.Commit(this, c.ToString(), 16, 200, Easing.Linear, (v, c) => itemContainer.TranslationX = 0, () => false);
-    //        }
-    //    }
-    //    _firstVisibleItemIndex = int.MaxValue;
-    //    _lastVisibleItemIndex = -1;
-
-    //    var killList = new List<View>();
-
-    //    foreach (object obj in canvas)
-    //    {
-    //        if (obj is ListItemZero item)
-    //        {
-    //            // Determine offset for item.
-    //            float itemOffset = item.ItemIndex * ItemHeight - ScrollOffset;
-
-    //            if ((itemOffset < -ItemHeight) || (itemOffset > canvas.Height) || (item.ItemIndex >= ItemsSource.Count))
-    //            {
-    //                killList.Add(item);
-    //            }
-    //            else
-    //            {
-    //                item.BindingContext = ItemsSource[item.ItemIndex];
-
-    //                item.TranslationY = itemOffset;
-
-    //                _firstVisibleItemIndex = Math.Min(_firstVisibleItemIndex, item.ItemIndex);
-    //                _lastVisibleItemIndex = Math.Max(_lastVisibleItemIndex, item.ItemIndex);
-    //            }
-    //        }
-    //    }
-
 
     private void UpdateItemContainers()
     {
@@ -294,8 +222,8 @@ public partial class ListViewZero : ContentView
 
         int lastVisibleIndex = Math.Min(ItemsSource.Count - 1, firstVisibleIndex + maxVisibleContainers);
 
-        // TODO: Foreach over this.Canvas and set ItemIndex to -1
-        // TODO: Then, after layout, kill any that still have ItemIndex of -1;
+        // Foreach over each ListItemZero in this.Canvas and set ItemIndex to -1.
+        // Then, after layout, kill any that still have ItemIndex of -1.
         // Mark everything in the canvas as a candidate for removal.
         foreach (View item in this.canvas)
             if (item is ListItemZero listItem)
@@ -315,9 +243,7 @@ public partial class ListViewZero : ContentView
                 canvas.Add(itemContainer);
                 itemContainer.BindingContext = ItemsSource[c];
             }
-
             itemContainer.ItemIndex = c;
-
         }
 
         _killList.Clear();
@@ -335,15 +261,14 @@ public partial class ListViewZero : ContentView
             _cache.PushToBucket(item.ItemTemplate, item);
         }
 
-
-        foreach (object obj in canvas)
+        foreach (object item in canvas)
         {
-            if (obj is ListItemZero item)
+            if (item is ListItemZero listItem)
             {
                 // Determine offset for item.
-                float itemOffset = item.ItemIndex * ItemHeight - ScrollOffset;
-                item.BindingContext = ItemsSource[item.ItemIndex];
-                item.TranslationY = itemOffset;
+                float itemOffset = listItem.ItemIndex * ItemHeight - ScrollOffset;
+                listItem.BindingContext = ItemsSource[listItem.ItemIndex];
+                listItem.TranslationY = itemOffset;
 
             }
             TestLabel.Text = $"Active: {canvas.Count}";

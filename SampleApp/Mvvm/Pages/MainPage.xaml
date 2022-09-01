@@ -9,22 +9,28 @@
         <converters:NestLevelToPaddingConverter x:Key="NestLevelConverter"/>
 
         <ControlTemplate x:Key="NodeTemplate">
-            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" BackgroundColor="Black"
-                Padding="{TemplateBinding ActualIndent, Converter={StaticResource NestLevelConverter}, Mode=OneWay}">
+            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" >
+
+                <cz:TreeNodeSpacer />
+                
                 <cz:Chevron
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
                     ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
                     />
 
-                <ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" 
-                BindingContext="{x:Null}" />
-                <!--<ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand" />-->
+                <!--<ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand"  />-->
+                <cz:TreeContentPresenter 
+                    VerticalOptions="Fill" 
+                    x:Name="tcp" 
+                    HorizontalOptions="Fill"   
+                    BindingContext="{TemplateBinding BindingContext.Data, Mode=OneWay}"
+                    />
             </HorizontalStackLayout>
 
         </ControlTemplate>
 
         <ControlTemplate x:Key="CellTemplate">
-            <ContentPresenter VerticalOptions="Start" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
+            <cz:TreeContentPresenter VerticalOptions="Start" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
         </ControlTemplate>
 
     </ContentPage.Resources>
@@ -44,17 +50,17 @@
         </HorizontalStackLayout>
 
 
-        <cz:TreeViewZero Grid.Row="1" Grid.Column="1" BackgroundColor="Gray" ItemsSource="{Binding SampleData}" IndentMultiplier="90">
-            <cz:TreeViewZero.TreeItemContainerStyle>
-                <Style TargetType="cz:ListItemZero">
-                    <Setter Property="ControlTemplate" Value="{StaticResource NodeTemplate}"/>
-                </Style>
-            </cz:TreeViewZero.TreeItemContainerStyle>
-
+        <cz:TreeViewZero Grid.Row="1" Grid.Column="1"
+                         BackgroundColor="Gray" 
+                         ItemsSource="{Binding SampleData}" 
+                         IndentMultiplier="20" 
+                         TreeItemControlTemplate="{StaticResource NodeTemplate}"
+ItemHeight="60"
+                         >
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">
                     <DataTemplate>
-                        <Label Text="{Binding Name}" BackgroundColor="Pink" HeightRequest="90" />
+                        <Label Text="{Binding Name}" BackgroundColor="Pink" />
                     </DataTemplate>
                 </cz:TreeItemDataTemplate>
             </cz:TreeViewZero.TreeItemTemplate>
@@ -71,12 +77,8 @@
             </cz:ListViewZero.ItemTemplate>
         </cz:ListViewZero>
 
-        <cz:TreeViewZero x:Name="tree1" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding SampleData}" IndentMultiplier="40">
-            <cz:TreeViewZero.TreeItemContainerStyle>
-                <Style TargetType="cz:TreeNodeZero">
-                    <Setter Property="ControlTemplate" Value="{StaticResource CellTemplate}"/>
-                </Style>
-            </cz:TreeViewZero.TreeItemContainerStyle>
+        <cz:TreeViewZero x:Name="tree1" Grid.Row="2" Grid.Column="1" ItemsSource="{Binding SampleData}" IndentMultiplier="40" TreeItemControlTemplate="{StaticResource CellTemplate}">
+
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">
                     <DataTemplate>

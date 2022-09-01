@@ -56,4 +56,6 @@
 	  <ProjectReference Include="..\FunctionZero.Maui.Controls\FunctionZero.Maui.Controls.csproj" />
 	</ItemGroup>
 
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionSampleAppHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+
 </Project>

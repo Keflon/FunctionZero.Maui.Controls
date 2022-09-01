@@ -27,7 +27,7 @@ namespace FunctionZero.Maui.Controls
         private static char[] _dot = new[] { '.' };
         private TreeItemsSourceManager<object> _rootContainer;
 
-        public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(float), typeof(TreeViewZero), (float)40.0, BindingMode.OneWay, null);
+        public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(float), typeof(TreeViewZero), (float)30.0, BindingMode.OneWay, null);
 
         public float ItemHeight
         {
@@ -38,7 +38,7 @@ namespace FunctionZero.Maui.Controls
 
         public TreeViewZero()
         {
-            InitializeComponent(); 
+            InitializeComponent();
         }
 
         public static readonly BindableProperty TreeItemTemplateProperty = BindableProperty.Create("TreeItemTemplate", typeof(TemplateProvider), typeof(TreeViewZero), null, propertyChanged: OnItemTemplateChanged);
@@ -109,18 +109,21 @@ namespace FunctionZero.Maui.Controls
             }
         }
 
-        public static readonly BindableProperty TreeItemContainerStyleProperty = BindableProperty.Create("TreeItemContainerStyle", typeof(Style), typeof(TreeViewZero), null, propertyChanged: OnTreeItemContainerStyleChanged);
+        public static readonly BindableProperty TreeItemControlTemplateProperty = BindableProperty.Create("TreeItemControlTemplate", typeof(ControlTemplate), typeof(TreeViewZero), null, propertyChanged: OnTreeItemControlTemplateChanged);
 
-        public Style TreeItemContainerStyle
+        public ControlTemplate TreeItemControlTemplate
         {
-            get { return (Style)GetValue(TreeItemContainerStyleProperty); }
-            set { SetValue(TreeItemContainerStyleProperty, value); }
+            get { return (ControlTemplate)GetValue(TreeItemControlTemplateProperty); }
+            set { SetValue(TreeItemControlTemplateProperty, value); }
         }
 
-        private static void OnTreeItemContainerStyleChanged(BindableObject bindable, object oldValue, object newValue)
+        private static void OnTreeItemControlTemplateChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var self = (TreeViewZero)bindable;
-            self.Resources["FunctionZero.Maui.Controls.TreeNodeZero"] = newValue;
+            //self.Resources["FunctionZero.Maui.Controls.TreeNodeZero.defaultControlTemplate"] = newValue;
+
+           self.ListItemStyle.Setters[0].Value = newValue;
+            
         }
 
         public static readonly BindableProperty IndentMultiplierProperty = BindableProperty.Create("IndentMultiplier", typeof(double), typeof(TreeViewZero), 15D);
