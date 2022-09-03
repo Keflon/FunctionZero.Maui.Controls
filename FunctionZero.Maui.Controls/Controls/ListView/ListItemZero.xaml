@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="FunctionZero.Maui.Controls.ListItemZero">
+             xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
+             x:Class="FunctionZero.Maui.Controls.ListItemZero"
+             BackgroundColor="CadetBlue"
+             x:Name="Self"
+             StyleClass="Local"
+             >
+    <!--<ContentView.GestureRecognizers>
+        <TapGestureRecognizer Tapped="Tgr_Tapped"/>
+    </ContentView.GestureRecognizers>-->
+    <ContentView.Resources>
+        <Style TargetType="cz:ListItemZero" Class="Local">
+            <Style.Triggers>
+                <!--<DataTrigger TargetType="cz:ListItemZero" Binding="{Binding IsSelected, Source={x:Reference Self}}" Value="True">
+                    <Setter Property="Opacity" Value="Blue"/>
+                </DataTrigger>-->
+                <Trigger TargetType="cz:ListItemZero" Property="IsSelected" Value="True">
+                    <Setter Property="BackgroundColor" Value="Blue"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </ContentView.Resources>
 </ContentView>

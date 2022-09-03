@@ -1,4 +1,8 @@
-﻿namespace SampleApp
+﻿using FunctionZero.Maui.Controls;
+using Microsoft.Maui.Platform;
+using System.Diagnostics;
+
+namespace SampleApp
 {
     public partial class App : Application
     {

@@ -17,7 +17,9 @@ namespace FunctionZero.Maui.Controls
         {
             TemplateBinding f = new TemplateBinding();
 
-            BackgroundColor = Colors.Purple;
+            //BackgroundColor = Colors.Purple;
+
+            //Margin = new Thickness(4);
 
             SetBinding(BindingContextProperty, f);
         }

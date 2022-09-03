@@ -100,6 +100,12 @@ public partial class ListViewZero : ContentView
 
     public ListViewZero()
     {
+#if ANDROID
+
+PlatformClass1.ListViewZeroSetup();
+
+#endif
+
         _cache = new();
         _sw = new();
         _killList = new(50);
@@ -113,9 +119,17 @@ public partial class ListViewZero : ContentView
         this.GestureRecognizers.Add(pgr);
 
         var tgr = new TapGestureRecognizer();
-        tgr.Tapped += (s, e) => this.AbortAnimation("SimpleAnimation");
+        tgr.Tapped += Tgr_Tapped;
         this.GestureRecognizers.Add(tgr);
+
+        //var ttgr = new 
     }
+
+    private void Tgr_Tapped(object sender, EventArgs e)
+    {
+        this.AbortAnimation("SimpleAnimation");
+    }
+
     private void Canvas_SizeChanged(object sender, EventArgs e)
     {
         UpdateItemContainers();
@@ -269,6 +283,7 @@ public partial class ListViewZero : ContentView
                 float itemOffset = listItem.ItemIndex * ItemHeight - ScrollOffset;
                 listItem.BindingContext = ItemsSource[listItem.ItemIndex];
                 listItem.TranslationY = itemOffset;
+                listItem.WidthRequest = this.Width;
 
             }
             TestLabel.Text = $"Active: {canvas.Count}";
@@ -315,10 +330,24 @@ public partial class ListViewZero : ContentView
         }
 
         retVal.HeightRequest = ItemHeight;
-        retVal.WidthRequest = 200;
+        //retVal.WidthRequest = 200;
         //retVal.ItemIndex = itemIndex;
         //retVal.BindingContext = item;
 
         return retVal;
     }
+
+
+#if ANDROID
+    public void UpdateAndroidTouch(float x, float y)
+    {
+        foreach (View item in this.canvas)
+            if (item is ListItemZero listItem)
+                if ((listItem.TranslationY <= y) && (listItem.TranslationY >= (y - ItemHeight)))
+                {
+                    listItem.IsSelected = !listItem.IsSelected;
+                    return;
+                }
+    }
+#endif
 }
