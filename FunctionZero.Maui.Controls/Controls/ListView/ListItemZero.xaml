@@ -3,13 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
              x:Class="FunctionZero.Maui.Controls.ListItemZero"
-             BackgroundColor="CadetBlue"
              x:Name="Self"
              StyleClass="Local"
+             HorizontalOptions="FillAndExpand"
+
              >
-    <!--<ContentView.GestureRecognizers>
-        <TapGestureRecognizer Tapped="Tgr_Tapped"/>
-    </ContentView.GestureRecognizers>-->
     <ContentView.Resources>
         <Style TargetType="cz:ListItemZero" Class="Local">
             <Style.Triggers>

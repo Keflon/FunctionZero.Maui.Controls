@@ -48,7 +48,7 @@
 
         </HorizontalStackLayout>
         
-        <cz:ListViewZero x:Name="lv1" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding SampleListData}" ScrollOffset="{Binding ListViewScrollOffset, Mode=TwoWay}" ItemHeight="40">
+        <cz:ListViewZero BackgroundColor="Green" x:Name="lv1" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding SampleListData}" ScrollOffset="{Binding ListViewScrollOffset, Mode=TwoWay}" ItemHeight="40">
             <cz:ListViewZero.ItemTemplate>
                 <DataTemplate>
                     <HorizontalStackLayout Margin="2">

@@ -14,9 +14,7 @@ namespace FunctionZero.Maui.Controls
         public static void ListViewZeroSetup()
         {
             if (_instance == null)
-            {
                 _instance = new PlatformClass1();
-            }
         }
 
         private PlatformClass1()
