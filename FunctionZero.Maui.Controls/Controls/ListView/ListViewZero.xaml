@@ -9,7 +9,17 @@
         HorizontalOptions="FillAndExpand" 
         VerticalOptions="FillAndExpand" 
         IsClippedToBounds="True">
+
+        <AbsoluteLayout.Resources>
+            <Style TargetType="AbsoluteLayout">
+            <Style.Setters>
+                <Setter Property="BackgroundColor" Value="AliceBlue"/>
+
+            </Style.Setters>
+            </Style>
+        </AbsoluteLayout.Resources>
         <Label x:Name="TestLabel" />
+
     </AbsoluteLayout>
 </ContentView>
 <!--ZIndex breaks release build.-->

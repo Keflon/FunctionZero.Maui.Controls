@@ -35,6 +35,7 @@
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*,*" ColumnDefinitions="*,*">
+        
         <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="2">
             <Label 
                 Text="{Binding Count}"
@@ -48,7 +49,14 @@
 
         </HorizontalStackLayout>
         
-        <cz:ListViewZero BackgroundColor="Green" x:Name="lv1" Grid.Row="1" Grid.Column="0" ItemsSource="{Binding SampleListData}" ScrollOffset="{Binding ListViewScrollOffset, Mode=TwoWay}" ItemHeight="40">
+        <cz:ListViewZero 
+            x:Name="lv1" 
+            Grid.Row="1" 
+            Grid.Column="0" 
+            ItemsSource="{Binding SampleListData}" 
+            ScrollOffset="{Binding ListViewScrollOffset, Mode=TwoWay}" 
+            ItemHeight="40"
+            >
             <cz:ListViewZero.ItemTemplate>
                 <DataTemplate>
                     <HorizontalStackLayout Margin="2">
@@ -59,13 +67,21 @@
             </cz:ListViewZero.ItemTemplate>
         </cz:ListViewZero>
 
-        <cz:ListViewZero Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampleListData}" ScrollOffset="{Binding ScrollOffset, Mode=TwoWay, Source={x:Reference lv1}}" ItemHeight="40">
+        <!--<cz:ListViewZero Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampleListData}" ScrollOffset="{Binding ScrollOffset, Mode=TwoWay, Source={x:Reference lv1}}" ItemHeight="40">
             <cz:ListViewZero.ItemTemplate>
                 <DataTemplate>
                         <Label Text="{Binding Name}"/>
                 </DataTemplate>
             </cz:ListViewZero.ItemTemplate>
-        </cz:ListViewZero>
+        </cz:ListViewZero>-->
+
+        <CollectionView  Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampleListData}" SelectionMode="Single">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding Name}"/>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
 
 
         <!--<cz:TreeViewZero Grid.Row="1" Grid.Column="1"
