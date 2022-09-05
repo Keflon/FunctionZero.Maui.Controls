@@ -38,6 +38,32 @@ public partial class ListViewZero : ContentView
         self.UpdateItemContainers();
     }
 
+
+
+
+
+
+    public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(ListViewZero), null, BindingMode.TwoWay, null, SelectedItemChanged);
+
+    public object SelectedItem
+    {
+        get { return (object)GetValue(SelectedItemProperty); }
+        set { SetValue(SelectedItemProperty, value); }
+    }
+
+    private static void SelectedItemChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (ListViewZero)bindable;
+        self.UpdateItemContainers();
+    }
+
+
+
+
+
+
+
+
     private void Collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         if (_pendingUpdate == false)
