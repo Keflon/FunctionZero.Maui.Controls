@@ -4,6 +4,7 @@ using Microsoft.Maui.Controls;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace FunctionZero.Maui.Controls;
@@ -16,6 +17,8 @@ public partial class ListViewZero : ContentView
     private readonly List<ListItemZero> _killList;
     double _totalY = 0;
     bool _pendingUpdate = false;
+    double _animationDelta;
+    bool _updatingContainers = false;
 
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource), typeof(IList), typeof(ListViewZero), null, BindingMode.OneWay, null, ItemsSourceChanged);
 
@@ -30,18 +33,48 @@ public partial class ListViewZero : ContentView
         var self = (ListViewZero)bindable;
 
         if (oldValue is INotifyCollectionChanged oldCollection)
-            oldCollection.CollectionChanged -= self.Collection_CollectionChanged;
+            oldCollection.CollectionChanged -= self.ItemsSource_CollectionChanged;
 
         if (newValue is INotifyCollectionChanged newCollection)
-            newCollection.CollectionChanged += self.Collection_CollectionChanged;
+            newCollection.CollectionChanged += self.ItemsSource_CollectionChanged;
 
         self.UpdateItemContainers();
     }
 
+    public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create(nameof(SelectedItems), typeof(IList), typeof(ListViewZero), new List<object>(), BindingMode.TwoWay, null, SelectedItemsChanged);
 
+    public IList SelectedItems
+    {
+        get { return (IList)GetValue(SelectedItemsProperty); }
+        set { SetValue(SelectedItemsProperty, value); }
+    }
+    private static void SelectedItemsChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (ListViewZero)bindable;
 
+        if (oldValue is INotifyCollectionChanged oldCollection)
+            oldCollection.CollectionChanged -= self.SelectedItems_CollectionChanged;
 
+        if (newValue is INotifyCollectionChanged newCollection)
+            newCollection.CollectionChanged += self.SelectedItems_CollectionChanged;
 
+        self.UpdateItemContainers();
+    }
+
+    public static readonly BindableProperty SelectionModeProperty = BindableProperty.Create(nameof(SelectionMode), typeof(SelectionMode), typeof(ListViewZero), SelectionMode.Single, BindingMode.OneWay, null, SelectionModeChanged);
+
+    public SelectionMode SelectionMode
+    {
+        get { return (SelectionMode)GetValue(SelectionModeProperty); }
+        set { SetValue(SelectionModeProperty, value); }
+    }
+
+    private static void SelectionModeChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (ListViewZero)bindable;
+        
+        self.DeferredFilterAndUpdate();
+    }
 
     public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(ListViewZero), null, BindingMode.TwoWay, null, SelectedItemChanged);
 
@@ -54,29 +87,17 @@ public partial class ListViewZero : ContentView
     private static void SelectedItemChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (ListViewZero)bindable;
-        self.UpdateItemContainers();
-    }
 
-
-
-
-
-
-
-
-    private void Collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-    {
-        if (_pendingUpdate == false)
+        if (self.SelectionMode == SelectionMode.None)
         {
-            _pendingUpdate = true;
-            // The underlying collection can have items added / removed in a foreach,
-            // and this buffers that down to 1 call to UpdateItemContainers.
-            Dispatcher.Dispatch(() =>
-            {
-                UpdateItemContainers();
-                _pendingUpdate = false;
-            }
-            );
+            self.SelectedItem = null;
+        }
+        else
+        {
+            var newContainer = self.GetViewForBindingContextFromCanvas(newValue);
+
+            if (newContainer is ListItemZero listItem)
+                listItem.IsSelected = true;
         }
     }
 
@@ -124,6 +145,58 @@ public partial class ListViewZero : ContentView
         set { SetValue(ItemHeightProperty, value); }
     }
 
+
+    private void ItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        DeferredFilterAndUpdate();
+    }
+
+    private void DeferredFilterAndUpdate()
+    {
+        if (_pendingUpdate == false)
+        {
+            _pendingUpdate = true;
+            // The underlying collection can have items added / removed in a foreach,
+            // and this buffers that down to 1 call to UpdateItemContainers.
+            Dispatcher.Dispatch(() =>
+            {
+                switch (SelectionMode)
+                {
+                    case SelectionMode.None:
+                        SelectedItems.Clear();
+                        break;
+                    case SelectionMode.Single:
+                        if (SelectedItems.Count > 1)
+                        {
+                            var temp = SelectedItems[SelectedItems.Count - 1];
+                            SelectedItems.Clear();
+                            SelectedItems.Add(temp);
+                        }
+                        break;
+                    case SelectionMode.Multiple:
+                        break;
+                }
+
+                if (SelectedItems.Contains(SelectedItem) == false)
+                {
+                    if (SelectedItems.Count > 0)
+                        SelectedItem = SelectedItems[SelectedItems.Count - 1];
+                    else
+                        SelectedItem = null;
+                }
+
+                UpdateItemContainers();
+                _pendingUpdate = false;
+            }
+            );
+        }
+    }
+
+    private void SelectedItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+        DeferredFilterAndUpdate();
+    }
+
     public ListViewZero()
     {
 #if ANDROID
@@ -148,7 +221,7 @@ PlatformClass1.ListViewZeroSetup();
         tgr.Tapped += Tgr_Tapped;
         this.GestureRecognizers.Add(tgr);
 
-        //var ttgr = new 
+        SelectedItems = new ObservableCollection<object>();
     }
 
     private void Tgr_Tapped(object sender, EventArgs e)
@@ -196,7 +269,6 @@ PlatformClass1.ListViewZeroSetup();
                 break;
         }
     }
-    double _animationDelta;
     private void PanAnimate(double elapsed)
     {
         this.ScrollOffset += (float)(_animationDelta * elapsed);
@@ -247,12 +319,19 @@ PlatformClass1.ListViewZeroSetup();
 
     private void UpdateItemContainers()
     {
-
         if (canvas.Height <= 0)
             return;
 
         if (ItemsSource == null)
             return;
+
+        if (_updatingContainers == true)
+        {
+            Debug.WriteLine("Gotcha!");
+            //return;
+        }
+
+        _updatingContainers = true;
 
         // Find the first item that is to be in view
         int firstVisibleIndex = Math.Max(0, (int)(ScrollOffset / ItemHeight));
@@ -280,6 +359,10 @@ PlatformClass1.ListViewZeroSetup();
             {
                 itemContainer = GetView(ItemsSource[c]);
                 itemContainer.BindingContext = null;
+                // To prevent the property-changed callback calling this method, 
+                // set IsSelected *before* adding to the canvas.
+                itemContainer.IsSelected = (SelectedItem == ItemsSource[c]) || (SelectedItems.Contains(ItemsSource[c]));
+
                 canvas.Add(itemContainer);
                 itemContainer.BindingContext = ItemsSource[c];
             }
@@ -298,6 +381,7 @@ PlatformClass1.ListViewZeroSetup();
             //item.BindingContext = null;
             canvas.Remove(item);
             item.ClearValue(ListItemZero.BindingContextProperty);
+            item.IsSelected = false;
             _cache.PushToBucket(item.ItemTemplate, item);
         }
 
@@ -311,9 +395,22 @@ PlatformClass1.ListViewZeroSetup();
                 listItem.TranslationY = itemOffset;
                 listItem.WidthRequest = this.Width;
 
+                listItem.IsSelected = SelectedItems.Contains(listItem.BindingContext);
+
+                listItem.IsPrimary = listItem.BindingContext == SelectedItem;
+
+                //listItem.IsSelected = 
+                //(SelectedItem == listItem.BindingContext)
+                //||
+                //(
+                //    (SelectionMode == SelectionMode.Multiple)
+                //    &&
+                //    (SelectedItems.Contains(listItem.BindingContext))
+                //);
             }
             TestLabel.Text = $"Active: {canvas.Count}";
         }
+        _updatingContainers = false;
     }
     private ListItemZero GetViewForBindingContextFromCanvas(object bindingContext)
     {
@@ -351,6 +448,9 @@ PlatformClass1.ListViewZeroSetup();
 
             retVal.ItemTemplate = template;
             retVal.Content = (View)template.CreateContent();
+
+            retVal.PropertyChanged += ListItemZero_PropertyChanged;
+
             //retVal.BindingContext = null;       // Stop it inheriting an unsuitable value.
 
         }
@@ -363,6 +463,47 @@ PlatformClass1.ListViewZeroSetup();
         return retVal;
     }
 
+    private void ListItemZero_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(ListItemZero.IsSelected))
+        {
+            if (_updatingContainers == false)
+            {
+                var listItem = (ListItemZero)sender;
+
+                if (listItem.BindingContext != null)
+                {
+                    if (SelectionMode != SelectionMode.None)
+                    {
+                        if (listItem.IsSelected)
+                        {
+                            // Adding to SelectedItems will cause a deferred update.
+                            // SelectedItem must be set prior to that call.
+                            SelectedItem = listItem.BindingContext;
+                            SelectedItems.Add(listItem.BindingContext);
+
+                        }
+
+                        else
+                        {
+                            SelectedItems.Remove(listItem.BindingContext);
+                            if (SelectedItem == listItem.BindingContext)
+                            {
+                                if (SelectedItems?.Count > 0)
+                                    SelectedItem = SelectedItems[SelectedItems.Count - 1];
+                                else
+                                    SelectedItem = null;
+                            }
+
+                        }
+                        //UpdateItemContainers();
+                    }
+                    else
+                        listItem.IsSelected = false;
+                }
+            }
+        }
+    }
 
 #if ANDROID
     public void UpdateAndroidTouch(float x, float y)

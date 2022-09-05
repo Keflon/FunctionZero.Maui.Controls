@@ -26,21 +26,34 @@ public partial class ListItemZero : ContentView
     public int ItemIndex { get; set; }
 	public DataTemplate ItemTemplate { get; set; }
 
-    public static readonly BindableProperty IsSelectedProperty = BindableProperty.Create(nameof(IsSelected), typeof(bool), typeof(ListItemZero), false, BindingMode.TwoWay, null, IsSelectedChanged);
-
-    private static async void IsSelectedChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var self = (ListItemZero)bindable;
-        
-        Debug.WriteLine($"IsSelected:{self.IsSelected}");
-
-        self.RotateTo(360).ContinueWith(async (t) => self.RotateTo(0));
-
-    }
+    public static readonly BindableProperty IsSelectedProperty = BindableProperty.Create(nameof(IsSelected), typeof(bool), typeof(ListItemZero), false, BindingMode.OneWay, null, IsSelectedChanged);
 
     public bool IsSelected
     {
         get { return (bool)GetValue(IsSelectedProperty); }
         set { SetValue(IsSelectedProperty, value); }
+    }    
+    
+    private static async void IsSelectedChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (ListItemZero)bindable;
+        
+        Debug.WriteLine($"IsSelected:{self.IsSelected}");
     }
+
+    public static readonly BindableProperty IsPrimaryProperty = BindableProperty.Create(nameof(IsPrimary), typeof(bool), typeof(ListItemZero), false, BindingMode.OneWay, null, IsPrimaryChanged);
+
+    public bool IsPrimary
+    {
+        get { return (bool)GetValue(IsPrimaryProperty); }
+        set { SetValue(IsPrimaryProperty, value); }
+    }
+
+    private static async void IsPrimaryChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (ListItemZero)bindable;
+
+        Debug.WriteLine($"IsSelected:{self.IsSelected}");
+    }
+
 }

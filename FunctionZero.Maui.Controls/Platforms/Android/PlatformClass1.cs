@@ -9,6 +9,7 @@ namespace FunctionZero.Maui.Controls
     {
         private float _touchX;
         private float _touchY;
+        private float _offset;
         private bool _tapTouchCandidate;
         private static PlatformClass1 _instance;
         public static void ListViewZeroSetup()
@@ -32,29 +33,33 @@ namespace FunctionZero.Maui.Controls
         {
             Debug.WriteLine(e.Event.Action);
 
+
             switch (e.Event.Action)
             {
                 case MotionEventActions.Down:
                     _touchX = e.Event.GetX();
                     _touchY = e.Event.GetY();
+                    _offset = sender.ScrollOffset;
                     _tapTouchCandidate = true;
                     break;
 
                 case MotionEventActions.Move:
-                    if ((Math.Abs(e.Event.GetX()-_touchX) > 20) && (Math.Abs(e.Event.GetY()-_touchY) > 20))
+                    if ((Math.Abs(e.Event.GetX() - _touchX) > 20) && (Math.Abs(e.Event.GetY() - _touchY) > 20))
                         _tapTouchCandidate = false;
                     break;
 
                 case MotionEventActions.Up:
-                    if (_tapTouchCandidate)
-                    {
-                        var point = new PointF(
-                            _touchX / (float)DeviceDisplay.MainDisplayInfo.Density,
-                            _touchY / (float)DeviceDisplay.MainDisplayInfo.Density);
+                    // Don't send a touch notification if the ListView has scrolled.
+                    if (sender.ScrollOffset == _offset)
+                        if (_tapTouchCandidate)
+                        {
+                            var point = new PointF(
+                                _touchX / (float)DeviceDisplay.MainDisplayInfo.Density,
+                                _touchY / (float)DeviceDisplay.MainDisplayInfo.Density);
 
 
-                        sender.UpdateAndroidTouch(point.X, point.Y);
-                    }
+                            sender.UpdateAndroidTouch(point.X, point.Y);
+                        }
                     break;
                 case MotionEventActions.Cancel:
                 default:

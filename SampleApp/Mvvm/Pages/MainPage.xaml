@@ -53,7 +53,10 @@
             x:Name="lv1" 
             Grid.Row="1" 
             Grid.Column="0" 
+            SelectedItem="{Binding SelectedItem}"
             ItemsSource="{Binding SampleListData}" 
+            SelectedItems="{Binding SelectedItems}"
+            SelectionMode="None"
             ScrollOffset="{Binding ListViewScrollOffset, Mode=TwoWay}" 
             ItemHeight="40"
             >

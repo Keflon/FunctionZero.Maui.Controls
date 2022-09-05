@@ -6,8 +6,9 @@
              x:Name="Self"
              StyleClass="Local"
              HorizontalOptions="FillAndExpand"
-
+             BackgroundColor="Transparent"
              >
+    <!--TODO: Set BackgroundColor from a style, so it can be 'put back' by the Setter below on iOS. Or see if next MAUI fixes the bug.-->
     <ContentView.Resources>
         <Style TargetType="cz:ListItemZero" Class="Local">
             <Style.Triggers>
@@ -15,7 +16,10 @@
                     <Setter Property="Opacity" Value="Blue"/>
                 </DataTrigger>-->
                 <Trigger TargetType="cz:ListItemZero" Property="IsSelected" Value="True">
-                    <Setter Property="BackgroundColor" Value="Blue"/>
+                    <Setter Property="BackgroundColor" Value="Cyan"/>
+                </Trigger>
+                <Trigger TargetType="cz:ListItemZero" Property="IsPrimary" Value="True">
+                    <Setter Property="Scale" Value="1.1"/>
                 </Trigger>
             </Style.Triggers>
         </Style>

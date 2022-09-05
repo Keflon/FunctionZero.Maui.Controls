@@ -5,7 +5,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,6 +30,20 @@ namespace SampleApp.Mvvm.PageViewModels
         {
             get => _listDance;
             set => SetProperty(ref _listDance, value);
+        }
+
+        private ListItem _selectedItem;
+        public ListItem SelectedItem
+        {
+            get => _selectedItem;
+            set => SetProperty(ref _selectedItem, value);
+        }
+
+        private ObservableCollection<ListItem> _selectedItems;
+        public ObservableCollection<ListItem> SelectedItems
+        {
+            get => _selectedItems;
+            set => SetProperty(ref _selectedItems, value);
         }
 
         private float _listViewScrollOffset;
@@ -84,8 +100,8 @@ namespace SampleApp.Mvvm.PageViewModels
             for (int c = 0; c < 400; c++)
                 SampleListData.Add(new ListItem($"Hello {c}", (float)110.0 + (float)Math.Sin(c / 9.0) * 40));
 
-
-
+            SelectedItems = new ObservableCollection<ListItem>();
+            SelectedItems.CollectionChanged += (sender, e) => { Debug.WriteLine($"VM Count:{SelectedItems.Count}"); };
 
             SampleTemplateTestData = new LevelZero("Root") { IsLevelZeroExpanded = true };
 
@@ -93,6 +109,11 @@ namespace SampleApp.Mvvm.PageViewModels
             //Device.StartTimer(TimeSpan.FromMilliseconds(15), Tick);
 
             Device.StartTimer(TimeSpan.FromMilliseconds(20), Tick2);
+
+
+            Task.Delay(1500).ContinueWith((d) => SelectedItem = (ListItem)SampleListData[4]);
+            Task.Delay(2000).ContinueWith((d) => SelectedItem = (ListItem)SampleListData[5]);
+            Task.Delay(2500).ContinueWith((d) => SelectedItem = (ListItem)SampleListData[6]);
 
         }
 
@@ -117,12 +138,28 @@ namespace SampleApp.Mvvm.PageViewModels
 
             return true;
 
-#else
+#elif false
 
             //var scale = (Math.Sin(_listCount / 223.0 * Math.Cos(_listCount / 337.0))) / 2.0 + 1.0;
             var scale = Math.Sin(_listCount / 223.0) / 2.0 + 1.0;
             ListViewScrollOffset = (float)scale * SampleListData.Count * 25;
 
+#elif true
+
+            if ((_listCount % 16) == 0)
+                for (int c = 0; c < 8; c++)
+                {
+                    if (((_listCount>>4) & (1 << c)) != 0)
+                    {
+                        if (SelectedItems.Contains(SampleListData[c + 10]) == false)
+                            SelectedItems.Add((ListItem)SampleListData[c + 10]);
+                    }
+                    else
+                    {
+                        if (SelectedItems.Contains(SampleListData[c + 10]) == true)
+                            SelectedItems.Remove((ListItem)SampleListData[c + 10]);
+                    }
+                }
 #endif
             _listCount++;
             return true;
@@ -222,6 +259,17 @@ namespace SampleApp.Mvvm.PageViewModels
             var retval = new List<object>();
             retval.Add(root);
             return retval;
+        }
+
+
+        protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            base.OnPropertyChanged(propertyName);
+
+            if (propertyName == nameof(SelectedItem))
+            {
+                Debug.WriteLine($"SelectedItem:{(SelectedItem?.Name ?? "null")}");
+            }
         }
     }
 }
