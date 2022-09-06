@@ -53,6 +53,20 @@ namespace SampleApp.Mvvm.PageViewModels
             set => SetProperty(ref _listViewScrollOffset, value);
         }
 
+        public class PickerStuff
+        {
+            public PickerStuff(string name, SelectionMode mode)
+            {
+                Name = name;
+                Mode = mode;
+            }
+
+            public string Name { get; }
+            public SelectionMode Mode { get; }
+        }
+
+        public List<PickerStuff> PickerData { get; }
+
         public class ListItem : INotifyPropertyChanged
         {
             private string _name;
@@ -102,6 +116,13 @@ namespace SampleApp.Mvvm.PageViewModels
 
             SelectedItems = new ObservableCollection<ListItem>();
             SelectedItems.CollectionChanged += (sender, e) => { Debug.WriteLine($"VM Count:{SelectedItems.Count}"); };
+
+            PickerData = new()
+            {
+                new PickerStuff("None", SelectionMode.None),
+                new PickerStuff("Single", SelectionMode.Single),
+                new PickerStuff("Multiple", SelectionMode.Multiple),
+            };
 
             SampleTemplateTestData = new LevelZero("Root") { IsLevelZeroExpanded = true };
 

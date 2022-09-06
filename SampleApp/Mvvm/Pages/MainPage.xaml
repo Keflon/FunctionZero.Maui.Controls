@@ -46,7 +46,9 @@
             <Switch IsToggled="{Binding ListDance}"/>
             <Label Text="TreeDance"/>
             <Switch IsToggled="{Binding TreeDance}"/>
+            <Picker x:Name="SelectionModePicker" Title="Mode" ItemsSource="{Binding PickerData}" ItemDisplayBinding="{Binding Name}" >
 
+            </Picker>
         </HorizontalStackLayout>
         
         <cz:ListViewZero 
@@ -56,7 +58,7 @@
             SelectedItem="{Binding SelectedItem}"
             ItemsSource="{Binding SampleListData}" 
             SelectedItems="{Binding SelectedItems}"
-            SelectionMode="None"
+            SelectionMode="{Binding SelectedItem.Mode, Source={x:Reference SelectionModePicker}}"
             ScrollOffset="{Binding ListViewScrollOffset, Mode=TwoWay}" 
             ItemHeight="40"
             >
