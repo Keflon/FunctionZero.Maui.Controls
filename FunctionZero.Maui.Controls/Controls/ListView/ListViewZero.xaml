@@ -10,15 +10,16 @@
         VerticalOptions="FillAndExpand" 
         IsClippedToBounds="True">
 
-        <AbsoluteLayout.Resources>
+        <!--<AbsoluteLayout.Resources>
             <Style TargetType="AbsoluteLayout">
             <Style.Setters>
-                <Setter Property="BackgroundColor" Value="AliceBlue"/>
+                <Setter Property="BackgroundColor" Value="Transparent"/>
 
             </Style.Setters>
             </Style>
-        </AbsoluteLayout.Resources>
-        <Label x:Name="TestLabel" />
+        </AbsoluteLayout.Resources>-->
+        
+        <!--<Label x:Name="TestLabel" />-->
 
     </AbsoluteLayout>
 </ContentView>

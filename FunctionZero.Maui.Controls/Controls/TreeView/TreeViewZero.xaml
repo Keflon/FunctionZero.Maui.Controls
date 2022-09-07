@@ -12,6 +12,7 @@
 
             <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" >
 
+                <!--The ControlTemplate sets the BindingContext to "{Binding Source={RelativeSource TemplatedParent}}" for us-->
                 <cz:TreeNodeSpacer />
 
                 <cz:Chevron
@@ -19,7 +20,6 @@
                     ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
                     />
 
-                <!--<ContentPresenter VerticalOptions="Start" x:Name="tcp" HorizontalOptions="StartAndExpand"  />-->
                 <cz:TreeContentPresenter 
                     VerticalOptions="Fill" 
                     x:Name="tcp" 
@@ -30,7 +30,7 @@
         </ControlTemplate>
 
         <!--This Style can be replaced in the resource dictionary by code-behind that tracks self.TreeItemContainerStyle-->
-        <Style x:Name ="ListItemStyle" TargetType="cz:ListItemZero">
+        <Style x:Name ="ListItemStyle" TargetType="cz:ListItemZero" Class="Local">
             <Setter Property="ControlTemplate" Value="{StaticResource defaultControlTemplate}"/>
         </Style>
 

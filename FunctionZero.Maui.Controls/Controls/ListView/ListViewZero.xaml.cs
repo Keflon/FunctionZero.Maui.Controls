@@ -41,7 +41,7 @@ public partial class ListViewZero : ContentView
         self.UpdateItemContainers();
     }
 
-    public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create(nameof(SelectedItems), typeof(IList), typeof(ListViewZero), new List<object>(), BindingMode.TwoWay, null, SelectedItemsChanged);
+    public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create(nameof(SelectedItems), typeof(IList), typeof(ListViewZero), null, BindingMode.TwoWay, null, SelectedItemsChanged);
 
     public IList SelectedItems
     {
@@ -61,7 +61,7 @@ public partial class ListViewZero : ContentView
         self.UpdateItemContainers();
     }
 
-    public static readonly BindableProperty SelectionModeProperty = BindableProperty.Create(nameof(SelectionMode), typeof(SelectionMode), typeof(ListViewZero), SelectionMode.Single, BindingMode.OneWay, null, SelectionModeChanged);
+    public static readonly BindableProperty SelectionModeProperty = BindableProperty.Create(nameof(SelectionMode), typeof(SelectionMode), typeof(ListViewZero), SelectionMode.None, BindingMode.OneWay, null, SelectionModeChanged);
 
     public SelectionMode SelectionMode
     {
@@ -408,7 +408,7 @@ PlatformClass1.ListViewZeroSetup();
                 //    (SelectedItems.Contains(listItem.BindingContext))
                 //);
             }
-            TestLabel.Text = $"Active: {canvas.Count}";
+            //TestLabel.Text = $"Active: {canvas.Count}";
         }
         _updatingContainers = false;
     }

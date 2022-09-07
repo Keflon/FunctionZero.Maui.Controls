@@ -8,19 +8,26 @@
              HorizontalOptions="FillAndExpand"
              BackgroundColor="Transparent"
              >
-    <!--TODO: Set BackgroundColor from a style, so it can be 'put back' by the Setter below on iOS. Or see if next MAUI fixes the bug.-->
+    <!--
+    NOTE: If BackgroundColor is not set to *something* the DataTrigger cannot put back the original color when it is not active.
+    NOTE: Is this a MAUIBUG? Surely the Trigger ought to put back the default value if none is specified?
+    -->
     <ContentView.Resources>
-        <Style TargetType="cz:ListItemZero" Class="Local">
+        <!--<Style TargetType="cz:ListItemZero" Class="Local">-->
+            <Style TargetType="cz:ListItemZero">
             <Style.Triggers>
                 <!--<DataTrigger TargetType="cz:ListItemZero" Binding="{Binding IsSelected, Source={x:Reference Self}}" Value="True">
                     <Setter Property="Opacity" Value="Blue"/>
                 </DataTrigger>-->
                 <Trigger TargetType="cz:ListItemZero" Property="IsSelected" Value="True">
-                    <Setter Property="BackgroundColor" Value="Cyan"/>
+                    <Setter Property="BackgroundColor" Value="AliceBlue"/>
+                </Trigger>
+                <!--<Trigger TargetType="cz:ListItemZero" Property="IsSelected" Value="False">
+                    <Setter Property="BackgroundColor" Value="Transparent"/>
                 </Trigger>
                 <Trigger TargetType="cz:ListItemZero" Property="IsPrimary" Value="True">
-                    <Setter Property="Scale" Value="1.1"/>
-                </Trigger>
+                    <Setter Property="BackgroundColor" Value="Cyan"/>
+                </Trigger>-->
             </Style.Triggers>
         </Style>
     </ContentView.Resources>

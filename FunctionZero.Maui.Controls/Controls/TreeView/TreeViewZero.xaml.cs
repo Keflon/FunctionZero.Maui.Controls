@@ -63,7 +63,7 @@ namespace FunctionZero.Maui.Controls
             var self = (TreeViewZero)bindable;
         }
 
-        public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create(nameof(SelectedItems), typeof(IList), typeof(TreeViewZero), new List<object>(), BindingMode.TwoWay, null, SelectedItemsChanged);
+        public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create(nameof(SelectedItems), typeof(IList), typeof(TreeViewZero), null, BindingMode.TwoWay, null, SelectedItemsChanged);
 
         public IList SelectedItems
         {
@@ -75,7 +75,7 @@ namespace FunctionZero.Maui.Controls
             var self = (TreeViewZero)bindable;
         }
 
-        public static readonly BindableProperty SelectionModeProperty = BindableProperty.Create(nameof(SelectionMode), typeof(SelectionMode), typeof(TreeViewZero), SelectionMode.Single, BindingMode.OneWay, null, SelectionModeChanged);
+        public static readonly BindableProperty SelectionModeProperty = BindableProperty.Create(nameof(SelectionMode), typeof(SelectionMode), typeof(TreeViewZero), SelectionMode.None, BindingMode.TwoWay, null, SelectionModeChanged);
 
         public SelectionMode SelectionMode
         {
@@ -91,6 +91,7 @@ namespace FunctionZero.Maui.Controls
         public TreeViewZero()
         {
             InitializeComponent();
+            SelectedItems = new ObservableCollection<object>();
         }
 
         public static readonly BindableProperty TreeItemTemplateProperty = BindableProperty.Create("TreeItemTemplate", typeof(TemplateProvider), typeof(TreeViewZero), null, propertyChanged: OnItemTemplateChanged);

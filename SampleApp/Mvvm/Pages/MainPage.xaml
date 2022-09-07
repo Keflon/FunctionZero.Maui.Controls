@@ -46,7 +46,7 @@
             <Switch IsToggled="{Binding ListDance}"/>
             <Label Text="TreeDance"/>
             <Switch IsToggled="{Binding TreeDance}"/>
-            <Picker x:Name="SelectionModePicker" Title="Mode" ItemsSource="{Binding PickerData}" ItemDisplayBinding="{Binding Name}" >
+            <Picker x:Name="SelectionModePicker" Title="Modes" ItemsSource="{Binding PickerData}" ItemDisplayBinding="{Binding Name}">
 
             </Picker>
         </HorizontalStackLayout>
@@ -109,8 +109,9 @@
         <cz:TreeViewZero x:Name="multiTemplateTree"
             ItemHeight="20"
             ScrollOffset="{Binding TreeViewScrollOffset, Mode=TwoWay}" 
-            SelectionMode="Single"
-            IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" Grid.Column="0"  BackgroundColor="AliceBlue" ItemsSource="{Binding SampleTemplateTestData}" IndentMultiplier="20" >
+            SelectionMode="{Binding SelectedItem.Mode, Source={x:Reference SelectionModePicker}}"
+
+            IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" Grid.Column="0"  ItemsSource="{Binding SampleTemplateTestData}" IndentMultiplier="20" >
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeItemDataTemplateSelector>
                     <cz:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
@@ -169,7 +170,7 @@
         -->
 
 
-        <cz:ListViewZero 
+        <!--<cz:ListViewZero 
             Grid.Row="2" 
             Grid.Column="1" 
         ItemsSource="{Binding TreeChildren, Source={x:Reference multiTemplateTree}}"
@@ -186,7 +187,7 @@
                     </HorizontalStackLayout>
                 </DataTemplate>
             </cz:ListViewZero.ItemTemplate>
-        </cz:ListViewZero>
+        </cz:ListViewZero>-->
 
         <!--<cz:TreeViewZero 
             x:Name="tree12" 

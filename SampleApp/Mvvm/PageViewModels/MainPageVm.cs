@@ -192,7 +192,6 @@ namespace SampleApp.Mvvm.PageViewModels
 #endif
             _listCount++;
             return true;
-
         }
 
         private int _count;
