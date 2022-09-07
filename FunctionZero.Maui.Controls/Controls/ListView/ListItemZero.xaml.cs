@@ -1,12 +1,13 @@
+using Microsoft.Maui.Controls;
 using System.Diagnostics;
 
 namespace FunctionZero.Maui.Controls;
 
 public partial class ListItemZero : ContentView
 {
-	public ListItemZero()
-	{
-		InitializeComponent();
+    public ListItemZero()
+    {
+        InitializeComponent();
 
         _usePlatformSpecificTgr = PlatformSetup.TryHookPlatformTouch();
 
@@ -19,15 +20,15 @@ public partial class ListItemZero : ContentView
     }
 
     private void Tgr_Tapped(object sender, EventArgs e)
-	{
+    {
         Debug.Assert(_usePlatformSpecificTgr == false);
 
-		IsSelected = !IsSelected;
+        IsSelected = !IsSelected;
         Debug.WriteLine($"IsSelected:{IsSelected}");
-	}
+    }
 
     public int ItemIndex { get; set; }
-	public DataTemplate ItemTemplate { get; set; }
+    public DataTemplate ItemTemplate { get; set; }
 
     public static readonly BindableProperty IsSelectedProperty = BindableProperty.Create(nameof(IsSelected), typeof(bool), typeof(ListItemZero), false, BindingMode.OneWay, null, IsSelectedChanged);
 
@@ -35,13 +36,15 @@ public partial class ListItemZero : ContentView
     {
         get { return (bool)GetValue(IsSelectedProperty); }
         set { SetValue(IsSelectedProperty, value); }
-    }    
-    
+    }
+
     private static async void IsSelectedChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (ListItemZero)bindable;
-        
+
         Debug.WriteLine($"IsSelected:{self.IsSelected}");
+
+        self.UpdateVisualState();
     }
 
     public static readonly BindableProperty IsPrimaryProperty = BindableProperty.Create(nameof(IsPrimary), typeof(bool), typeof(ListItemZero), false, BindingMode.OneWay, null, IsPrimaryChanged);
@@ -58,6 +61,18 @@ public partial class ListItemZero : ContentView
         var self = (ListItemZero)bindable;
 
         Debug.WriteLine($"IsSelected:{self.IsSelected}");
+
+        self.UpdateVisualState();
+
     }
 
+    private void UpdateVisualState()
+    {
+        if (IsPrimary)
+            VisualStateManager.GoToState(this, "Focused");
+        else if (IsSelected)
+            VisualStateManager.GoToState(this, "Selected");
+        else
+            VisualStateManager.GoToState(this, "Normal");
+    }
 }

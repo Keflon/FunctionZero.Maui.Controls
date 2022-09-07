@@ -14,6 +14,7 @@
 
                 <!--The ControlTemplate sets the BindingContext to "{Binding Source={RelativeSource TemplatedParent}}" for us-->
                 <cz:TreeNodeSpacer />
+                <!--<cz:TreeNodeSpacer BindingContext="{Binding Source={RelativeSource TemplatedParent}}"/>-->
 
                 <cz:Chevron
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
@@ -45,6 +46,6 @@
             SelectedItem="{Binding SelectedItem, Source={x:Reference Self}, Mode=TwoWay}"
             SelectionMode="{Binding SelectionMode, Source={x:Reference Self}, Mode=TwoWay}"
             SelectedItems="{Binding SelectedItems, Source={x:Reference Self}, Mode=TwoWay}"
-        />
+         />
     </ContentView.Content>
 </ContentView>

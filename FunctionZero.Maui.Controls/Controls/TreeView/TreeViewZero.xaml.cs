@@ -175,8 +175,8 @@ namespace FunctionZero.Maui.Controls
         {
             var self = (TreeViewZero)bindable;
             //self.Resources["FunctionZero.Maui.Controls.TreeNodeZero.defaultControlTemplate"] = newValue;
-
-           self.ListItemStyle.Setters[0].Value = newValue;
+           
+            self.ListItemStyle.Setters[0].Value = newValue;
             
         }
 
