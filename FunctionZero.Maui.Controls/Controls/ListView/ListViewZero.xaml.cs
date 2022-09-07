@@ -503,7 +503,7 @@ public partial class ListViewZero : ContentView
     }
 
 
-    public void UpdateAndroidTouch(float x, float y)
+    public void ReceivePlatformTap(float x, float y)
     {
         Debug.Assert(_usePlatformSpecificTgr);
 

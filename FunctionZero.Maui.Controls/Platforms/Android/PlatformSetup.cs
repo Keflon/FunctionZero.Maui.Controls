@@ -11,22 +11,6 @@ namespace FunctionZero.Maui.Controls
         private float _touchY;
         private float _offset;
         private bool _tapTouchCandidate;
-
-
-        //partial void Setup()
-        //{
-        //    Microsoft.Maui.Handlers.ContentViewHandler.Mapper.AppendToMapping("ListViewZeroTouch", (handler, view) =>
-        //    {
-        //        if (view is ListViewZero listView)
-        //        {
-        //            handler.PlatformView.Touch += (s, e) => PlatformView_Touch(listView, e);
-        //        }
-        //    });
-
-        //    _setupSucceeded = true;
-        //}
-
-
         private PlatformSetup()
         {
             Microsoft.Maui.Handlers.ContentViewHandler.Mapper.AppendToMapping("ListViewZeroTouch", (handler, view) =>
@@ -42,7 +26,6 @@ namespace FunctionZero.Maui.Controls
         private void PlatformView_Touch(ListViewZero sender, Android.Views.View.TouchEventArgs e)
         {
             Debug.WriteLine(e.Event.Action);
-
 
             switch (e.Event.Action)
             {
@@ -68,7 +51,7 @@ namespace FunctionZero.Maui.Controls
                                 _touchY / (float)DeviceDisplay.MainDisplayInfo.Density);
 
 
-                            sender.UpdateAndroidTouch(point.X, point.Y);
+                            sender.ReceivePlatformTap(point.X, point.Y);
                         }
                     break;
                 case MotionEventActions.Cancel:
