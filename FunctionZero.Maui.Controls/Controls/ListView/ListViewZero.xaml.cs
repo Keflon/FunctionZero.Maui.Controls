@@ -12,6 +12,7 @@ namespace FunctionZero.Maui.Controls;
 public partial class ListViewZero : ContentView
 {
     float _anchor;
+    private readonly bool _usePlatformSpecificTgr;
     private BucketDictionary<DataTemplate, ListItemZero> _cache;
     Stopwatch _sw;
     private readonly List<ListItemZero> _killList;
@@ -196,14 +197,10 @@ public partial class ListViewZero : ContentView
     {
         DeferredFilterAndUpdate();
     }
-
+    public static bool _usePlatformTapRecognizer;
     public ListViewZero()
     {
-#if ANDROID
-
-PlatformClass1.ListViewZeroSetup();
-
-#endif
+        _usePlatformSpecificTgr = PlatformSetup.TryHookPlatformTouch();
 
         _cache = new();
         _sw = new();
@@ -505,9 +502,11 @@ PlatformClass1.ListViewZeroSetup();
         }
     }
 
-#if ANDROID
+
     public void UpdateAndroidTouch(float x, float y)
     {
+        Debug.Assert(_usePlatformSpecificTgr);
+
         foreach (View item in this.canvas)
             if (item is ListItemZero listItem)
                 if ((listItem.TranslationY <= y) && (listItem.TranslationY >= (y - ItemHeight)))
@@ -516,5 +515,4 @@ PlatformClass1.ListViewZeroSetup();
                     return;
                 }
     }
-#endif
 }

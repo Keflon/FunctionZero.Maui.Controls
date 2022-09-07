@@ -15,19 +15,38 @@
     <ContentView.Resources>
         <!--<Style TargetType="cz:ListItemZero" Class="Local">-->
             <Style TargetType="cz:ListItemZero">
-            <Style.Triggers>
-                <!--<DataTrigger TargetType="cz:ListItemZero" Binding="{Binding IsSelected, Source={x:Reference Self}}" Value="True">
+            <!--<Style.Triggers>
+                --><!--<DataTrigger TargetType="cz:ListItemZero" Binding="{Binding IsSelected, Source={x:Reference Self}}" Value="True">
                     <Setter Property="Opacity" Value="Blue"/>
-                </DataTrigger>-->
+                </DataTrigger>--><!--
                 <Trigger TargetType="cz:ListItemZero" Property="IsSelected" Value="True">
                     <Setter Property="BackgroundColor" Value="AliceBlue"/>
                 </Trigger>
-                <!--<Trigger TargetType="cz:ListItemZero" Property="IsSelected" Value="False">
+                --><!--<Trigger TargetType="cz:ListItemZero" Property="IsSelected" Value="False">
                     <Setter Property="BackgroundColor" Value="Transparent"/>
-                </Trigger>
+                </Trigger>--><!--
                 <Trigger TargetType="cz:ListItemZero" Property="IsPrimary" Value="True">
                     <Setter Property="BackgroundColor" Value="Cyan"/>
                 </Trigger>-->
+
+
+
+
+
+
+
+
+            <Style.Triggers>
+                <DataTrigger TargetType="cz:ListItemZero" Binding="{Binding IsSelected, Source={x:Reference Self}}" Value="True">
+                    <Setter Property="BackgroundColor" Value="AliceBlue"/>
+                </DataTrigger>
+                <DataTrigger TargetType="cz:ListItemZero" Binding="{Binding IsSelected, Source={x:Reference Self}}" Value="False">
+                    <Setter Property="BackgroundColor" Value="Transparent"/>
+                </DataTrigger>
+                <DataTrigger TargetType="cz:ListItemZero" Binding="{Binding IsPrimary, Source={x:Reference Self}}" Value="True">
+                    <Setter Property="BackgroundColor" Value="Cyan"/>
+                </DataTrigger>
+
             </Style.Triggers>
         </Style>
     </ContentView.Resources>

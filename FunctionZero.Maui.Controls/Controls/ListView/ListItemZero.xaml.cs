@@ -8,20 +8,23 @@ public partial class ListItemZero : ContentView
 	{
 		InitializeComponent();
 
-#if !ANDROID
-        var tgr = new TapGestureRecognizer();
-        tgr.Tapped += Tgr_Tapped;
-        this.GestureRecognizers.Add(tgr);
-#endif
+        _usePlatformSpecificTgr = PlatformSetup.TryHookPlatformTouch();
+
+        if (_usePlatformSpecificTgr == false)
+        {
+            var tgr = new TapGestureRecognizer();
+            tgr.Tapped += Tgr_Tapped;
+            this.GestureRecognizers.Add(tgr);
+        }
     }
 
-#if !ANDROID
     private void Tgr_Tapped(object sender, EventArgs e)
 	{
+        Debug.Assert(_usePlatformSpecificTgr == false);
+
 		IsSelected = !IsSelected;
         Debug.WriteLine($"IsSelected:{IsSelected}");
 	}
-#endif
 
     public int ItemIndex { get; set; }
 	public DataTemplate ItemTemplate { get; set; }
@@ -42,6 +45,7 @@ public partial class ListItemZero : ContentView
     }
 
     public static readonly BindableProperty IsPrimaryProperty = BindableProperty.Create(nameof(IsPrimary), typeof(bool), typeof(ListItemZero), false, BindingMode.OneWay, null, IsPrimaryChanged);
+    private readonly bool _usePlatformSpecificTgr;
 
     public bool IsPrimary
     {

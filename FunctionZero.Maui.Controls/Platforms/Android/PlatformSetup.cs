@@ -5,28 +5,38 @@ using System.Diagnostics;
 namespace FunctionZero.Maui.Controls
 {
     // All the code in this file is only included on Android.
-    public class PlatformClass1
+    public partial class PlatformSetup
     {
         private float _touchX;
         private float _touchY;
         private float _offset;
         private bool _tapTouchCandidate;
-        private static PlatformClass1 _instance;
-        public static void ListViewZeroSetup()
-        {
-            if (_instance == null)
-                _instance = new PlatformClass1();
-        }
 
-        private PlatformClass1()
+
+        //partial void Setup()
+        //{
+        //    Microsoft.Maui.Handlers.ContentViewHandler.Mapper.AppendToMapping("ListViewZeroTouch", (handler, view) =>
+        //    {
+        //        if (view is ListViewZero listView)
+        //        {
+        //            handler.PlatformView.Touch += (s, e) => PlatformView_Touch(listView, e);
+        //        }
+        //    });
+
+        //    _setupSucceeded = true;
+        //}
+
+
+        private PlatformSetup()
         {
-            Microsoft.Maui.Handlers.ContentViewHandler.Mapper.AppendToMapping("Barnaby", (handler, view) =>
+            Microsoft.Maui.Handlers.ContentViewHandler.Mapper.AppendToMapping("ListViewZeroTouch", (handler, view) =>
             {
                 if (view is ListViewZero listView)
                 {
                     handler.PlatformView.Touch += (s, e) => PlatformView_Touch(listView, e);
                 }
             });
+            _setupSucceeded = true;
         }
 
         private void PlatformView_Touch(ListViewZero sender, Android.Views.View.TouchEventArgs e)
