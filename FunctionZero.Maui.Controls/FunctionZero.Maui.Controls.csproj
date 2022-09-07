@@ -61,9 +61,6 @@ Performance improvement.</PackageReleaseNotes>
 	  <MauiXaml Update="Controls\ScrollBar\ScrollBarZero.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Controls\TreeView\TreeNodeZero.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Controls\TreeView\TreeViewZero.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

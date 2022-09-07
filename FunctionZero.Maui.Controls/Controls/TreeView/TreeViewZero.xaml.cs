@@ -27,6 +27,8 @@ namespace FunctionZero.Maui.Controls
         private static char[] _dot = new[] { '.' };
         private TreeItemsSourceManager<object> _rootContainer;
 
+        public IEnumerable TreeChildren => _rootContainer?.TreeNodeChildren;
+
         public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(float), typeof(TreeViewZero), (float)30.0, BindingMode.OneWay, null);
 
         public float ItemHeight
@@ -35,6 +37,56 @@ namespace FunctionZero.Maui.Controls
             set { SetValue(ItemHeightProperty, value); }
         }
 
+        public static readonly BindableProperty ScrollOffsetProperty = BindableProperty.Create(nameof(ScrollOffset), typeof(float), typeof(TreeViewZero), (float)0.0, BindingMode.OneWay, null, null, ScrollOffsetChanged);
+
+        public float ScrollOffset
+        {
+            get { return (float)GetValue(ScrollOffsetProperty); }
+            set { SetValue(ScrollOffsetProperty, value); }
+        }
+
+        private static void ScrollOffsetChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var self = (TreeViewZero)bindable;
+        }
+
+        public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(TreeViewZero), null, BindingMode.TwoWay, null, SelectedItemChanged);
+
+        public object SelectedItem
+        {
+            get { return (object)GetValue(SelectedItemProperty); }
+            set { SetValue(SelectedItemProperty, value); }
+        }
+
+        private static void SelectedItemChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var self = (TreeViewZero)bindable;
+        }
+
+        public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create(nameof(SelectedItems), typeof(IList), typeof(TreeViewZero), new List<object>(), BindingMode.TwoWay, null, SelectedItemsChanged);
+
+        public IList SelectedItems
+        {
+            get { return (IList)GetValue(SelectedItemsProperty); }
+            set { SetValue(SelectedItemsProperty, value); }
+        }
+        private static void SelectedItemsChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var self = (TreeViewZero)bindable;
+        }
+
+        public static readonly BindableProperty SelectionModeProperty = BindableProperty.Create(nameof(SelectionMode), typeof(SelectionMode), typeof(TreeViewZero), SelectionMode.Single, BindingMode.OneWay, null, SelectionModeChanged);
+
+        public SelectionMode SelectionMode
+        {
+            get { return (SelectionMode)GetValue(SelectionModeProperty); }
+            set { SetValue(SelectionModeProperty, value); }
+        }
+
+        private static void SelectionModeChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var self = (TreeViewZero)bindable;
+        }
 
         public TreeViewZero()
         {
@@ -83,6 +135,7 @@ namespace FunctionZero.Maui.Controls
                 self.TryAttach(self._rootContainer);
 
                 ((INotifyCollectionChanged)self._rootContainer.TreeNodeChildren).CollectionChanged += TreeViewZero_CollectionChanged;
+                self.OnPropertyChanged(nameof(TreeChildren));
             }
         }
 

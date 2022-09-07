@@ -53,6 +53,13 @@ namespace SampleApp.Mvvm.PageViewModels
             set => SetProperty(ref _listViewScrollOffset, value);
         }
 
+        private float _treeViewScrollOffset;
+        public float TreeViewScrollOffset
+        {
+            get => _treeViewScrollOffset;
+            set => SetProperty(ref _treeViewScrollOffset, value);
+        }
+
         public class PickerStuff
         {
             public PickerStuff(string name, SelectionMode mode)
@@ -167,10 +174,11 @@ namespace SampleApp.Mvvm.PageViewModels
 
 #elif true
 
-            if ((_listCount % 16) == 0)
+            //if ((_listCount % 16) == 0)
                 for (int c = 0; c < 8; c++)
                 {
-                    if (((_listCount>>4) & (1 << c)) != 0)
+                    //if (((_listCount>>4) & (1 << c)) != 0)
+                    if (((_listCount) & (1 << c)) != 0)
                     {
                         if (SelectedItems.Contains(SampleListData[c + 10]) == false)
                             SelectedItems.Add((ListItem)SampleListData[c + 10]);
@@ -198,6 +206,11 @@ namespace SampleApp.Mvvm.PageViewModels
             if (TreeDance == false)
                 return true;
 
+            //var scale = (Math.Sin(_listCount / 223.0 * Math.Cos(_listCount / 337.0))) / 2.0 + 1.0;
+            var scale = Math.Sin(Count / 2.0) / 2.0;
+            TreeViewScrollOffset = (float)scale * 100;
+            Count++;
+            return true;
             //IsRootVisible = (Count & 8)==0;
             if ((Count % 8) < 2)
             {
