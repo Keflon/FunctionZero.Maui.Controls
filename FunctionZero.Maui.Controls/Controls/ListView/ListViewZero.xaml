@@ -2,25 +2,50 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FunctionZero.Maui.Controls.ListViewZero" 
+             xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
              HorizontalOptions="FillAndExpand" 
              VerticalOptions="FillAndExpand" >
+
+    <ContentView.Resources>
+        <Style TargetType="cz:ListItemZero" >
+            <Setter Property="VisualStateManager.VisualStateGroups" >
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates" >
+
+                        <VisualState x:Name="Normal" >
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                        <VisualState x:Name="Focused">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Cyan" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="AliceBlue" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+        
+    </ContentView.Resources>
+    
     <AbsoluteLayout 
         x:Name="canvas" 
         HorizontalOptions="FillAndExpand" 
         VerticalOptions="FillAndExpand" 
-        IsClippedToBounds="True">
+        BackgroundColor="Transparent"
+        IsClippedToBounds="True"/>
 
-        <!--<AbsoluteLayout.Resources>
-            <Style TargetType="AbsoluteLayout">
-            <Style.Setters>
-                <Setter Property="BackgroundColor" Value="Transparent"/>
 
-            </Style.Setters>
-            </Style>
-        </AbsoluteLayout.Resources>-->
-        
-        <!--<Label x:Name="TestLabel" />-->
 
-    </AbsoluteLayout>
+
 </ContentView>
 <!--ZIndex breaks release build.-->

@@ -32,6 +32,33 @@
             <cz:TreeContentPresenter VerticalOptions="Fill" HorizontalOptions="StartAndExpand" BindingContext="{TemplateBinding BindingContext.Data}" />
         </ControlTemplate>
 
+        <Style x:Key="testItemStyle" TargetType="cz:ListItemZero">
+            <Setter Property="VisualStateManager.VisualStateGroups" >
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+
+                        <VisualState x:Name="Normal" >
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                        <VisualState x:Name="Focused">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Brown" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Grey" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*,*" ColumnDefinitions="*,*">
@@ -56,12 +83,14 @@
             Grid.Row="1" 
             Grid.Column="0" 
             SelectedItem="{Binding SelectedItem}"
-            ItemsSource="{Binding SampleListData}" 
+            ItemsSource="{Binding SampleListData}"
             SelectedItems="{Binding SelectedItems}"
             SelectionMode="{Binding SelectedItem.Mode, Source={x:Reference SelectionModePicker}}"
             ScrollOffset="{Binding ListViewScrollOffset, Mode=TwoWay}" 
             ItemHeight="40"
             >
+            <!--ItemContainerStyle="{StaticResource testItemStyle}"-->
+
             <cz:ListViewZero.ItemTemplate>
                 <DataTemplate>
                     <HorizontalStackLayout Margin="2">
@@ -110,8 +139,10 @@
             ItemHeight="20"
             ScrollOffset="{Binding TreeViewScrollOffset, Mode=TwoWay}" 
             SelectionMode="{Binding SelectedItem.Mode, Source={x:Reference SelectionModePicker}}"
+            ItemContainerStyle="{StaticResource testItemStyle}"
 
             IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" Grid.Column="0"  ItemsSource="{Binding SampleTemplateTestData}" IndentMultiplier="20" >
+            
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeItemDataTemplateSelector>
                     <cz:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">

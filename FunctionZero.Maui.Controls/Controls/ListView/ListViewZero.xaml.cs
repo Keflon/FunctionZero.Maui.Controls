@@ -147,6 +147,19 @@ public partial class ListViewZero : ContentView
     }
 
 
+    public static readonly BindableProperty ItemContainerStyleProperty = BindableProperty.Create(nameof(ItemContainerStyle), typeof(Style), typeof(ListViewZero), null, BindingMode.OneWay, null, ItemContainerStyleChanged);
+
+    public Style ItemContainerStyle
+    {
+        get { return (Style)GetValue(ItemContainerStyleProperty); }
+        set { SetValue(ItemContainerStyleProperty, value); }
+    }
+
+    private static void ItemContainerStyleChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (ListViewZero)bindable;
+    }
+
     private void ItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         DeferredFilterAndUpdate();
@@ -445,6 +458,9 @@ public partial class ListViewZero : ContentView
 
             retVal.ItemTemplate = template;
             retVal.Content = (View)template.CreateContent();
+
+            if(ItemContainerStyle != null)
+                retVal.Style = ItemContainerStyle;
 
             retVal.PropertyChanged += ListItemZero_PropertyChanged;
 

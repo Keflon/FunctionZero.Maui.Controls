@@ -44,11 +44,12 @@ public partial class ListItemZero : ContentView
 
         Debug.WriteLine($"IsSelected:{self.IsSelected}");
 
-        self.UpdateVisualState();
+        self.DeferredUpdateVisualState();
     }
 
     public static readonly BindableProperty IsPrimaryProperty = BindableProperty.Create(nameof(IsPrimary), typeof(bool), typeof(ListItemZero), false, BindingMode.OneWay, null, IsPrimaryChanged);
     private readonly bool _usePlatformSpecificTgr;
+    private bool _pendingUpdate;
 
     public bool IsPrimary
     {
@@ -56,14 +57,30 @@ public partial class ListItemZero : ContentView
         set { SetValue(IsPrimaryProperty, value); }
     }
 
-    private static async void IsPrimaryChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void IsPrimaryChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (ListItemZero)bindable;
 
         Debug.WriteLine($"IsSelected:{self.IsSelected}");
 
-        self.UpdateVisualState();
+        self.DeferredUpdateVisualState();
 
+    }
+
+    private void DeferredUpdateVisualState()
+    {
+        if (_pendingUpdate == false)
+        {
+            _pendingUpdate = true;
+            // This is called when either IsSelected changes or IsPrimary changes,
+            // and if both change, this buffers that down to 1 call to UpdateVisualState.
+            Dispatcher.Dispatch(() =>
+            {
+                UpdateVisualState();
+                _pendingUpdate = false;
+            }
+            );
+        }
     }
 
     private void UpdateVisualState()

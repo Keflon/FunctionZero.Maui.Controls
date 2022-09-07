@@ -188,6 +188,19 @@ namespace FunctionZero.Maui.Controls
             set { SetValue(IndentMultiplierProperty, value); }
         }
 
+        public static readonly BindableProperty ItemContainerStyleProperty = BindableProperty.Create(nameof(ItemContainerStyle), typeof(Style), typeof(TreeViewZero), null, BindingMode.OneWay, null, ItemContainerStyleChanged);
+
+        public Style ItemContainerStyle
+        {
+            get { return (Style)GetValue(ItemContainerStyleProperty); }
+            set { SetValue(ItemContainerStyleProperty, value); }
+        }
+
+        private static void ItemContainerStyleChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var self = (TreeViewZero)bindable;
+        }
+
         private static void TreeViewZero_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var thing = (ReadOnlyObservableCollection<TreeNodeContainer<object>>)sender;

@@ -56,7 +56,7 @@ namespace FunctionZero.Maui.Controls
                     break;
                 case MotionEventActions.Cancel:
                 default:
-                    _tapTouchCandidate = true;
+                    //_tapTouchCandidate = true;
                     break;
             }
         }

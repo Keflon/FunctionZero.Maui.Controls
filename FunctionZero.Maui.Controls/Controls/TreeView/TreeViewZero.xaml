@@ -2,7 +2,6 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
         xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
         xmlns:cz="clr-namespace:FunctionZero.Maui.Controls"
-        xmlns:converters="clr-namespace:FunctionZero.Maui.Converters"
         x:Class="FunctionZero.Maui.Controls.TreeViewZero"
     VerticalOptions="Fill"
     x:Name="Self">
@@ -14,7 +13,6 @@
 
                 <!--The ControlTemplate sets the BindingContext to "{Binding Source={RelativeSource TemplatedParent}}" for us-->
                 <cz:TreeNodeSpacer />
-                <!--<cz:TreeNodeSpacer BindingContext="{Binding Source={RelativeSource TemplatedParent}}"/>-->
 
                 <cz:Chevron
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
@@ -34,7 +32,6 @@
         <Style x:Name ="ListItemStyle" TargetType="cz:ListItemZero" Class="Local">
             <Setter Property="ControlTemplate" Value="{StaticResource defaultControlTemplate}"/>
         </Style>
-
     </ContentView.Resources>
 
     <ContentView.Content>
@@ -46,6 +43,9 @@
             SelectedItem="{Binding SelectedItem, Source={x:Reference Self}, Mode=TwoWay}"
             SelectionMode="{Binding SelectionMode, Source={x:Reference Self}, Mode=TwoWay}"
             SelectedItems="{Binding SelectedItems, Source={x:Reference Self}, Mode=TwoWay}"
+            ItemContainerStyle="{Binding ItemContainerStyle, Source={x:Reference Self}}"
          />
+        <!--ItemContainerStyle="{StaticResource Key=floop}"-->
+
     </ContentView.Content>
 </ContentView>
