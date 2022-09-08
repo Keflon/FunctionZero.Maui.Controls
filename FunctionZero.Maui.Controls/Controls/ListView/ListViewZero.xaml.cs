@@ -14,13 +14,11 @@ public partial class ListViewZero : ContentView
     float _anchor;
     private readonly bool _usePlatformSpecificTgr;
     private BucketDictionary<DataTemplate, ListItemZero> _cache;
-    Stopwatch _sw;
     private readonly List<ListItemZero> _killList;
-    double _totalY = 0;
     bool _pendingUpdate = false;
     double _animationDelta;
     bool _updatingContainers = false;
-
+    private ScrollVelocityManager _velocityManager;
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource), typeof(IList), typeof(ListViewZero), null, BindingMode.OneWay, null, ItemsSourceChanged);
 
     public IList ItemsSource
@@ -121,7 +119,13 @@ public partial class ListViewZero : ContentView
     private static void ScrollOffsetChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (ListViewZero)bindable;
-        self.UpdateItemContainers();
+
+        // TODO: Is the second one quicker on a slow Droid phone?
+        //self.UpdateItemContainers();
+
+
+
+        self.DeferredFilterAndUpdate();
     }
 
     public static readonly BindableProperty ScrollVelocityProperty = BindableProperty.Create(nameof(ScrollVelocity), typeof(double), typeof(ListViewZero), (double)0.0, BindingMode.OneWay, null, null, ScrollVelocityChanged);
@@ -135,7 +139,6 @@ public partial class ListViewZero : ContentView
     private static void ScrollVelocityChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (ListViewZero)bindable;
-
     }
 
     public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(float), typeof(ListViewZero), (float)40.0, BindingMode.OneWay, null);
@@ -145,7 +148,6 @@ public partial class ListViewZero : ContentView
         get { return (float)GetValue(ItemHeightProperty); }
         set { SetValue(ItemHeightProperty, value); }
     }
-
 
     public static readonly BindableProperty ItemContainerStyleProperty = BindableProperty.Create(nameof(ItemContainerStyle), typeof(Style), typeof(ListViewZero), null, BindingMode.OneWay, null, ItemContainerStyleChanged);
 
@@ -174,6 +176,7 @@ public partial class ListViewZero : ContentView
             // and this buffers that down to 1 call to UpdateItemContainers.
             Dispatcher.Dispatch(() =>
             {
+                // TODO: This switch statement could be better placed.
                 switch (SelectionMode)
                 {
                     case SelectionMode.None:
@@ -216,8 +219,8 @@ public partial class ListViewZero : ContentView
         _usePlatformSpecificTgr = PlatformSetup.TryHookPlatformTouch();
 
         _cache = new();
-        _sw = new();
         _killList = new(50);
+        _velocityManager = new(10);
 
         InitializeComponent();
 
@@ -225,10 +228,10 @@ public partial class ListViewZero : ContentView
 
         var pgr = new PanGestureRecognizer();
         pgr.PanUpdated += Gr_PanUpdated;
-        this.GestureRecognizers.Add(pgr);
 
         var tgr = new TapGestureRecognizer();
         tgr.Tapped += Tgr_Tapped;
+        this.GestureRecognizers.Add(pgr);
         this.GestureRecognizers.Add(tgr);
 
         SelectedItems = new ObservableCollection<object>();
@@ -252,22 +255,18 @@ public partial class ListViewZero : ContentView
             case GestureStatus.Started:
                 this.AbortAnimation("SimpleAnimation");
                 _anchor = ScrollOffset;
-                _sw.Start();
+                _velocityManager.Start(ScrollOffset);
                 break;
             case GestureStatus.Running:
-                ScrollOffset = _anchor - (float)(e.TotalY);
-                _totalY = e.TotalY;
+                ScrollOffset = MassageScrollOffset(_anchor - (float)(e.TotalY));
+                _velocityManager.StoreDataPoint(ScrollOffset);
                 break;
             case GestureStatus.Completed:
 
-                double timeDelta = _sw.Elapsed.TotalMilliseconds;
-                _sw.Reset();
-                double motionDelta = _totalY;
-
                 uint millisecondRate = 16;
 
-                _animationDelta = -(motionDelta / timeDelta) * millisecondRate;
-
+                _animationDelta = _velocityManager.GetVelocity(millisecondRate);
+                _velocityManager.Stop();
 
                 var animation = new Animation(PanAnimate, 1, 0);
 
@@ -279,52 +278,37 @@ public partial class ListViewZero : ContentView
                 break;
         }
     }
-    private void PanAnimate(double elapsed)
-    {
-        this.ScrollOffset += (float)(_animationDelta * elapsed);
 
-        if (ScrollOffset < 0)
+    private float MassageScrollOffset(float newValue)
+    {
+        if (newValue < 0)
         {
             this.AbortAnimation("SimpleAnimation");
-            ScrollOffset = 0;
-            UpdateItemContainers();
-            PanBounce();
-
-
+            return 0;
         }
+
+
+        double scrollMax = ItemsSource.Count * ItemHeight - Height;
+
+        scrollMax = Math.Max(0, scrollMax);
+
+        // return (float)Math.Min(newValue, (float)scrollMax);
+
+        // Debug.WriteLine($"{Height}, {scrollMax}");
+
+        if (newValue > scrollMax)
+        {
+           this.AbortAnimation("SimpleAnimation");
+           return (float)scrollMax;
+        }
+
+        return newValue;
     }
 
-    private void PanBounce()
+    private void PanAnimate(double elapsed)
     {
-        double direction = 1;
-        uint duration = 250;
-
-        foreach (object obj in canvas)
-        {
-            if (obj is ListItemZero item)
-            {
-                direction = -direction;
-
-                //item.TranslateTo(item.TranslationY * direction * _animationDelta / 120, item.TranslationY *= 1.15, duration, Easing.CubicOut);
-                item.RotateTo(direction * 10, duration, Easing.SpringOut);
-                //item.RotateXTo(direction * item.TranslationY / item.Height, duration, Easing.CubicOut);
-
-                //item.TranslationY *= 1.02;
-                //item.Rotation = direction * item.TranslationY / item.Height * 5;
-            }
-        }
-        Task.Delay((int)duration).ContinueWith(async (a) =>
-        {
-            foreach (object obj in canvas)
-            {
-                if (obj is ListItemZero item)
-                {
-                    //item.TranslateTo(0, item.ItemIndex * ItemHeight - ScrollOffset, duration, Easing.BounceOut);
-                    item.RotateTo(0, duration, Easing.BounceOut);
-                    //item.RotateXTo(0, 1000, Easing.BounceOut);
-                }
-            }
-        });
+        var newValue = this.ScrollOffset + (float)(_animationDelta * elapsed);
+        ScrollOffset = MassageScrollOffset(newValue);
     }
 
     private void UpdateItemContainers()
@@ -413,6 +397,7 @@ public partial class ListViewZero : ContentView
         }
         _updatingContainers = false;
     }
+
     private ListItemZero GetViewForBindingContextFromCanvas(object bindingContext)
     {
         // TODO: Once working, use a map.

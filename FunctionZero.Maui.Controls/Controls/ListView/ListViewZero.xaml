@@ -4,7 +4,8 @@
              x:Class="FunctionZero.Maui.Controls.ListViewZero" 
              xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
              HorizontalOptions="FillAndExpand" 
-             VerticalOptions="FillAndExpand" >
+             VerticalOptions="FillAndExpand" 
+             >
 
     <ContentView.Resources>
         <Style TargetType="cz:ListItemZero" >
