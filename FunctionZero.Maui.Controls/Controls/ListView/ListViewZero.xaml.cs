@@ -408,15 +408,6 @@ public partial class ListViewZero : ContentView
                 listItem.IsSelected = SelectedItems.Contains(listItem.BindingContext);
 
                 listItem.IsPrimary = listItem.BindingContext == SelectedItem;
-
-                //listItem.IsSelected = 
-                //(SelectedItem == listItem.BindingContext)
-                //||
-                //(
-                //    (SelectionMode == SelectionMode.Multiple)
-                //    &&
-                //    (SelectedItems.Contains(listItem.BindingContext))
-                //);
             }
             //TestLabel.Text = $"Active: {canvas.Count}";
         }
@@ -434,13 +425,9 @@ public partial class ListViewZero : ContentView
 
     private ListItemZero GetView(object bindingContext)
     {
-        //object item = ItemsSource[itemIndex];
         ListItemZero retVal = null;
 
         DataTemplate template;
-
-        //if (item is TreeListItemsSourceZero.TreeNodeContainer<object> blorg)
-        //    item = blorg.Data;
 
         if (ItemTemplate is DataTemplateSelector selector)
             template = selector.SelectTemplate(bindingContext, null);
@@ -496,7 +483,6 @@ public partial class ListViewZero : ContentView
                             SelectedItems.Add(listItem.BindingContext);
 
                         }
-
                         else
                         {
                             SelectedItems.Remove(listItem.BindingContext);
