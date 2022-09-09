@@ -39,7 +39,7 @@ namespace FunctionZero.Maui.Controls
 
         internal void StoreDataPoint(float scrollOffset)
         {
-            Debug.WriteLine($"OFFSET:{scrollOffset},DELTA:{scrollOffset - _lastScrollOffset}");
+            //Debug.WriteLine($"OFFSET:{scrollOffset},DELTA:{scrollOffset - _lastScrollOffset}");
 
             if (_velocityQueue.Count == 10)
                 _velocityQueue.Dequeue();
@@ -73,16 +73,22 @@ namespace FunctionZero.Maui.Controls
                 if (item.elapsedMilliseconds > (totalElapsedMilliseconds - 150))
                 {
                     var timeDelta = item.elapsedMilliseconds - timeAnchor;
+                    if (timeDelta == 0)
+                        timeDelta = 1;      // We don't line divide by 0!!
 
                     float animationDelta = (item.delta / timeDelta) * millisecondRate;
                     var positiveDelta = Math.Abs(animationDelta);
 
                     validcount++;
                     totalDelta += positiveDelta;
-                }
-                timeAnchor = item.elapsedMilliseconds;
+
+                    Debug.WriteLine($"{validcount} - {totalDelta} - {animationDelta} {positiveDelta}");
+				}
+
+				timeAnchor = item.elapsedMilliseconds;
 
             }
+
             if (validcount > 0)
             {
                 var result = totalDelta / validcount;
@@ -91,6 +97,7 @@ namespace FunctionZero.Maui.Controls
 
                 return result;
             }
+
             return 0;
         }
 

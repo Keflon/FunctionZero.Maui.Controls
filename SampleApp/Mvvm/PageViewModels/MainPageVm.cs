@@ -122,7 +122,7 @@ namespace SampleApp.Mvvm.PageViewModels
                 SampleListData.Add(new ListItem($"Hello {c}", (float)110.0 + (float)Math.Sin(c / 9.0) * 40));
 
             SelectedItems = new ObservableCollection<ListItem>();
-            SelectedItems.CollectionChanged += (sender, e) => { Debug.WriteLine($"VM Count:{SelectedItems.Count}"); };
+            //SelectedItems.CollectionChanged += (sender, e) => { Debug.WriteLine($"VM Count:{SelectedItems.Count}"); };
 
             PickerData = new()
             {

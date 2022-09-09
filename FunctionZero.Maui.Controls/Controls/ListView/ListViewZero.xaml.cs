@@ -11,6 +11,8 @@ namespace FunctionZero.Maui.Controls;
 
 public partial class ListViewZero : ContentView
 {
+    const string SimpleAnimation = "SimpleAnimation";
+
     float _anchor;
     private readonly bool _usePlatformSpecificTgr;
     private BucketDictionary<DataTemplate, ListItemZero> _cache;
@@ -239,7 +241,7 @@ public partial class ListViewZero : ContentView
 
     private void Tgr_Tapped(object sender, EventArgs e)
     {
-        this.AbortAnimation("SimpleAnimation");
+        this.AbortAnimation(SimpleAnimation);
     }
 
     private void Canvas_SizeChanged(object sender, EventArgs e)
@@ -253,7 +255,7 @@ public partial class ListViewZero : ContentView
         switch (e.StatusType)
         {
             case GestureStatus.Started:
-                this.AbortAnimation("SimpleAnimation");
+                this.AbortAnimation(SimpleAnimation);
                 _anchor = ScrollOffset;
                 _velocityManager.Start(ScrollOffset);
                 break;
@@ -270,7 +272,7 @@ public partial class ListViewZero : ContentView
 
                 var animation = new Animation(PanAnimate, 1, 0);
 
-                animation.Commit(this, "SimpleAnimation", millisecondRate, 2000, Easing.Linear, (v, c) => { }, () => false);
+                animation.Commit(this, SimpleAnimation, millisecondRate, 2000, Easing.Linear, (v, c) => { }, () => _continueAnimation);
 
                 break;
             case GestureStatus.Canceled:
@@ -279,36 +281,55 @@ public partial class ListViewZero : ContentView
         }
     }
 
-    private float MassageScrollOffset(float newValue)
+    private bool _continueAnimation = false;
+
+    private float MassageScrollOffset(float offset)
     {
-        if (newValue < 0)
+        if (offset < 0)
         {
-            this.AbortAnimation("SimpleAnimation");
-            return 0;
+            Debug.WriteLine($"< 0 : {offset}");
+
+            offset *= 0.9f;
+
+            if (Math.Abs(offset) < 1.0f)
+            {
+                this.AbortAnimation(SimpleAnimation);
+                offset = 0.0f;
+            }
+
+            //_continueAnimation = true;
+
+            return offset;
         }
 
+        float scrollMax = (float)Math.Max(0, ItemsSource.Count * ItemHeight - Height);
 
-        double scrollMax = ItemsSource.Count * ItemHeight - Height;
-
-        scrollMax = Math.Max(0, scrollMax);
-
-        // return (float)Math.Min(newValue, (float)scrollMax);
-
-        // Debug.WriteLine($"{Height}, {scrollMax}");
-
-        if (newValue > scrollMax)
+        if (offset > scrollMax)
         {
-           this.AbortAnimation("SimpleAnimation");
-           return (float)scrollMax;
+            Debug.WriteLine($"> {scrollMax} : {offset}");
+
+			offset = (float)(scrollMax + (offset - scrollMax) * 0.9f);
+
+            if (Math.Abs(offset - scrollMax) < 1.0f)
+            {
+                this.AbortAnimation(SimpleAnimation);
+                offset = (float)scrollMax;
+            }
+
+            //_continueAnimation = true;
+
+            return offset;
         }
 
-        return newValue;
+        return offset;
     }
 
     private void PanAnimate(double elapsed)
     {
-        var newValue = this.ScrollOffset + (float)(_animationDelta * elapsed);
-        ScrollOffset = MassageScrollOffset(newValue);
+        Debug.WriteLine($"PanAnimate: {this.ScrollOffset} + {_animationDelta} * {elapsed}");
+
+        var newScrollOffset = this.ScrollOffset + (float)(_animationDelta * elapsed);
+        ScrollOffset = MassageScrollOffset(newScrollOffset);
     }
 
     private void UpdateItemContainers()
