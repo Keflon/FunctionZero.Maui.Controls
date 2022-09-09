@@ -309,7 +309,7 @@ public partial class ListViewZero : ContentView
         {
             Debug.WriteLine($"> {scrollMax} : {offset}");
 
-			offset = (float)(scrollMax + (offset - scrollMax) * 0.9f);
+            offset = (float)(scrollMax + (offset - scrollMax) * 0.9f);
 
             if (Math.Abs(offset - scrollMax) < 1.0f)
             {

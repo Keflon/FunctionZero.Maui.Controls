@@ -1,14 +1,151 @@
 # Breaking news  
-`TreeViewZero` now uses a `ListViewZero` to contain its items, to avoid the problems encountered using the CollectionView and ListView.  
+1. `ListViewZero` has been added to the library. The ink is still wet so expect rapid improvements to peripheral functionality such as mouse-wheel support (currently missing)  
+1. `TreeViewZero` now uses a `ListViewZero` to contain its items, to avoid the problems encountered using the CollectionView and ListView.  
+1. `TreeNodeZero` no longer exists - tree-nodes are now rendered by a customisable `ControlTemplate` applied to `ListItemZero` instances
 
 # Controls
 [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)
 
-1. [ListViewZero](#listviewzero)
+1. [ListViewZero](#listviewzero) (below)
+1. [TreeViewZero](#treeviewzero) (below)
+
+## ListViewZero
+### Features
 - A fully virtualising list-view that doesn't [leak memory](https://github.com/dotnet/maui/issues/8151) or [enforce arbitrary item spacing](https://github.com/dotnet/maui/issues/4520).
-- All rendering uses cross-platform code.
-1. [TreeViewZero](#treeviewzero)
-- A fully virtualising tree-view
+- Very high performance
+- All rendering uses cross-platform code
+
+If you can use a `CollectionView` or a `ListView` you will have no trouble with a `ListViewZero`  
+
+TODO: Sample image  
+
+### ListViewZero exposes the following properties
+Property | Type | Bindable | Purpose
+:----- | :---- | :----: | :-----
+ItemContainerStyle      | Style            | Yes  | An optional `Style` that can be applied to the `ListItemZero` instances that represent each node. This can be used to modify how selected-items are rendered.
+ItemHeight              | float            | Yes  | The height of each row in the list-view
+ItemsSource             | object           | Yes  | Set this to the IEnumerable (usually found in your view-model) that contains your items  
+ItemTemplate            | DataTemplate     | Yes  | Used to draw the data for each node. Set this to a `DataTemplate` or a `DataTemplateSelector`. See below.
+ScrollOffset            | float            | YES! | This is the absolute offset and can bound to.
+ScrollVelocity          | float            | Yes  | The current scroll-velocity, in units per update. 
+SelectedItem            | object           | Yes  | Set to the currently selected item, i.e. an instance of your *ViewModel* data, or null
+SelectedItems           | IList            | Yes  | All currently selected items. Default is an `ObservableCollection<object>`. You can bind to it or set your own collection, and if it supports `INotifyCollectionChanged` the `ListViewZero` will track it.
+SelectionMode           | SelectionMode    | Yes  | Alloows a `SelectionMode` of None, Single or Multiple.
+
+### Create a ListViewZero
+Given a collection of items
+```csharp
+public IEnumerable<Person> ListData { get; }
+```
+Add the namespace:
+```xml
+xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
+```
+Then declare a `ListViewZero` like this:
+```xml
+<!--Tip: A generous ItemHeight ensures the items aren't too small to tap with your finger-->
+<cz:ListViewZero 
+    ItemsSource="{Binding SampleListData}"
+    ItemHeight="40"
+
+    ... the rest are optional ...
+
+    SelectedItem="{Binding SelectedItem}"
+    SelectedItems="{Binding SelectedItems}"
+    SelectionMode="Multiple"
+    >
+    <cz:ListViewZero.ItemTemplate>
+        <DataTemplate>
+            <Label Text="{Binding Name}" />
+        </DataTemplate>
+    </cz:ListViewZero.ItemTemplate>
+</cz:ListViewZero>
+```
+
+### Tracking changes in the data
+If the ItemsSource supports `INotifyCollectionChanged`, the list-view will track all changes automatically. E.g.  
+```csharp
+public ObservableCollection<Person> ListData { get; }
+```
+If the properties on your items support `INotifyPropertyChanged` then they too will be tracked.  
+
+For example, `ListViewZero` will track changes to `Name` property on the following node:
+```csharp
+public class Person : BaseClassWithInpc
+{
+   private string _name;
+   public string Name
+   {
+      get => _name;
+      set => SetProperty(ref _name, value);
+   }
+}
+```
+
+## SelectionMode
+Similar to the `CollectionView`, allowed values are *None, Single or Multiple*. You can change this property at runtime, e.g. via `Binding`  
+
+### SelectedItem / SelectedItems
+`SelectedItem` tracks the currently selected item, and can be databound to your ViewModel  
+
+`SelectedItems` defaults to an `ObservableCollection` and tracks all items whose `IsSelected` property is true. The default `BindingMode` is `TwoWay`  
+In your view-model you can bind to the default collection (BindingMode OneWayToSource) or replace it  with your own collection (BindingMode OneWay or TwoWay)  
+The `ListViewZero` will maintain the contents of the collection for you, and you can modify the collection from your view-model to programatically select items
+
+
+
+
+
+## Styling SelectedItems
+Selected items are rendered using a VisualStateManager and 3 of the 4 *CommonStates*  
+You can replace this styling by setting the `ItemContainerStyle` property on your `ListViewZero`  
+
+Common State | Description | IsSelected | IsPrimary | SelectionMode
+:-----   | :----                                             | :---- | :---- | :----
+Normal   | The ListViewItem is not selected                  | False | False | Any
+Focused  | The ListViewItem is the primary-selection         | True  | True  | Single or Multiple
+Selected | The ListViewItem is selected but not the primary  | True  | False | Multiple
+Disabled | Not used                                          | n/a   | n/a   | n/a
+
+This is the default `Style` used to modify the `BackgroundColor` of selected items, and can serve as a baseline for your own  
+```xml
+<Style x:Key="testItemStyle" TargetType="cz:ListItemZero">
+    <Setter Property="VisualStateManager.VisualStateGroups" >
+        <VisualStateGroupList>
+            <VisualStateGroup x:Name="CommonStates">
+
+                <!-- BackgroundColor must have a value set or the other states cannot 'put back' the original color -->
+                <!-- I *think* this is due to a bug in MAUI because unappyling a Setter ought to revert to the original value or default -->
+                <VisualState x:Name="Normal" >
+                    <VisualState.Setters>
+                 <Setter Property="BackgroundColor" Value="Transparent" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Focused">
+                    <VisualState.Setters>
+                        <Setter Property="BackgroundColor" Value="Cyan" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Selected">
+                    <VisualState.Setters>
+                        <Setter Property="BackgroundColor" Value="AliceBlue" />
+                    </VisualState.Setters>
+                </VisualState>
+
+            </VisualStateGroup>
+        </VisualStateGroupList>
+    </Setter>
+</Style>
+```
+And set it like this:
+```xml
+<cz:ListViewZero 
+    SelectionMode="Multiple"
+    ItemContainerStyle="{StaticResource testItemStyle}"
+    ...
+```
 
 ## TreeViewZero
 ![Sample image](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/AndroidTree.png?raw=true)
@@ -22,10 +159,10 @@ Property | Type | Bindable | Purpose
 :----- | :---- | :----: | :-----
 IndentMultiplier        | double           | Yes (OneTime) | How far the TreeNode should be indented for each nest level. Default is 15.0
 IsRootVisible           | bool             | Yes  | Specifies whether the root node should be shown or omitted.
-ItemContainerStyle      | Style            | Yes  | An optional `Style` that can be applied to the `TreeNodeZero` objects that represent each node. This can be used to modify how selected-items are rendered.
-ItemHeight              | float            | Yes  | The height of each row in the TreeView
+ItemContainerStyle      | Style            | Yes  | An optional `Style` that can be applied to the `ListItemZero` instances that represent each node. This can be used to modify how selected-items are rendered.
+ItemHeight              | float            | Yes  | The height of each row in the tree-view
 ItemsSource             | object           | Yes  | Set this to your root node  
-ScrollOffset            | float            | YES! | This is the absolute offset of the scroller
+ScrollOffset            | float            | YES! | This is the absolute offset and can bound to
 SelectedItem            | object           | Yes  | Set to the currently selected item, i.e. an instance of your *ViewModel* data, or null
 SelectedItems           | IList            | Yes  | All currently selected items. Default is an `ObservableCollection<object>`. You can bind to it or set your own collection, and if it supports `INotifyCollectionChanged` the `TreeViewZero` will track it.
 SelectionMode           | SelectionMode    | Yes  | Alloows a `SelectionMode` of None, Single or Multiple.
