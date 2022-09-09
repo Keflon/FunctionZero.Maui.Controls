@@ -439,7 +439,7 @@ You can base the `ControlTemplate` on the default, show here, or bake your own e
 
 ~~I'll update the source and [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls) once these bugs are fixed, if necessary.~~
 
-To work around some teething bugs, this no longer uses the MAUI CollectionView or ListView internally.  
+To work around some MAUI teething bugs, this no longer uses the MAUI CollectionView or ListView internally.  
 
 
   

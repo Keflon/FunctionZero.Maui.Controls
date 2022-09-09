@@ -290,6 +290,7 @@ public partial class ListViewZero : ContentView
         {
             Debug.WriteLine($"< 0 : {offset}");
 
+#if WIP
             offset *= 0.9f;
 
             if (Math.Abs(offset) < 1.0f)
@@ -299,7 +300,9 @@ public partial class ListViewZero : ContentView
             }
 
             //_continueAnimation = true;
-
+#else
+            offset = 0;
+#endif
             return offset;
         }
 
@@ -309,6 +312,7 @@ public partial class ListViewZero : ContentView
         {
             Debug.WriteLine($"> {scrollMax} : {offset}");
 
+#if WIP
             offset = (float)(scrollMax + (offset - scrollMax) * 0.9f);
 
             if (Math.Abs(offset - scrollMax) < 1.0f)
@@ -318,7 +322,9 @@ public partial class ListViewZero : ContentView
             }
 
             //_continueAnimation = true;
-
+#else
+            offset = scrollMax;
+#endif
             return offset;
         }
 

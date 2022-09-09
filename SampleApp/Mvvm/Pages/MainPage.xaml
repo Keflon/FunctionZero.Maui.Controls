@@ -10,7 +10,7 @@
             <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" >
 
                 <cz:TreeNodeSpacer />
-                <Label Text="{TemplateBinding BindingContext}"/>
+
                 <cz:Chevron
                     VerticalOptions="Fill"
                     HorizontalOptions="Fill"

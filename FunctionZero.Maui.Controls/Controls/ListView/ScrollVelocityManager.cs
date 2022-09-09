@@ -70,27 +70,27 @@ namespace FunctionZero.Maui.Controls
 
             foreach (var item in _velocityQueue)
             {
-                if (item.elapsedMilliseconds > (totalElapsedMilliseconds - 150))
+                //if (item.elapsedMilliseconds > (totalElapsedMilliseconds - 150))
                 {
                     var timeDelta = item.elapsedMilliseconds - timeAnchor;
-                    if (timeDelta == 0)
-                        timeDelta = 1;      // We don't line divide by 0!!
+                    if (timeDelta != 0)
+                    {
+                        float animationDelta = (item.delta / timeDelta);
+                        var positiveDelta = Math.Abs(animationDelta);
 
-                    float animationDelta = (item.delta / timeDelta) * millisecondRate;
-                    var positiveDelta = Math.Abs(animationDelta);
+                        validcount++;
+                        totalDelta += positiveDelta;
 
-                    validcount++;
-                    totalDelta += positiveDelta;
-
-                    Debug.WriteLine($"{validcount} - {totalDelta} - {animationDelta} {positiveDelta}");
+                        Debug.WriteLine($"{validcount} - {totalDelta} - {animationDelta} {positiveDelta}");
+                    }
 				}
 
 				timeAnchor = item.elapsedMilliseconds;
 
             }
-            if (validcount >= _qDepth)
+            if (validcount >= 2)
             {
-                var result = totalDelta / validcount;
+                var result = totalDelta / validcount * millisecondRate;
                 if (_startScrollOffset > _lastScrollOffset)
                     return -result;
 
