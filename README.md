@@ -1,9 +1,14 @@
-# ~~Breaking news (literally)~~
-~~It seems the indent of tree nodes is broken after updating to VS 17.4.0 Preview 1.0.  
-I will update this text when things change.~~  
-Everything is [fixed](https://www.nuget.org/packages/FunctionZero.Maui.Controls) :smile:  
+# Breaking news  
+`TreeViewZero` now uses a `ListViewZero` to contain its items, to avoid the problems encountered using the CollectionView and ListView.  
+
 # Controls
 [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)
+
+1. [ListViewZero](#listviewzero)
+- A fully virtualising list-view that doesn't [leak memory](https://github.com/dotnet/maui/issues/8151) or [enforce arbitrary item spacing](https://github.com/dotnet/maui/issues/4520).
+- All rendering uses cross-platform code.
+1. [TreeViewZero](#treeviewzero)
+- A fully virtualising tree-view
 
 ## TreeViewZero
 ![Sample image](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/AndroidTree.png?raw=true)
@@ -17,7 +22,7 @@ Property | Type | Bindable | Purpose
 :----- | :---- | :----: | :-----
 IndentMultiplier        | double           | Yes (OneTime) | How far the TreeNode should be indented for each nest level. Default is 15.0
 IsRootVisible           | bool             | Yes  | Specifies whether the root node should be shown or omitted.
-ItemContainerStyle      | Style            | Yes  | An optional `Style` that can be applied to the `TreeNodeZero` objects that represent each node.
+ItemContainerStyle      | Style            | Yes  | An optional `Style` that can be applied to the `TreeNodeZero` objects that represent each node. This can be used to modify how selected-items are rendered.
 ItemHeight              | float            | Yes  | The height of each row in the TreeView
 ItemsSource             | object           | Yes  | Set this to your root node  
 ScrollOffset            | float            | YES! | This is the absolute offset of the scroller
@@ -106,6 +111,55 @@ This is how to bind the `IsMyNodeExpanded` from our data, to `IsExpanded` on the
     </cz:TreeItemDataTemplate>
 </cz:TreeViewZero.TreeItemTemplate>
 ```
+
+## SelectionMode
+The `TreeViewZero` allows selection modes *None, Single or Multiple*.
+Please see the [ListViewZero](#listviewZero-selection-mode) docs for how to use the SelectionMode property.
+
+## Styling SelectedItems
+
+Use this to style each tree-node, e.g. to change how selected items are rendered.  
+See [ListViewZero ItemContainerStyle](#listviewZero-visual-state-manager) for details, or use the following as a guide:  
+
+```xml
+<Style x:Key="testItemStyle" TargetType="cz:ListItemZero">
+    <Setter Property="VisualStateManager.VisualStateGroups" >
+        <VisualStateGroupList>
+            <VisualStateGroup x:Name="CommonStates">
+
+                <!-- BackgroundColor must have a value set or the other states cannot 'put back' the original color -->
+                <!-- I *think* this is due to a bug in MAUI because unappyling a Setter ought to revert to the original value or default -->
+                <VisualState x:Name="Normal" >
+                    <VisualState.Setters>
+                 <Setter Property="BackgroundColor" Value="Transparent" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Focused">
+                    <VisualState.Setters>
+                        <Setter Property="BackgroundColor" Value="Cyan" />
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Selected">
+                    <VisualState.Setters>
+                        <Setter Property="BackgroundColor" Value="AliceBlue" />
+                    </VisualState.Setters>
+                </VisualState>
+
+            </VisualStateGroup>
+        </VisualStateGroupList>
+    </Setter>
+</Style>
+```
+And set it like this:
+```xml
+<cz:TreeViewZero 
+    SelectionMode="Multiple"
+    ItemContainerStyle="{StaticResource testItemStyle}"
+```
+
+
 ### TreeItemDataTemplateSelector
 If your tree of data consists of disparate nodes with different properties for their `Children`, 
 use a `TreeItemDataTemplateSelector` and set `TargetType` for each `TreeItemDataTemplate`.  
@@ -246,12 +300,13 @@ You can base the `ControlTemplate` on the default, show here, or bake your own e
 ```
 
 ## Known issues:
-~~There are two known issues, both in the **WinUI** platform, both relating to the underlying `CollectionView` used by `TreeViewZero`.~~ 
-~~1. The `CollectionView` has a minimum item-spacing bug, reported [here](https://github.com/dotnet/maui/issues/4520)~~
-~~2. The `CollectionView` is not recycling containers, reported [here](https://github.com/dotnet/maui/issues/8151)~~  
+~~There are two known issues, both in the **WinUI** platform, both relating to the underlying `CollectionView` used by `TreeViewZero`.~~  
+~~1. The `CollectionView` has a minimum item-spacing bug, reported [here](https://github.com/dotnet/maui/issues/4520)~~  
+~~2. The `CollectionView` is not recycling containers, reported [here](https://github.com/dotnet/maui/issues/8151)~~   
 
 ~~I'll update the source and [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls) once these bugs are fixed, if necessary.~~
 
-To work around current bugs, this no longer uses the MAUI CollectionView or ListView.
+To work around some teething bugs, this no longer uses the MAUI CollectionView or ListView internally.  
+
 
   

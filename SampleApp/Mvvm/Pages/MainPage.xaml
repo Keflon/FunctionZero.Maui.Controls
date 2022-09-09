@@ -37,6 +37,8 @@
                 <VisualStateGroupList>
                     <VisualStateGroup x:Name="CommonStates">
 
+                        <!-- BackgroundColor must have a value set or the other states cannot 'put back' the original color-->
+                        <!-- I think this is a bug in MAUI because unappyling a Setter ought to revert to the original value-->
                         <VisualState x:Name="Normal" >
                             <VisualState.Setters>
                                 <Setter Property="BackgroundColor" Value="Transparent" />
