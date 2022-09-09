@@ -132,7 +132,7 @@ namespace FunctionZero.Maui.Controls
                 self._rootContainer = new TreeItemsSourceManager<object>(self.IsRootVisible, rootNode, self.GetCanHaveChildren, self.GetChildrenForNode);
                 self._rootContainer.NodeChanged += self._rootContainer_NodeChanged;
                 self.TheListView.ItemsSource = self._rootContainer.TreeNodeChildren;
-                
+
                 self.TryAttach(self._rootContainer);
 
                 ((INotifyCollectionChanged)self._rootContainer.TreeNodeChildren).CollectionChanged += TreeViewZero_CollectionChanged;
@@ -175,9 +175,9 @@ namespace FunctionZero.Maui.Controls
         {
             var self = (TreeViewZero)bindable;
             //self.Resources["FunctionZero.Maui.Controls.TreeNodeZero.defaultControlTemplate"] = newValue;
-           
+
             self.ListItemStyle.Setters[0].Value = newValue;
-            
+
         }
 
         public static readonly BindableProperty IndentMultiplierProperty = BindableProperty.Create("IndentMultiplier", typeof(double), typeof(TreeViewZero), 15D);
@@ -204,7 +204,7 @@ namespace FunctionZero.Maui.Controls
         private static void TreeViewZero_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             var thing = (ReadOnlyObservableCollection<TreeNodeContainer<object>>)sender;
-            
+
             Debug.WriteLine($"Count:{thing.Count}");
         }
 

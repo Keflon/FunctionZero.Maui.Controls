@@ -13,20 +13,35 @@ namespace FunctionZero.Maui.Controls
     {
         public IList<TreeItemDataTemplate> Children { get; set; } = new List<TreeItemDataTemplate>();
 
-        protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
-        {
-            var itemData = ((TreeNodeContainer<object>)item).Data;
+        // Used by the underlying ListViewZero.
+        //protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
+        //{
+        //    var itemData = ((TreeNodeContainer<object>)item).Data;
 
-            foreach (var template in Children)
-                if (template.TargetType.IsAssignableFrom(itemData.GetType()))
-                    return template.OnSelectTemplateProvider(itemData).ItemTemplate;
+        //    foreach (TreeItemDataTemplate template in Children)
+        //        if (template.TargetType.IsAssignableFrom(itemData.GetType()))
+        //            return template.OnSelectTemplateProvider(itemData).ItemTemplate;
 
-            return null;
-        }
+        //    return null;
+        //}
 
+        //protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
+        //{
+        //    var itemData = ((TreeNodeContainer<object>)item).Data;
+
+        //    return OnSelectTemplateProvider(itemData).ItemTemplate;
+
+        //    foreach (TreeItemDataTemplate template in Children)
+        //        if (template.TargetType.IsAssignableFrom(itemData.GetType()))
+        //            return template.OnSelectTemplateProvider(itemData).ItemTemplate;
+
+        //    return null;
+        //}
+
+        // Used by the TreeViewZero.
         public override TreeItemDataTemplate OnSelectTemplateProvider(object item)
         {
-            foreach (var template in Children)
+            foreach (TreeItemDataTemplate template in Children)
                 if (template.TargetType.IsAssignableFrom(item.GetType()))
                     return template.OnSelectTemplateProvider(item);
 

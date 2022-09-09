@@ -10,15 +10,19 @@
         <ControlTemplate x:Key="defaultControlTemplate">
 
             <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" >
-
-                <!--The ControlTemplate sets the BindingContext to "{Binding Source={RelativeSource TemplatedParent}}" for us-->
+                <!--
+                The ControlTemplate sets the TreeNodeSpacer BindingContext to "{Binding Source={RelativeSource TemplatedParent}}" for us,
+                i.e. a ListItemZero.
+                The TreeNodeSpacer walks up the visual-tree to find the containing TreeViewZero, to get the IndentMultiplier.
+                It then sets its WidthRequest to the IndentMultiplier * (ListItemZero.BindingContext.Indent - 1)
+                -->
                 <cz:TreeNodeSpacer />
 
                 <cz:Chevron
                     IsExpanded="{TemplateBinding BindingContext.IsExpanded, Mode=TwoWay}" 
                     ShowChevron="{TemplateBinding BindingContext.ShowChevron, Mode=TwoWay}" 
                     />
-
+                <!--This is-a ContentPresenter that allows us to specify a BindingContext for the Content-->
                 <cz:TreeContentPresenter 
                     VerticalOptions="Fill" 
                     x:Name="tcp" 

@@ -7,10 +7,10 @@
     <ContentPage.Resources>
 
         <ControlTemplate x:Key="NodeTemplate">
-            <HorizontalStackLayout  >
+            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" >
 
                 <cz:TreeNodeSpacer />
-                
+                <Label Text="{TemplateBinding BindingContext}"/>
                 <cz:Chevron
                     VerticalOptions="Fill"
                     HorizontalOptions="Fill"
@@ -109,17 +109,17 @@
             </cz:ListViewZero.ItemTemplate>
         </cz:ListViewZero>-->
 
-        <CollectionView  Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampleListData}" SelectionMode="Single">
+        <!--<CollectionView  Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampleListData}" SelectionMode="Single">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Label Text="{Binding Name}"/>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
-        </CollectionView>
+        </CollectionView>-->
 
 
-        <!--<cz:TreeViewZero Grid.Row="1" Grid.Column="1"
-                         BackgroundColor="Gray" 
+        <cz:TreeViewZero Grid.Row="1" Grid.Column="1"
+                         BackgroundColor="Blue" 
                          ItemsSource="{Binding SampleData}" 
                          IndentMultiplier="20" 
                          TreeItemControlTemplate="{StaticResource NodeTemplate}"
@@ -132,7 +132,7 @@
                     </DataTemplate>
                 </cz:TreeItemDataTemplate>
             </cz:TreeViewZero.TreeItemTemplate>
-        </cz:TreeViewZero>-->
+        </cz:TreeViewZero>
 
 
         <cz:TreeViewZero x:Name="multiTemplateTree"
