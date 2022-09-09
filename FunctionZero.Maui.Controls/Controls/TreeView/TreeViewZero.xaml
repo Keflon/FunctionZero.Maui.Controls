@@ -9,7 +9,7 @@
     <ContentView.Resources>
         <ControlTemplate x:Key="defaultControlTemplate">
 
-            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" >
+            <HorizontalStackLayout >
                 <!--
                 The ControlTemplate sets the TreeNodeSpacer BindingContext to "{Binding Source={RelativeSource TemplatedParent}}" for us,
                 i.e. a ListItemZero.
@@ -25,7 +25,6 @@
                 <!--This is-a ContentPresenter that allows us to specify a BindingContext for the Content-->
                 <cz:TreeContentPresenter 
                     VerticalOptions="Fill" 
-                    x:Name="tcp" 
                     HorizontalOptions="Fill"   
                     BindingContext="{TemplateBinding BindingContext.Data, Mode=OneWay}"
                     />

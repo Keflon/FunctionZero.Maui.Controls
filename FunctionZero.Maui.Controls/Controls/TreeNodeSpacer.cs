@@ -10,9 +10,9 @@ namespace FunctionZero.Maui.Controls
         {
             TemplateBinding f = new TemplateBinding();
 
-            //BackgroundColor = Colors.Purple;
+            BackgroundColor = Colors.Transparent;
             //Margin = new Thickness(4);
-
+            InputTransparent = true;
             SetBinding(BindingContextProperty, f);
         }
 

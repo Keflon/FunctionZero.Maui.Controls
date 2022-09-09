@@ -7,7 +7,7 @@
     <ContentPage.Resources>
 
         <ControlTemplate x:Key="NodeTemplate">
-            <HorizontalStackLayout HeightRequest="{Binding Height, Mode=OneWay, Source={x:Reference tcp}}" >
+            <HorizontalStackLayout >
 
                 <cz:TreeNodeSpacer />
 
@@ -20,7 +20,6 @@
 
                 <cz:TreeContentPresenter 
                     VerticalOptions="Fill" 
-                    x:Name="tcp" 
                     HorizontalOptions="Fill"   
                     BindingContext="{TemplateBinding BindingContext.Data, Mode=OneWay}"
                     />
@@ -64,13 +63,13 @@
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*,*" ColumnDefinitions="*,*">
-        
+
         <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="2">
             <Label 
                 Text="{Binding Count}"
                 VerticalOptions="Center" 
                 HorizontalOptions="Center" />
-            <Label x:Name="TestLabel" Text="BANANA"/>  
+            <Label x:Name="TestLabel" Text="BANANA"/>
             <Label Text="ListDance"/>
             <Switch IsToggled="{Binding ListDance}"/>
             <Label Text="TreeDance"/>
@@ -79,7 +78,7 @@
 
             </Picker>
         </HorizontalStackLayout>
-        
+
         <cz:ListViewZero 
             x:Name="lv1" 
             Grid.Row="1" 
@@ -128,7 +127,7 @@
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">
                     <DataTemplate>
-                        <Label Text="{Binding Name}" BackgroundColor="Pink" />
+                        <Label Text="{Binding Name}" BackgroundColor="Pink"/>
                     </DataTemplate>
                 </cz:TreeItemDataTemplate>
             </cz:TreeViewZero.TreeItemTemplate>
@@ -136,13 +135,13 @@
 
 
         <cz:TreeViewZero x:Name="multiTemplateTree"
-            ItemHeight="20"
+            ItemHeight="40"
             ScrollOffset="{Binding TreeViewScrollOffset, Mode=TwoWay}" 
             SelectionMode="{Binding SelectedItem.Mode, Source={x:Reference SelectionModePicker}}"
             ItemContainerStyle="{StaticResource testItemStyle}"
 
             IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" Grid.Column="0"  ItemsSource="{Binding SampleTemplateTestData}" IndentMultiplier="20" >
-            
+
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeItemDataTemplateSelector>
                     <cz:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
