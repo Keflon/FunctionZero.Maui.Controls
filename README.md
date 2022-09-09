@@ -82,7 +82,7 @@ public class Person : BaseClassWithInpc
 }
 ```
 
-## SelectionMode
+### SelectionMode
 Similar to the `CollectionView`, allowed values are *None, Single or Multiple*. You can change this property at runtime, e.g. via `Binding`  
 
 ### SelectedItem / SelectedItems
@@ -91,10 +91,6 @@ Similar to the `CollectionView`, allowed values are *None, Single or Multiple*. 
 `SelectedItems` defaults to an `ObservableCollection` and tracks all items whose `IsSelected` property is true. The default `BindingMode` is `TwoWay`  
 In your view-model you can bind to the default collection (BindingMode OneWayToSource) or replace it  with your own collection (BindingMode OneWay or TwoWay)  
 The `ListViewZero` will maintain the contents of the collection for you, and you can modify the collection from your view-model to programatically select items
-
-
-
-
 
 ## Styling SelectedItems
 Selected items are rendered using a VisualStateManager and 3 of the 4 *CommonStates*  
@@ -251,12 +247,12 @@ This is how to bind the `IsMyNodeExpanded` from our data, to `IsExpanded` on the
 
 ## SelectionMode
 The `TreeViewZero` allows selection modes *None, Single or Multiple*.
-Please see the [ListViewZero](#listviewZero-selection-mode) docs for how to use the SelectionMode property.
+Please see the [ListViewZero](#selecteditem-selecteditems) docs for how to use the SelectionMode property.
 
 ## Styling SelectedItems
 
 Use this to style each tree-node, e.g. to change how selected items are rendered.  
-See [ListViewZero ItemContainerStyle](#listviewZero-visual-state-manager) for details, or use the following as a guide:  
+See [Styling SelectedItems](#styling-selecteditems) on the `ListViewZero` for details, or use the following as a guide:  
 
 ```xml
 <Style x:Key="testItemStyle" TargetType="cz:ListItemZero">
