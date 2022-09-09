@@ -30,7 +30,7 @@ ScrollOffset            | float            | YES! | This is the absolute offset 
 ScrollVelocity          | float            | Yes  | The current scroll-velocity, in units per update. 
 SelectedItem            | object           | Yes  | Set to the currently selected item, i.e. an instance of your *ViewModel* data, or null
 SelectedItems           | IList            | Yes  | All currently selected items. Default is an `ObservableCollection<object>`. You can bind to it or set your own collection, and if it supports `INotifyCollectionChanged` the `ListViewZero` will track it.
-SelectionMode           | SelectionMode    | Yes  | Alloows a `SelectionMode` of None, Single or Multiple.
+SelectionMode           | SelectionMode    | Yes  | Allows a `SelectionMode` of None, Single or Multiple.
 
 ### Create a ListViewZero
 Given a collection of items
