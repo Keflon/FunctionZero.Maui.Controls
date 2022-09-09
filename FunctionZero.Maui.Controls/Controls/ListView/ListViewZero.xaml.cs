@@ -71,7 +71,7 @@ public partial class ListViewZero : ContentView
     private static void SelectionModeChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (ListViewZero)bindable;
-        
+
         self.DeferredFilterAndUpdate();
     }
 
@@ -220,7 +220,7 @@ public partial class ListViewZero : ContentView
 
         _cache = new();
         _killList = new(50);
-        _velocityManager = new(10);
+        _velocityManager = new(5);
 
         InitializeComponent();
 
@@ -262,6 +262,7 @@ public partial class ListViewZero : ContentView
                 _velocityManager.StoreDataPoint(ScrollOffset);
                 break;
             case GestureStatus.Completed:
+            case GestureStatus.Canceled:
 
                 uint millisecondRate = 16;
 
@@ -273,9 +274,9 @@ public partial class ListViewZero : ContentView
                 animation.Commit(this, "SimpleAnimation", millisecondRate, 2000, Easing.Linear, (v, c) => { }, () => false);
 
                 break;
-            case GestureStatus.Canceled:
-                ScrollOffset = _anchor;
-                break;
+                //case GestureStatus.Canceled:
+                //    ScrollOffset = _anchor;
+                //    break;
         }
     }
 
@@ -298,8 +299,8 @@ public partial class ListViewZero : ContentView
 
         if (newValue > scrollMax)
         {
-           this.AbortAnimation("SimpleAnimation");
-           return (float)scrollMax;
+            this.AbortAnimation("SimpleAnimation");
+            return (float)scrollMax;
         }
 
         return newValue;
@@ -431,7 +432,7 @@ public partial class ListViewZero : ContentView
             retVal.ItemTemplate = template;
             retVal.Content = (View)template.CreateContent();
 
-            if(ItemContainerStyle != null)
+            if (ItemContainerStyle != null)
                 retVal.Style = ItemContainerStyle;
 
             retVal.PropertyChanged += ListItemZero_PropertyChanged;

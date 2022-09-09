@@ -33,7 +33,7 @@ namespace FunctionZero.Maui.Controls
             _startScrollOffset = scrollOffset;
             _lastScrollOffset = scrollOffset;
             _lastElapsedMilliseconds = 0;
-
+            Stop();
             _sw.Start();
         }
 
@@ -41,7 +41,7 @@ namespace FunctionZero.Maui.Controls
         {
             Debug.WriteLine($"OFFSET:{scrollOffset},DELTA:{scrollOffset - _lastScrollOffset}");
 
-            if (_velocityQueue.Count == 10)
+            if (_velocityQueue.Count == _qDepth)
                 _velocityQueue.Dequeue();
 
             var elapsedMilliseconds = _sw.ElapsedMilliseconds;
@@ -83,7 +83,7 @@ namespace FunctionZero.Maui.Controls
                 timeAnchor = item.elapsedMilliseconds;
 
             }
-            if (validcount > 0)
+            if (validcount >= _qDepth)
             {
                 var result = totalDelta / validcount;
                 if (_startScrollOffset > _lastScrollOffset)
