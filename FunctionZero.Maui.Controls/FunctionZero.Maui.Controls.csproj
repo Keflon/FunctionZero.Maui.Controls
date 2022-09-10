@@ -24,13 +24,13 @@
 		<Copyright>FunctionZero Ltd</Copyright>
 		<PackageProjectUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</RepositoryUrl>
-		<PackageTags>MAUI TreeView TreeViewZero iOS WinUI Android Control </PackageTags>
-		<PackageReleaseNotes>Fixed breakages introduced by next MAUI version.
-Performance improvement.</PackageReleaseNotes>
+		<PackageTags>MAUI; ListView; ListViewZero; TreeView; TreeViewZero; iOS; WinUI; Windows; Tizen; Android; Control </PackageTags>
+		<PackageReleaseNotes>Introducing ListViewZero - a high performance alternative to the MAUI ListView.
+TreeViewZero now uses ListViewZero for rendering (instead of a CollectionView), leading to performance improvements, a substantially smaller memory footprint and fine control over the scroll-offset.</PackageReleaseNotes>
 		<PackageLicenseFile>License.md</PackageLicenseFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>1.0.2</Version>
+		<Version>2.0.0-pre0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>

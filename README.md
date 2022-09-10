@@ -6,8 +6,8 @@
 # Controls
 [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)
 
-1. [ListViewZero](#listviewzero) (below)
-1. [TreeViewZero](#treeviewzero) (below)
+1. [ListViewZero](#listviewzero)
+1. [TreeViewZero](#treeviewzero)
 
 ## ListViewZero
 ### Features
