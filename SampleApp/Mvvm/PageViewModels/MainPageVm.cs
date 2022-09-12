@@ -164,15 +164,13 @@ namespace SampleApp.Mvvm.PageViewModels
             ((ListItem)SampleListData[0]).Offset = (float)110.0 + (float)Math.Sin(_listCount / 9.0) * 40;
 
 
-            return true;
-
-#elif false
+#elif true
 
             //var scale = (Math.Sin(_listCount / 223.0 * Math.Cos(_listCount / 337.0))) / 2.0 + 1.0;
             var scale = Math.Sin(_listCount / 223.0) / 2.0 + 1.0;
             ListViewScrollOffset = (float)scale * SampleListData.Count * 25;
 
-#elif true
+#elif false
 
             //if ((_listCount % 16) == 0)
                 for (int c = 0; c < 8; c++)
@@ -205,11 +203,12 @@ namespace SampleApp.Mvvm.PageViewModels
             if (TreeDance == false)
                 return true;
 
+#if false
             //var scale = (Math.Sin(_listCount / 223.0 * Math.Cos(_listCount / 337.0))) / 2.0 + 1.0;
             var scale = Math.Sin(Count / 2.0) / 2.0;
             TreeViewScrollOffset = (float)scale * 100;
-            Count++;
-            return true;
+#else
+
             //IsRootVisible = (Count & 8)==0;
             if ((Count % 8) < 2)
             {
@@ -250,7 +249,7 @@ namespace SampleApp.Mvvm.PageViewModels
                 //    node.LevelOneChildren.Insert(1, _spareTemplateNode);
                 //}
             }
-
+#endif
             Count++;
 
             return true;

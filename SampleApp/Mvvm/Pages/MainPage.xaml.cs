@@ -14,7 +14,8 @@ namespace SampleApp.Mvvm.Pages
 
         private void Button_Clicked(object sender, EventArgs e)
         {
-            TestLabel.Text=((Button)sender).Text;
+            //TestLabel.Text=((Button)sender).Text;
+            Title=$"Home - Tapped: {((Button)sender).Text}";
         }
     }
 }

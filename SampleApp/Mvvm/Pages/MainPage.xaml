@@ -65,18 +65,15 @@
     <Grid RowDefinitions="Auto,*,*" ColumnDefinitions="*,*">
 
         <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="2">
-            <Label 
-                Text="{Binding Count}"
-                VerticalOptions="Center" 
-                HorizontalOptions="Center" />
-            <Label x:Name="TestLabel" Text="BANANA"/>
+            <Picker x:Name="SelectionModePicker" Title="Selection Mode" ItemsSource="{Binding PickerData}" ItemDisplayBinding="{Binding Name}"/>
+            <!--<Label Text="{Binding Count}" />-->
+            <!--<Label x:Name="TestLabel" Text="BANANA"/>-->
             <Label Text="ListDance"/>
             <Switch IsToggled="{Binding ListDance}"/>
             <Label Text="TreeDance"/>
             <Switch IsToggled="{Binding TreeDance}"/>
-            <Picker x:Name="SelectionModePicker" Title="Modes" ItemsSource="{Binding PickerData}" ItemDisplayBinding="{Binding Name}">
 
-            </Picker>
+
         </HorizontalStackLayout>
 
         <cz:ListViewZero 
