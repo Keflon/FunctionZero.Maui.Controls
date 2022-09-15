@@ -3,6 +3,14 @@
 1. `TreeViewZero` now uses a `ListViewZero` to contain its items, to avoid the problems encountered using the CollectionView and ListView.  
 1. `TreeNodeZero` no longer exists - tree-nodes are now rendered by a customisable `ControlTemplate` applied to `ListItemZero` instances
 
+# Upgrade from 1.x..
+Rename `TreeDataTemplateSelector` to `TreeItemDataTemplateSelector` in your xaml
+
+# Linting errors
+At the time of writing, the xaml editor linting has trouble with DataTemplates  
+within these controls. That's just the IDE and you can ignore them as long as the project builds!  
+If you know how to fix this please let me know :)
+
 # Controls
 [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)
 
