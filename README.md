@@ -341,7 +341,7 @@ The first `TargetType` your data-node can be assigned to is used. Put another wa
 ```
 ### Customising TreeItemDataTemplateSelector
 If you want **full-control** over the `TreeItemTemplate` per node, you can easily implement your own 
-`TreeItemDataTemplateSelector` and override `OnSelectTemplate`. Here's an example that chooses a template 
+`TreeItemDataTemplateSelector` and override `OnSelectTemplateProvider`. Here's an example that chooses a template 
 based on whether the node has children or not:
 
 ```csharp
