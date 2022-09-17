@@ -11,8 +11,7 @@ namespace FunctionZero.Maui.Controls
     {
         private readonly int _qDepth;
         Stopwatch _sw;
-
-        record DataPoint(float delta, long elapsedMilliseconds);
+        record struct DataPoint(float delta, long elapsedMilliseconds);
 
         private readonly Queue<DataPoint> _velocityQueue;
         double _totalY = 0;
@@ -41,18 +40,21 @@ namespace FunctionZero.Maui.Controls
         {
             //Debug.WriteLine($"OFFSET:{scrollOffset},DELTA:{scrollOffset - _lastScrollOffset}");
 
-            if (_velocityQueue.Count == _qDepth)
-                _velocityQueue.Dequeue();
-
+            DataPoint nextDataPoint;
             var elapsedMilliseconds = _sw.ElapsedMilliseconds;
 
-            // TODO: Pre-allocate all DataPoints and re-use!
-            _velocityQueue.Enqueue(
-                new DataPoint(
-                    scrollOffset - _lastScrollOffset,
-                    elapsedMilliseconds// - _lastElapsedMilliseconds
-                )
-            );
+            if (_velocityQueue.Count == _qDepth)
+            {
+                nextDataPoint = _velocityQueue.Dequeue();
+                nextDataPoint.delta = scrollOffset - _lastScrollOffset;
+                nextDataPoint.elapsedMilliseconds = elapsedMilliseconds;
+            }
+            else
+            {
+                nextDataPoint = new DataPoint(scrollOffset - _lastScrollOffset, elapsedMilliseconds);
+            }
+
+            _velocityQueue.Enqueue(nextDataPoint);
 
             _lastScrollOffset = scrollOffset;
             _lastElapsedMilliseconds = elapsedMilliseconds;
@@ -70,7 +72,7 @@ namespace FunctionZero.Maui.Controls
 
             foreach (var item in _velocityQueue)
             {
-                //if (item.elapsedMilliseconds > (totalElapsedMilliseconds - 150))
+                if (item.elapsedMilliseconds > (totalElapsedMilliseconds - 100))
                 {
                     var timeDelta = item.elapsedMilliseconds - timeAnchor;
                     if (timeDelta != 0)

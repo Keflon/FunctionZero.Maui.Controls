@@ -45,8 +45,5 @@
         BackgroundColor="Transparent"
         IsClippedToBounds="True"/>
 
-
-
-
 </ContentView>
 <!--ZIndex breaks release build.-->
