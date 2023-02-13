@@ -10,7 +10,7 @@ within these controls. That's just the IDE and you can ignore them as long as th
 If you know how to fix this please let me know :)
 
 # Controls
-[NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)
+[NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)  
 Use package [2.0.0](https://www.nuget.org/packages/FunctionZero.Maui.Controls/2.0.0) if you are building against .NET 6.
 
 
