@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0;net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041.0</TargetFrameworks>
+		<TargetFrameworks>net6.0;net6.0-maccatalyst;net7.0-ios;net7.0-android</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net7.0-windows10.0.19041.0</TargetFrameworks>
 		<!-- Uncomment to also build the tizen app. You will need to install tizen by following this: https://github.com/Samsung/Tizen.NET -->
 		<!-- <TargetFrameworks>$(TargetFrameworks);net6.0-tizen</TargetFrameworks> -->
 		<UseMaui>true</UseMaui>
@@ -20,17 +20,16 @@
 		<Title>FunctionZero Controls library including TreeViewZero</Title>
 		<Authors>Keith Pickford</Authors>
 		<Company>FunctionZero Ltd</Company>
-		<Description>A MAUI Controls library featuring a cross-platform TreeView for WinUI, iOS, Mac and Android.</Description>
+		<Description>A MAUI Controls library featuring a cross-platform virtualizing TreeView and ListView for WinUI, iOS, Mac and Android.</Description>
 		<Copyright>FunctionZero Ltd</Copyright>
 		<PackageProjectUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</RepositoryUrl>
 		<PackageTags>MAUI; ListView; ListViewZero; TreeView; TreeViewZero; iOS; WinUI; Windows; Tizen; Android; Control </PackageTags>
-		<PackageReleaseNotes>Introducing ListViewZero - a high performance alternative to the MAUI ListView.
-TreeViewZero now uses ListViewZero for rendering (instead of a CollectionView), leading to performance improvements, a substantially smaller memory footprint and fine control over the scroll-offset.</PackageReleaseNotes>
+		<PackageReleaseNotes>Built against .NET 7.</PackageReleaseNotes>
 		<PackageLicenseFile>License.md</PackageLicenseFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>2.0.0</Version>
+		<Version>2.1.0</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
