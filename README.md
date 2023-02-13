@@ -1,7 +1,5 @@
 # Breaking news  
-1. `ListViewZero` has been added to the library. The ink is still wet so expect rapid improvements to peripheral functionality such as mouse-wheel support (currently missing)  
-1. `TreeViewZero` now uses a `ListViewZero` to contain its items, to avoid the problems encountered using the CollectionView and ListView.  
-1. `TreeNodeZero` no longer exists - tree-nodes are now rendered by a customisable `ControlTemplate` applied to `ListItemZero` instances
+1. Updated to use .NET 7.  
 
 # Upgrade from 1.x..
 Rename `TreeDataTemplateSelector` to `TreeItemDataTemplateSelector` in your xaml
@@ -13,6 +11,7 @@ If you know how to fix this please let me know :)
 
 # Controls
 [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)
+Use package [2.0.0](https://www.nuget.org/packages/FunctionZero.Maui.Controls/2.0.0) if you are building against .NET 6.
 
 1. [ListViewZero](#listviewzero)
 1. [TreeViewZero](#treeviewzero)
