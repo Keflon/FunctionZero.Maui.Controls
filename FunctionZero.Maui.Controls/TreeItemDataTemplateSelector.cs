@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace FunctionZero.Maui.Controls
 {
-    [ContentProperty("Children")]
+    [ContentProperty("DataTemplateContent")]
     public class TreeItemDataTemplateSelector : TemplateProvider
     {
-        public IList<TreeItemDataTemplate> Children { get; set; } = new List<TreeItemDataTemplate>();
+        public IList<TreeItemDataTemplate> DataTemplateContent { get; set; } = new List<TreeItemDataTemplate>();
 
         // Used by the underlying ListViewZero.
         //protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
@@ -41,7 +41,7 @@ namespace FunctionZero.Maui.Controls
         // Used by the TreeViewZero.
         public override TreeItemDataTemplate OnSelectTemplateProvider(object item)
         {
-            foreach (TreeItemDataTemplate template in Children)
+            foreach (TreeItemDataTemplate template in DataTemplateContent)
                 if (template.TargetType.IsAssignableFrom(item.GetType()))
                     return template.OnSelectTemplateProvider(item);
 
