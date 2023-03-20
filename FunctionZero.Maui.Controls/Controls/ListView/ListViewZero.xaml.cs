@@ -258,16 +258,6 @@ public partial class ListViewZero : ContentView
         _updatingContainers = true;
 
         // Calculate total estimated height
-        //if (ItemsSource.Count > 0)
-        //{
-        //    var template = GetDataTemplate(ItemsSource[0]);
-        //    var view = (VisualElement)template.CreateContent();
-        //    var measure = view.Measure(canvas.Width, double.PositiveInfinity, MeasureFlags.IncludeMargins);
-        //    var totalHeight = measure.Request.Height * ItemsSource.Count;
-        //    var marginBelow = totalHeight - canvas.Height;
-        //    canvas.Margin = new Thickness(0, 0, 0, marginBelow);
-        //}
-
         var totalHeight = ItemHeight * ItemsSource.Count;
         var marginBelow = Math.Max(0, totalHeight - canvas.Height - ScrollOffset);
         canvas.Margin = new Thickness(0, ScrollOffset, 0, marginBelow);
@@ -335,9 +325,11 @@ public partial class ListViewZero : ContentView
                 listItem.TranslationY = itemOffset;
                 listItem.WidthRequest = this.Width;
 
-                listItem.IsSelected = SelectedItems.Contains(listItem.BindingContext);
+                var isSelected = SelectedItems.Contains(listItem.BindingContext);
+                listItem.IsSelected = isSelected;
 
-                listItem.IsPrimary = listItem.BindingContext == SelectedItem;
+                var isPrimary = listItem.BindingContext == SelectedItem;
+                listItem.IsPrimary = isPrimary;
             }
             //TestLabel.Text = $"Active: {canvas.Count}";
         }

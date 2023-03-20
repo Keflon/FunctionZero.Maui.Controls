@@ -87,7 +87,9 @@ public partial class ListItemZero : ContentView
     private void UpdateVisualState()
     {
         if (IsPrimary)
-            VisualStateManager.GoToState(this, "Focused");
+            // Need to use a different name than "Focused", since "Focused" is a state that Maui
+            // injects in automatically that can interfere with our focused state
+            VisualStateManager.GoToState(this, "Focused2");
         else if (IsSelected)
             VisualStateManager.GoToState(this, "Selected");
         else
