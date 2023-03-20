@@ -13,14 +13,11 @@ public partial class ListViewZero : ContentView
 {
     const string SimpleAnimation = "SimpleAnimation";
 
-    float _anchor;
     private readonly bool _usePlatformSpecificTgr;
     private BucketDictionary<DataTemplate, ListItemZero> _cache;
     private readonly List<ListItemZero> _killList;
     bool _pendingUpdate = false;
-    double _animationDelta;
     bool _updatingContainers = false;
-    private ScrollVelocityManager _velocityManager;
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource), typeof(IList), typeof(ListViewZero), null, BindingMode.OneWay, null, ItemsSourceChanged);
 
     public IList ItemsSource
@@ -222,7 +219,6 @@ public partial class ListViewZero : ContentView
 
         _cache = new();
         _killList = new(50);
-        _velocityManager = new(5);
 
         InitializeComponent();
 
