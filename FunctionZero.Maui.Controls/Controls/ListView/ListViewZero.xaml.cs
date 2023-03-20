@@ -226,14 +226,10 @@ public partial class ListViewZero : ContentView
 
         InitializeComponent();
 
-        canvas.SizeChanged += Canvas_SizeChanged;
-
-        var pgr = new PanGestureRecognizer();
-        pgr.PanUpdated += Gr_PanUpdated;
+        scrollView.SizeChanged += ScrollView_SizeChanged;
 
         var tgr = new TapGestureRecognizer();
         tgr.Tapped += Tgr_Tapped;
-        this.GestureRecognizers.Add(pgr);
         this.GestureRecognizers.Add(tgr);
 
         SelectedItems = new ObservableCollection<object>();
@@ -244,104 +240,14 @@ public partial class ListViewZero : ContentView
         this.AbortAnimation(SimpleAnimation);
     }
 
-    private void Canvas_SizeChanged(object sender, EventArgs e)
+    private void ScrollView_SizeChanged(object sender, EventArgs e)
     {
         UpdateItemContainers();
     }
 
-    private void Gr_PanUpdated(object sender, PanUpdatedEventArgs e)
-    {
-        // TODO: Improve inertia.
-        switch (e.StatusType)
-        {
-            case GestureStatus.Started:
-                this.AbortAnimation(SimpleAnimation);
-                _anchor = ScrollOffset;
-                _velocityManager.Start(ScrollOffset);
-                break;
-            case GestureStatus.Running:
-                ScrollOffset = MassageScrollOffset(_anchor - (float)(e.TotalY));
-                _velocityManager.StoreDataPoint(ScrollOffset);
-                break;
-            case GestureStatus.Completed:
-            case GestureStatus.Canceled:
-
-                uint millisecondRate = 16;
-
-                _animationDelta = _velocityManager.GetVelocity(millisecondRate);
-                _velocityManager.Stop();
-
-                var animation = new Animation(PanAnimate, 1, 0);
-
-                animation.Commit(this, SimpleAnimation, millisecondRate, 2000, Easing.Linear, (v, c) => { }, () => _continueAnimation);
-
-                break;
-                //case GestureStatus.Canceled:
-                //    ScrollOffset = _anchor;
-                //    break;
-        }
-    }
-
-    private bool _continueAnimation = false;
-
-    private float MassageScrollOffset(float offset)
-    {
-        if (offset < 0)
-        {
-            Debug.WriteLine($"< 0 : {offset}");
-
-#if WIP
-            offset *= 0.9f;
-
-            if (Math.Abs(offset) < 1.0f)
-            {
-                this.AbortAnimation(SimpleAnimation);
-                offset = 0.0f;
-            }
-
-            //_continueAnimation = true;
-#else
-            offset = 0;
-#endif
-            return offset;
-        }
-
-        float scrollMax = (float)Math.Max(0, ItemsSource.Count * ItemHeight - Height);
-
-        if (offset > scrollMax)
-        {
-            Debug.WriteLine($"> {scrollMax} : {offset}");
-
-#if WIP
-            offset = (float)(scrollMax + (offset - scrollMax) * 0.9f);
-
-            if (Math.Abs(offset - scrollMax) < 1.0f)
-            {
-                this.AbortAnimation(SimpleAnimation);
-                offset = (float)scrollMax;
-            }
-
-            //_continueAnimation = true;
-#else
-            offset = scrollMax;
-#endif
-            return offset;
-        }
-
-        return offset;
-    }
-
-    private void PanAnimate(double elapsed)
-    {
-        Debug.WriteLine($"PanAnimate: {this.ScrollOffset} + {_animationDelta} * {elapsed}");
-
-        var newScrollOffset = this.ScrollOffset + (float)(_animationDelta * elapsed);
-        ScrollOffset = MassageScrollOffset(newScrollOffset);
-    }
-
     private void UpdateItemContainers()
     {
-        if (canvas.Height <= 0)
+        if (scrollView.Height <= 0)
             return;
 
         if (ItemsSource == null)
@@ -355,11 +261,27 @@ public partial class ListViewZero : ContentView
 
         _updatingContainers = true;
 
+        // Calculate total estimated height
+        //if (ItemsSource.Count > 0)
+        //{
+        //    var template = GetDataTemplate(ItemsSource[0]);
+        //    var view = (VisualElement)template.CreateContent();
+        //    var measure = view.Measure(canvas.Width, double.PositiveInfinity, MeasureFlags.IncludeMargins);
+        //    var totalHeight = measure.Request.Height * ItemsSource.Count;
+        //    var marginBelow = totalHeight - canvas.Height;
+        //    canvas.Margin = new Thickness(0, 0, 0, marginBelow);
+        //}
+
+        var totalHeight = ItemHeight * ItemsSource.Count;
+        var marginBelow = Math.Max(0, totalHeight - canvas.Height - ScrollOffset);
+        canvas.Margin = new Thickness(0, ScrollOffset, 0, marginBelow);
+        canvas.HeightRequest = scrollView.Height;
+
         // Find the first item that is to be in view
         int firstVisibleIndex = Math.Max(0, (int)(ScrollOffset / ItemHeight));
 
         // Maximum number of ListItem instances that can be at least partially seen.
-        int maxVisibleContainers = (int)(canvas.Height / ItemHeight) + 1;
+        int maxVisibleContainers = (int)(scrollView.Height / ItemHeight) + 1;
 
         int lastVisibleIndex = Math.Min(ItemsSource.Count - 1, firstVisibleIndex + maxVisibleContainers);
 
@@ -426,6 +348,11 @@ public partial class ListViewZero : ContentView
         _updatingContainers = false;
     }
 
+    private void ScrollView_Scrolled(object sender, ScrolledEventArgs e)
+    {
+        ScrollOffset = (float)e.ScrollY;
+    }
+
     private ListItemZero GetViewForBindingContextFromCanvas(object bindingContext)
     {
         // TODO: Once working, use a map.
@@ -440,12 +367,7 @@ public partial class ListViewZero : ContentView
     {
         ListItemZero retVal = null;
 
-        DataTemplate template;
-
-        if (ItemTemplate is DataTemplateSelector selector)
-            template = selector.SelectTemplate(bindingContext, null);
-        else
-            template = ItemTemplate;
+        DataTemplate template = GetDataTemplate(bindingContext);
 
         if (_cache.TryPopFromBucket(template, out var cachedThing, bindingContext))
         {
@@ -474,6 +396,18 @@ public partial class ListViewZero : ContentView
         //retVal.BindingContext = item;
 
         return retVal;
+    }
+
+    private DataTemplate GetDataTemplate(object bindingContext)
+    {
+        if (ItemTemplate is DataTemplateSelector selector)
+        {
+            return selector.SelectTemplate(bindingContext, null);
+        }
+        else
+        {
+            return ItemTemplate;
+        }
     }
 
     private void ListItemZero_PropertyChanged(object sender, PropertyChangedEventArgs e)

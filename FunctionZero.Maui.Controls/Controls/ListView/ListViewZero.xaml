@@ -35,15 +35,19 @@
                 </VisualStateGroupList>
             </Setter>
         </Style>
-        
+
     </ContentView.Resources>
-    
-    <AbsoluteLayout 
-        x:Name="canvas" 
-        HorizontalOptions="FillAndExpand" 
-        VerticalOptions="FillAndExpand" 
-        BackgroundColor="Transparent"
-        IsClippedToBounds="True"/>
+
+    <ScrollView x:Name="scrollView" Scrolled="ScrollView_Scrolled">
+        <StackLayout>
+            <AbsoluteLayout
+                x:Name="canvas"
+                HorizontalOptions="FillAndExpand" 
+                VerticalOptions="FillAndExpand" 
+                BackgroundColor="Transparent"
+                IsClippedToBounds="True"/>
+        </StackLayout>
+    </ScrollView>
 
 </ContentView>
 <!--ZIndex breaks release build.-->
