@@ -132,19 +132,6 @@ public partial class ListViewZero : ContentView
         self._handlingScrolledEvent = false;
     }
 
-    public static readonly BindableProperty ScrollVelocityProperty = BindableProperty.Create(nameof(ScrollVelocity), typeof(double), typeof(ListViewZero), (double)0.0, BindingMode.OneWay, null, null, ScrollVelocityChanged);
-
-    public double ScrollVelocity
-    {
-        get { return (double)GetValue(ScrollVelocityProperty); }
-        set { SetValue(ScrollVelocityProperty, value); }
-    }
-
-    private static void ScrollVelocityChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var self = (ListViewZero)bindable;
-    }
-
     public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(float), typeof(ListViewZero), (float)40.0, BindingMode.OneWay, null);
 
     public float ItemHeight
@@ -265,13 +252,14 @@ public partial class ListViewZero : ContentView
 
         // Calculate total estimated height
         var buffer = ItemHeight * 2;
-        var bufferTop = Math.Min(buffer, ScrollOffset);
-        var totalHeight = ItemHeight * ItemsSource.Count;
-        var bufferBottom = Math.Min(buffer, Math.Max(0, totalHeight - ScrollOffset - scrollView.Height - bufferTop));
+        var totalHeight = Math.Max(scrollView.Height, ItemHeight * ItemsSource.Count);
+        var correctedScrollOffset = (float)Math.Min(ScrollOffset, totalHeight - scrollView.Height); // On iOS, you can scroll below the scrollview - don't count this
+        var bufferTop = Math.Min(buffer, correctedScrollOffset);
+        var bufferBottom = Math.Min(buffer, Math.Max(0, totalHeight - correctedScrollOffset - scrollView.Height - bufferTop));
         var canvasHeight = scrollView.Height + bufferTop + bufferBottom;
-        var marginAbove = Math.Max(0, ScrollOffset - bufferTop);
+        var marginAbove = Math.Max(0, correctedScrollOffset - bufferTop);
         var marginBelow = Math.Max(0, totalHeight - marginAbove - canvasHeight);
-        if (marginBelow == 0 && canvasHeight > scrollView.Height)
+        if (marginBelow == 0 && marginAbove == 0 && canvasHeight > scrollView.Height)
         {
             // Hack - need some margin in order to be able to scroll for some reason
             marginBelow = 1;
