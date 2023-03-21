@@ -18,6 +18,7 @@ public partial class ListViewZero : ContentView
     private readonly List<ListItemZero> _killList;
     bool _pendingUpdate = false;
     bool _updatingContainers = false;
+    bool _handlingScrolledEvent = false;
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource), typeof(IList), typeof(ListViewZero), null, BindingMode.OneWay, null, ItemsSourceChanged);
 
     public IList ItemsSource
@@ -115,16 +116,20 @@ public partial class ListViewZero : ContentView
         set { SetValue(ScrollOffsetProperty, value); }
     }
 
-    private static void ScrollOffsetChanged(BindableObject bindable, object oldValue, object newValue)
+    private static async void ScrollOffsetChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (ListViewZero)bindable;
 
         // TODO: Is the second one quicker on a slow Droid phone?
         //self.UpdateItemContainers();
 
-
+        if (!self._handlingScrolledEvent)
+        {
+            await self.scrollView.ScrollToAsync(self.scrollView.ScrollX, self.ScrollOffset, false);
+        }
 
         self.DeferredFilterAndUpdate();
+        self._handlingScrolledEvent = false;
     }
 
     public static readonly BindableProperty ScrollVelocityProperty = BindableProperty.Create(nameof(ScrollVelocity), typeof(double), typeof(ListViewZero), (double)0.0, BindingMode.OneWay, null, null, ScrollVelocityChanged);
@@ -212,7 +217,9 @@ public partial class ListViewZero : ContentView
     {
         DeferredFilterAndUpdate();
     }
+
     public static bool _usePlatformTapRecognizer;
+
     public ListViewZero()
     {
         _usePlatformSpecificTgr = PlatformSetup.TryHookPlatformTouch();
@@ -338,6 +345,7 @@ public partial class ListViewZero : ContentView
 
     private void ScrollView_Scrolled(object sender, ScrolledEventArgs e)
     {
+        _handlingScrolledEvent = true;
         ScrollOffset = (float)e.ScrollY;
     }
 
