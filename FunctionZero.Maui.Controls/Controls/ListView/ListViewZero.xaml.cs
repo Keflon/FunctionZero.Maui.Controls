@@ -273,6 +273,7 @@ public partial class ListViewZero : ContentView
         var marginBelow = Math.Max(0, totalHeight - marginAbove - canvasHeight);
         if (marginBelow == 0 && canvasHeight > scrollView.Height)
         {
+            // Hack - need some margin in order to be able to scroll for some reason
             marginBelow = 1;
         }
         canvas.Margin = new Thickness(0, marginAbove, 0, marginBelow);
