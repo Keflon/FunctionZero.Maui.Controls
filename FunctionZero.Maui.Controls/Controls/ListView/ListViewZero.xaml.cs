@@ -173,7 +173,7 @@ public partial class ListViewZero : ContentView
 
     private void DeferredFilterAndUpdate()
     {
-        if (_pendingUpdate == false)
+        if (!_pendingUpdate)
         {
             _pendingUpdate = true;
             // The underlying collection can have items added / removed in a foreach,
@@ -208,8 +208,7 @@ public partial class ListViewZero : ContentView
 
                 UpdateItemContainers();
                 _pendingUpdate = false;
-            }
-            );
+            });
         }
     }
 
@@ -265,16 +264,25 @@ public partial class ListViewZero : ContentView
         _updatingContainers = true;
 
         // Calculate total estimated height
+        var buffer = ItemHeight * 2;
+        var bufferTop = Math.Min(buffer, ScrollOffset);
         var totalHeight = ItemHeight * ItemsSource.Count;
-        var marginBelow = Math.Max(0, totalHeight - canvas.Height - ScrollOffset);
-        canvas.Margin = new Thickness(0, ScrollOffset, 0, marginBelow);
-        canvas.HeightRequest = scrollView.Height;
+        var bufferBottom = Math.Min(buffer, Math.Max(0, totalHeight - ScrollOffset - scrollView.Height - bufferTop));
+        var canvasHeight = scrollView.Height + bufferTop + bufferBottom;
+        var marginAbove = Math.Max(0, ScrollOffset - bufferTop);
+        var marginBelow = Math.Max(0, totalHeight - marginAbove - canvasHeight);
+        if (marginBelow == 0 && canvasHeight > scrollView.Height)
+        {
+            marginBelow = 1;
+        }
+        canvas.Margin = new Thickness(0, marginAbove, 0, marginBelow);
+        canvas.HeightRequest = canvasHeight;
 
         // Find the first item that is to be in view
-        int firstVisibleIndex = Math.Max(0, (int)(ScrollOffset / ItemHeight));
+        int firstVisibleIndex = Math.Max(0, (int)(marginAbove / ItemHeight));
 
         // Maximum number of ListItem instances that can be at least partially seen.
-        int maxVisibleContainers = (int)(scrollView.Height / ItemHeight) + 1;
+        int maxVisibleContainers = (int)(canvasHeight / ItemHeight) + 1;
 
         int lastVisibleIndex = Math.Min(ItemsSource.Count - 1, firstVisibleIndex + maxVisibleContainers);
 
@@ -327,7 +335,7 @@ public partial class ListViewZero : ContentView
             if (item is ListItemZero listItem)
             {
                 // Determine offset for item.
-                float itemOffset = listItem.ItemIndex * ItemHeight - ScrollOffset;
+                float itemOffset = listItem.ItemIndex * ItemHeight - marginAbove;
                 listItem.BindingContext = ItemsSource[listItem.ItemIndex];
                 listItem.TranslationY = itemOffset;
                 listItem.WidthRequest = this.Width;
