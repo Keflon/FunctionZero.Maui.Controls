@@ -46,15 +46,15 @@ namespace SampleApp.Mvvm.PageViewModels
             set => SetProperty(ref _selectedItems, value);
         }
 
-        private float _listViewScrollOffset;
-        public float ListViewScrollOffset
+        private double _listViewScrollOffset;
+        public double ListViewScrollOffset
         {
             get => _listViewScrollOffset;
             set => SetProperty(ref _listViewScrollOffset, value);
         }
 
-        private float _treeViewScrollOffset;
-        public float TreeViewScrollOffset
+        private double _treeViewScrollOffset;
+        public double TreeViewScrollOffset
         {
             get => _treeViewScrollOffset;
             set => SetProperty(ref _treeViewScrollOffset, value);
@@ -77,9 +77,9 @@ namespace SampleApp.Mvvm.PageViewModels
         public class ListItem : INotifyPropertyChanged
         {
             private string _name;
-            private float _offset;
+            private double _offset;
 
-            public ListItem(string name, float offset)
+            public ListItem(string name, double offset)
             {
                 Name = name;
                 Offset = offset;
@@ -97,7 +97,7 @@ namespace SampleApp.Mvvm.PageViewModels
                     }
                 }
             }
-            public float Offset
+            public double Offset
             {
                 get => _offset;
                 set
@@ -119,7 +119,7 @@ namespace SampleApp.Mvvm.PageViewModels
             SampleListData = new ObservableCollection<ListItem>();
 
             for (int c = 0; c < 400; c++)
-                SampleListData.Add(new ListItem($"Hello {c}", (float)110.0 + (float)Math.Sin(c / 9.0) * 40));
+                SampleListData.Add(new ListItem($"Hello {c}", (double)110.0 + (double)Math.Sin(c / 9.0) * 40));
 
             SelectedItems = new ObservableCollection<ListItem>();
             //SelectedItems.CollectionChanged += (sender, e) => { Debug.WriteLine($"VM Count:{SelectedItems.Count}"); };
@@ -168,7 +168,7 @@ namespace SampleApp.Mvvm.PageViewModels
 
             //var scale = (Math.Sin(_listCount / 223.0 * Math.Cos(_listCount / 337.0))) / 2.0 + 1.0;
             var scale = Math.Sin(_listCount / 223.0) / 2.0 + 1.0;
-            ListViewScrollOffset = (float)scale * SampleListData.Count * 25;
+            ListViewScrollOffset = (double)scale * SampleListData.Count * 25;
 
 #elif false
 

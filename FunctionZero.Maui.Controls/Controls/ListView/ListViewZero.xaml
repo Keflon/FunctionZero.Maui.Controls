@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FunctionZero.Maui.Controls.ListViewZero" 
              xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
+             xmlns:sb="clr-namespace:FunctionZero.Maui.Controls.ScrollBar;assembly=FunctionZero.Maui.Controls"
              HorizontalOptions="FillAndExpand" 
              VerticalOptions="FillAndExpand" 
+             x:Name="Self"
              >
 
     <ContentView.Resources>
@@ -37,13 +39,19 @@
         </Style>
         
     </ContentView.Resources>
-    
+
     <AbsoluteLayout 
         x:Name="canvas" 
         HorizontalOptions="FillAndExpand" 
         VerticalOptions="FillAndExpand" 
         BackgroundColor="Transparent"
-        IsClippedToBounds="True"/>
+        IsClippedToBounds="True">
+        <sb:ScrollBarZero 
+            x:Name="sb" 
+            ScrollY="{Binding ScrollOffset, Source={x:Reference Self}}"
+            ZIndex="1"
+            />
+    </AbsoluteLayout>
 
 </ContentView>
 <!--ZIndex breaks release build.-->

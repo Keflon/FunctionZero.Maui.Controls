@@ -11,12 +11,12 @@ namespace FunctionZero.Maui.Controls
     {
         private readonly int _qDepth;
         Stopwatch _sw;
-        record struct DataPoint(float delta, long elapsedMilliseconds);
+        record struct DataPoint(double delta, long elapsedMilliseconds);
 
         private readonly Queue<DataPoint> _velocityQueue;
         double _totalY = 0;
-        private float _startScrollOffset;
-        float _lastScrollOffset;
+        private double _startScrollOffset;
+        double _lastScrollOffset;
         private long _lastElapsedMilliseconds;
 
         public ScrollVelocityManager(int qDepth)
@@ -27,7 +27,7 @@ namespace FunctionZero.Maui.Controls
             _velocityQueue = new(qDepth);
         }
 
-        internal void Start(float scrollOffset)
+        internal void Start(double scrollOffset)
         {
             _startScrollOffset = scrollOffset;
             _lastScrollOffset = scrollOffset;
@@ -36,7 +36,7 @@ namespace FunctionZero.Maui.Controls
             _sw.Start();
         }
 
-        internal void StoreDataPoint(float scrollOffset)
+        internal void StoreDataPoint(double scrollOffset)
         {
             //Debug.WriteLine($"OFFSET:{scrollOffset},DELTA:{scrollOffset - _lastScrollOffset}");
 
@@ -68,7 +68,7 @@ namespace FunctionZero.Maui.Controls
             long timeAnchor = 0;
 
             int validcount = 0;
-            float totalDelta = 0;
+            double totalDelta = 0;
 
             foreach (var item in _velocityQueue)
             {
@@ -77,7 +77,7 @@ namespace FunctionZero.Maui.Controls
                     var timeDelta = item.elapsedMilliseconds - timeAnchor;
                     if (timeDelta != 0)
                     {
-                        float animationDelta = (item.delta / timeDelta);
+                        double animationDelta = (item.delta / timeDelta);
                         var positiveDelta = Math.Abs(animationDelta);
 
                         validcount++;

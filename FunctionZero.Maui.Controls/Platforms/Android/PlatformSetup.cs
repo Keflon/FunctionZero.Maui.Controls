@@ -7,9 +7,14 @@ namespace FunctionZero.Maui.Controls
     // All the code in this file is only included on Android.
     public partial class PlatformSetup
     {
+    }
+}
+    /*
+    public partial class PlatformSetup
+    {
         private float _touchX;
         private float _touchY;
-        private float _offset;
+        private double _offset;
         private bool _tapTouchCandidate;
         private PlatformSetup()
         {
@@ -61,4 +66,4 @@ namespace FunctionZero.Maui.Controls
             }
         }
     }
-}
+    */

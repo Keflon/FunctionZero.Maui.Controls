@@ -11,16 +11,13 @@ namespace FunctionZero.Maui.Controls;
 
 public partial class ListViewZero : ContentView
 {
-    const string SimpleAnimation = "SimpleAnimation";
-
-    float _anchor;
-    private readonly bool _usePlatformSpecificTgr;
     private BucketDictionary<DataTemplate, ListItemZero> _cache;
     private readonly List<ListItemZero> _killList;
     bool _pendingUpdate = false;
-    double _animationDelta;
     bool _updatingContainers = false;
-    private ScrollVelocityManager _velocityManager;
+
+    #region bindable properties
+
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource), typeof(IList), typeof(ListViewZero), null, BindingMode.OneWay, null, ItemsSourceChanged);
 
     public IList ItemsSource
@@ -39,6 +36,7 @@ public partial class ListViewZero : ContentView
         if (newValue is INotifyCollectionChanged newCollection)
             newCollection.CollectionChanged += self.ItemsSource_CollectionChanged;
 
+        self.UpdateScrollBarContentHeight();
         self.UpdateItemContainers();
     }
 
@@ -110,11 +108,21 @@ public partial class ListViewZero : ContentView
         set { SetValue(ItemTemplateProperty, value); }
     }
 
-    public static readonly BindableProperty ScrollOffsetProperty = BindableProperty.Create(nameof(ScrollOffset), typeof(float), typeof(ListViewZero), (float)0.0, BindingMode.OneWay, null, null, ScrollOffsetChanged);
-
-    public float ScrollOffset
+    public static readonly BindableProperty ScrollOffsetProperty = BindableProperty.Create(nameof(ScrollOffset), typeof(double), typeof(ListViewZero), (double)0.0, BindingMode.OneWay, null, ScrollOffsetChanged,null , CoerceScrollOffsetValue);
+    // ATTENTION: TwoWay Binding a double to a ScrollOffset on a ScrollView can lose precision by varying amounts on different platforms, causing an event storm!
+    // Ignoring small changes prevents the storm.
+    private static object CoerceScrollOffsetValue(BindableObject bindable, object value)
     {
-        get { return (float)GetValue(ScrollOffsetProperty); }
+        var self = (ListViewZero)bindable;
+
+        if (Math.Abs(self.ScrollOffset - (double)value) < 1.0)
+            return self.ScrollOffset;
+        return value;
+    }
+
+    public double ScrollOffset
+    {
+        get { return (double)GetValue(ScrollOffsetProperty); }
         set { SetValue(ScrollOffsetProperty, value); }
     }
 
@@ -124,9 +132,6 @@ public partial class ListViewZero : ContentView
 
         // TODO: Is the second one quicker on a slow Droid phone?
         //self.UpdateItemContainers();
-
-
-
         self.DeferredFilterAndUpdate();
     }
 
@@ -143,11 +148,11 @@ public partial class ListViewZero : ContentView
         var self = (ListViewZero)bindable;
     }
 
-    public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(float), typeof(ListViewZero), (float)40.0, BindingMode.OneWay, null);
+    public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(double), typeof(ListViewZero), (double)40.0, BindingMode.OneWay, null);
 
-    public float ItemHeight
+    public double ItemHeight
     {
-        get { return (float)GetValue(ItemHeightProperty); }
+        get { return (double)GetValue(ItemHeightProperty); }
         set { SetValue(ItemHeightProperty, value); }
     }
 
@@ -164,8 +169,11 @@ public partial class ListViewZero : ContentView
         var self = (ListViewZero)bindable;
     }
 
+    #endregion
+
     private void ItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
+        UpdateScrollBarContentHeight();
         DeferredFilterAndUpdate();
     }
 
@@ -215,25 +223,17 @@ public partial class ListViewZero : ContentView
     {
         DeferredFilterAndUpdate();
     }
-    public static bool _usePlatformTapRecognizer;
     public ListViewZero()
     {
-        _usePlatformSpecificTgr = PlatformSetup.TryHookPlatformTouch();
-
         _cache = new();
         _killList = new(50);
-        _velocityManager = new(5);
 
         InitializeComponent();
 
         canvas.SizeChanged += Canvas_SizeChanged;
 
-        var pgr = new PanGestureRecognizer();
-        pgr.PanUpdated += Gr_PanUpdated;
-
         var tgr = new TapGestureRecognizer();
         tgr.Tapped += Tgr_Tapped;
-        this.GestureRecognizers.Add(pgr);
         this.GestureRecognizers.Add(tgr);
 
         SelectedItems = new ObservableCollection<object>();
@@ -241,102 +241,44 @@ public partial class ListViewZero : ContentView
 
     private void Tgr_Tapped(object sender, EventArgs e)
     {
-        this.AbortAnimation(SimpleAnimation);
+        var tea = (TappedEventArgs)e;
+        Point? point = tea.GetPosition(this);
+        
+        // Get ListViewItem for point
+        if (point.HasValue)
+        {
+            var listItem = GetListItemUnderPoint(point.Value.Y);
+            if (listItem != null)
+            {
+                listItem.IsSelected = !listItem.IsSelected;
+            }
+        }
+    }
+
+    public ListItemZero GetListItemUnderPoint(double yOffset)
+    {
+        foreach (View item in this.canvas)
+            if (item is ListItemZero listItem)
+                if ((yOffset >= item.TranslationY) && (yOffset < (item.TranslationY+ItemHeight)))
+                    return listItem;
+        return null;
     }
 
     private void Canvas_SizeChanged(object sender, EventArgs e)
     {
+        UpdateScrollBarLayoutBounds();
+
         UpdateItemContainers();
     }
 
-    private void Gr_PanUpdated(object sender, PanUpdatedEventArgs e)
+    private void UpdateScrollBarLayoutBounds()
     {
-        // TODO: Improve inertia.
-        switch (e.StatusType)
-        {
-            case GestureStatus.Started:
-                this.AbortAnimation(SimpleAnimation);
-                _anchor = ScrollOffset;
-                _velocityManager.Start(ScrollOffset);
-                break;
-            case GestureStatus.Running:
-                ScrollOffset = MassageScrollOffset(_anchor - (float)(e.TotalY));
-                _velocityManager.StoreDataPoint(ScrollOffset);
-                break;
-            case GestureStatus.Completed:
-            case GestureStatus.Canceled:
-
-                uint millisecondRate = 16;
-
-                _animationDelta = _velocityManager.GetVelocity(millisecondRate);
-                _velocityManager.Stop();
-
-                var animation = new Animation(PanAnimate, 1, 0);
-
-                animation.Commit(this, SimpleAnimation, millisecondRate, 2000, Easing.Linear, (v, c) => { }, () => _continueAnimation);
-
-                break;
-                //case GestureStatus.Canceled:
-                //    ScrollOffset = _anchor;
-                //    break;
-        }
+        //canvas.SetLayoutBounds(sb, new Rect(canvas.Width - 50, 0, 50, canvas.Height));
+        canvas.SetLayoutBounds(sb, new Rect(0, 0, canvas.Width, canvas.Height));
     }
-
-    private bool _continueAnimation = false;
-
-    private float MassageScrollOffset(float offset)
+    private void UpdateScrollBarContentHeight()
     {
-        if (offset < 0)
-        {
-            Debug.WriteLine($"< 0 : {offset}");
-
-#if WIP
-            offset *= 0.9f;
-
-            if (Math.Abs(offset) < 1.0f)
-            {
-                this.AbortAnimation(SimpleAnimation);
-                offset = 0.0f;
-            }
-
-            //_continueAnimation = true;
-#else
-            offset = 0;
-#endif
-            return offset;
-        }
-
-        float scrollMax = (float)Math.Max(0, ItemsSource.Count * ItemHeight - Height);
-
-        if (offset > scrollMax)
-        {
-            Debug.WriteLine($"> {scrollMax} : {offset}");
-
-#if WIP
-            offset = (float)(scrollMax + (offset - scrollMax) * 0.9f);
-
-            if (Math.Abs(offset - scrollMax) < 1.0f)
-            {
-                this.AbortAnimation(SimpleAnimation);
-                offset = (float)scrollMax;
-            }
-
-            //_continueAnimation = true;
-#else
-            offset = scrollMax;
-#endif
-            return offset;
-        }
-
-        return offset;
-    }
-
-    private void PanAnimate(double elapsed)
-    {
-        Debug.WriteLine($"PanAnimate: {this.ScrollOffset} + {_animationDelta} * {elapsed}");
-
-        var newScrollOffset = this.ScrollOffset + (float)(_animationDelta * elapsed);
-        ScrollOffset = MassageScrollOffset(newScrollOffset);
+        sb.ContentHeight = ItemHeight * ItemsSource.Count;
     }
 
     private void UpdateItemContainers()
@@ -412,7 +354,7 @@ public partial class ListViewZero : ContentView
             if (item is ListItemZero listItem)
             {
                 // Determine offset for item.
-                float itemOffset = listItem.ItemIndex * ItemHeight - ScrollOffset;
+                double itemOffset = listItem.ItemIndex * ItemHeight - ScrollOffset;
                 listItem.BindingContext = ItemsSource[listItem.ItemIndex];
                 listItem.TranslationY = itemOffset;
                 listItem.WidthRequest = this.Width;
@@ -421,7 +363,6 @@ public partial class ListViewZero : ContentView
 
                 listItem.IsPrimary = listItem.BindingContext == SelectedItem;
             }
-            //TestLabel.Text = $"Active: {canvas.Count}";
         }
         _updatingContainers = false;
     }
@@ -515,19 +456,5 @@ public partial class ListViewZero : ContentView
                 }
             }
         }
-    }
-
-
-    public void ReceivePlatformTap(float x, float y)
-    {
-        Debug.Assert(_usePlatformSpecificTgr);
-
-        foreach (View item in this.canvas)
-            if (item is ListItemZero listItem)
-                if ((listItem.TranslationY <= y) && (listItem.TranslationY >= (y - ItemHeight)))
-                {
-                    listItem.IsSelected = !listItem.IsSelected;
-                    return;
-                }
     }
 }
