@@ -19,7 +19,9 @@
                             </VisualState.Setters>
                         </VisualState>
 
-                        <VisualState x:Name="Focused">
+                        <!-- Need to use a different name than "Focused", since "Focused" is a state that Maui
+                        injects in automatically that can interfere with our focused state -->
+                        <VisualState x:Name="Focused2">
                             <VisualState.Setters>
                                 <Setter Property="BackgroundColor" Value="Cyan" />
                             </VisualState.Setters>
@@ -35,15 +37,19 @@
                 </VisualStateGroupList>
             </Setter>
         </Style>
-        
+
     </ContentView.Resources>
-    
-    <AbsoluteLayout 
-        x:Name="canvas" 
-        HorizontalOptions="FillAndExpand" 
-        VerticalOptions="FillAndExpand" 
-        BackgroundColor="Transparent"
-        IsClippedToBounds="True"/>
+
+    <ScrollView x:Name="scrollView" Scrolled="ScrollView_Scrolled">
+        <StackLayout>
+            <AbsoluteLayout
+                x:Name="canvas"
+                HorizontalOptions="FillAndExpand" 
+                VerticalOptions="FillAndExpand" 
+                BackgroundColor="Transparent"
+                IsClippedToBounds="True"/>
+        </StackLayout>
+    </ScrollView>
 
 </ContentView>
 <!--ZIndex breaks release build.-->

@@ -28,6 +28,7 @@ public partial class ListItemZero : ContentView
     }
 
     public int ItemIndex { get; set; }
+
     public DataTemplate ItemTemplate { get; set; }
 
     public static readonly BindableProperty IsSelectedProperty = BindableProperty.Create(nameof(IsSelected), typeof(bool), typeof(ListItemZero), false, BindingMode.OneWay, null, IsSelectedChanged);
@@ -38,7 +39,7 @@ public partial class ListItemZero : ContentView
         set { SetValue(IsSelectedProperty, value); }
     }
 
-    private static async void IsSelectedChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void IsSelectedChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (ListItemZero)bindable;
 
@@ -86,7 +87,9 @@ public partial class ListItemZero : ContentView
     private void UpdateVisualState()
     {
         if (IsPrimary)
-            VisualStateManager.GoToState(this, "Focused");
+            // Need to use a different name than "Focused", since "Focused" is a state that Maui
+            // injects in automatically that can interfere with our focused state
+            VisualStateManager.GoToState(this, "Focused2");
         else if (IsSelected)
             VisualStateManager.GoToState(this, "Selected");
         else
