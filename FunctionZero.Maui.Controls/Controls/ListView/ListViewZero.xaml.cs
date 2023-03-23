@@ -100,7 +100,7 @@ public partial class ListViewZero : ContentView
         }
     }
 
-    public static readonly BindableProperty ItemTemplateProperty = BindableProperty.Create(nameof(ItemTemplate), typeof(DataTemplate), typeof(ListViewZero), null, BindingMode.OneWay, null);
+    public static readonly BindableProperty ItemTemplateProperty = BindableProperty.Create(nameof(ItemTemplate), typeof(DataTemplate), typeof(ListViewZero), null, BindingMode.OneWay);
 
     public DataTemplate ItemTemplate
     {
@@ -135,7 +135,7 @@ public partial class ListViewZero : ContentView
         self.DeferredFilterAndUpdate();
     }
 
-    public static readonly BindableProperty ScrollVelocityProperty = BindableProperty.Create(nameof(ScrollVelocity), typeof(double), typeof(ListViewZero), (double)0.0, BindingMode.OneWay, null, null, ScrollVelocityChanged);
+    public static readonly BindableProperty ScrollVelocityProperty = BindableProperty.Create(nameof(ScrollVelocity), typeof(double), typeof(ListViewZero), (double)0.0, BindingMode.OneWay, null, ScrollVelocityChanged);
 
     public double ScrollVelocity
     {
@@ -148,7 +148,7 @@ public partial class ListViewZero : ContentView
         var self = (ListViewZero)bindable;
     }
 
-    public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(double), typeof(ListViewZero), (double)40.0, BindingMode.OneWay, null);
+    public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(double), typeof(ListViewZero), (double)40.0, BindingMode.OneWay);
 
     public double ItemHeight
     {
