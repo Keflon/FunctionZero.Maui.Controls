@@ -21,7 +21,7 @@
                             </VisualState.Setters>
                         </VisualState>
 
-                        <VisualState x:Name="Focused">
+                        <VisualState x:Name="Focused2">
                             <VisualState.Setters>
                                 <Setter Property="BackgroundColor" Value="Cyan" />
                             </VisualState.Setters>
@@ -37,21 +37,15 @@
                 </VisualStateGroupList>
             </Setter>
         </Style>
-        
+
     </ContentView.Resources>
 
-    <AbsoluteLayout 
-        x:Name="canvas" 
-        HorizontalOptions="FillAndExpand" 
-        VerticalOptions="FillAndExpand" 
-        BackgroundColor="Transparent"
-        IsClippedToBounds="True">
-        <sb:ScrollBarZero 
-            x:Name="sb" 
-            ScrollY="{Binding ScrollOffset, Source={x:Reference Self}}"
-            ZIndex="1"
+    <ScrollView x:Name="scrollView">
+        <AbsoluteLayout 
+            x:Name="canvas" 
+            HorizontalOptions="Fill" 
+            VerticalOptions="Start" 
             />
-    </AbsoluteLayout>
-
+    </ScrollView>
 </ContentView>
 <!--ZIndex breaks release build.-->

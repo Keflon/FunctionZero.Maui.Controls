@@ -5,6 +5,5 @@
              x:Class="FunctionZero.Maui.Controls.ListItemZero"
              x:Name="Self"
              StyleClass="Local, Vsm"
-             HorizontalOptions="FillAndExpand"
 />
 

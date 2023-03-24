@@ -80,7 +80,7 @@ public partial class ListItemZero : ContentView
     private void UpdateVisualState()
     {
         if (IsPrimary)
-            VisualStateManager.GoToState(this, "Focused");
+            VisualStateManager.GoToState(this, "Focused2");
         else if (IsSelected)
             VisualStateManager.GoToState(this, "Selected");
         else
