@@ -40,15 +40,11 @@
 
     </ContentView.Resources>
 
-    <!--An initial height and width must be specified otherwise Android 
-    stops propogating HeightRequest to Height, for no reason-->
-    <sb:CustomScrollView x:Name="scrollView" >
-        <AbsoluteLayout
-            x:Name="canvas" 
-               HeightRequest="2"        
-               WidthRequest="2"        
-            />
-    </sb:CustomScrollView>
+
+    <sb:CustomScrollView x:Name="scrollView"              HorizontalOptions="Fill" BackgroundColor="AliceBlue"
+             VerticalOptions="Fill" />
+
+
 </ContentView>
 <!--ZIndex breaks release build.-->
     

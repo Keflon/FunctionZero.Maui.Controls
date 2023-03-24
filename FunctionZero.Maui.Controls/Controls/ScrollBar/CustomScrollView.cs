@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace FunctionZero.Maui.Controls.ScrollBar
 {
@@ -12,8 +13,27 @@ namespace FunctionZero.Maui.Controls.ScrollBar
     {
         public CustomScrollView()
         {
+            var view = new AbsoluteLayout();
+            view.WidthRequest = 2;
+            view.HeightRequest = 2;
+            Content = view;
+            
+
             base.Scrolled += CustomScrollView_Scrolled;
         }
+
+        protected override void OnSizeAllocated(double width, double height)
+        {
+            base.OnSizeAllocated(width, height);
+            if ((width > 0) && (height > 0))
+            {
+                Content.WidthRequest = width;
+                Content.HeightRequest = height;
+                TrySetMargin();
+            }
+        }
+
+        public AbsoluteLayout Canvas => (AbsoluteLayout)Content;
 
         private void CustomScrollView_Scrolled(object sender, ScrolledEventArgs e)
         {
@@ -41,11 +61,14 @@ namespace FunctionZero.Maui.Controls.ScrollBar
         private static void ContentHeightChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var self = (CustomScrollView)bindable;
-            //self.content = new Size(300, self.ContentHeight);
-            self.Content.Margin = new Thickness(0, 0, 0, self.ContentHeight - self.Content.Height);
-            //self.Content.Margin = new Thickness(0, 0, 0, 100);
 
+            self.TrySetMargin();
+        }
 
+        private void TrySetMargin()
+        {
+            if (Content.HeightRequest > 0)
+                Content.Margin = new Thickness(0, 0, 0, ContentHeight - Content.Height);
         }
 
         public double ContentHeight

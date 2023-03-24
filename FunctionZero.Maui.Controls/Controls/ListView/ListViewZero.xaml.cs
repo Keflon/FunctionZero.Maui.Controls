@@ -244,7 +244,7 @@ public partial class ListViewZero : ContentView
                         SelectedItem = null;
                 }
 
-                foreach (View item in this.canvas)
+                foreach (View item in this.scrollView.Canvas)
                     if (item is ListItemZero listItem)
                     {
                         listItem.IsSelected = SelectedItems.Contains(listItem.BindingContext);
@@ -320,10 +320,6 @@ public partial class ListViewZero : ContentView
 
     private void ScrollView_SizeChanged(object sender, EventArgs e)
     {
-        // This ought to be achievable in xaml, but doesn't work on every platform.
-        canvas.WidthRequest = scrollView.Width;
-        canvas.HeightRequest = scrollView.Height;
-
         DeferredUpdateItemContainers();
     }
 
@@ -359,7 +355,7 @@ public partial class ListViewZero : ContentView
 
     private void UpdateItemContainers()
     {
-        if (canvas.Height <= 0)
+        if (this.scrollView.Canvas.Height <= 0)
             return;
 
         if (ItemsSource == null)
@@ -384,7 +380,7 @@ public partial class ListViewZero : ContentView
         // Foreach over each ListItemZero in this.Canvas and set ItemIndex to -1.
         // Then, after layout, kill any that still have ItemIndex of -1.
         // Mark everything in the canvas as a candidate for removal.
-        foreach (View item in this.canvas)
+        foreach (View item in this.scrollView.Canvas)
             if (item is ListItemZero listItem)
                 listItem.ItemIndex = -1;
 
@@ -406,7 +402,7 @@ public partial class ListViewZero : ContentView
                 listItem.IsPrimary = ItemsSource[c] == SelectedItem;
 
                 // SMELL: canvas will provide a BC, so we should set BC first. The TreeNodeSpacer needs this for some reason. Fix the TreeNodeSpacer.
-                canvas.Add(listItem);
+                this.scrollView.Canvas.Add(listItem);
                 listItem.BindingContext = ItemsSource[c];
             }
             listItem.ItemIndex = c;
@@ -414,7 +410,7 @@ public partial class ListViewZero : ContentView
 
         _killList.Clear();
 
-        foreach (View item in this.canvas)
+        foreach (View item in this.scrollView.Canvas)
             if (item is ListItemZero listItem)
                 if (listItem.ItemIndex == -1)
                     _killList.Add(listItem);
@@ -422,14 +418,14 @@ public partial class ListViewZero : ContentView
         foreach (ListItemZero item in _killList)
         {
             //item.BindingContext = null;
-            canvas.Remove(item);
+            this.scrollView.Canvas.Remove(item);
             item.ClearValue(ListItemZero.BindingContextProperty);
             item.IsSelected = false;
             item.IsPrimary = false;
             _cache.PushToBucket(item.ItemTemplate, item);
         }
 
-        foreach (object item in canvas)
+        foreach (object item in this.scrollView.Canvas)
         {
             if (item is ListItemZero listItem)
             {
@@ -446,7 +442,7 @@ public partial class ListViewZero : ContentView
     private ListItemZero GetViewForBindingContextFromCanvas(object bindingContext)
     {
         // TODO: Will a Map be quicker? Probably not.
-        foreach (View item in this.canvas)
+        foreach (View item in this.scrollView.Canvas)
             if (item.BindingContext == bindingContext)
                 return (ListItemZero)item;
 
