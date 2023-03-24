@@ -148,22 +148,13 @@ public partial class ListViewZero : ContentView
     {
         var self = (ListViewZero)bindable;
 
-        // The following may no longer be true.
-        // Calling immediately brings in containers before they have updated themselves, so they have old layouts.
-        //self.UpdateItemContainers();
-        // Deferring allows containers to update before they are rendered, so layouts are correct, 
-        // but fast-scrolling can lead to empty space before they are rendered.
-        // Could easily be mitigated by extending range of items offscreen. TODO: Lookahead and Lookbehind values.
-
-
-        //_ = self.scrollView.ScrollToAsync(0, self.ScrollOffset, false);
-        //self.UpdateItemContainers();
+        // TODO: Lookahead and Lookbehind values; to prevent flicker on Windows when fast scolling.
 
         // Windows is less flickery if we defer the update here. That doesn't make sense!
         // iOS and Droid don't flicker and look the same either way. That doesn't make sense either!
         self.DeferredUpdateItemContainers();
 
-        // If the scroll movement came from the ScrollView don't write it back, because doing so upsets iOS when scrolling outside of bounds.
+        // If the scroll movement came from the ScrollView don't write it back, because doing so upsets iOS when scrolling outside of bounds and is unnecessary anyway.
         if(self.scrollView.ScrollY != self.ScrollOffset)
             self.DeferredScrollTo(self.ScrollOffset);
     }
