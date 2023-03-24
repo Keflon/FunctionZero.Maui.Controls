@@ -41,7 +41,7 @@
     </ContentView.Resources>
 
 
-    <sb:CustomScrollView x:Name="scrollView"              HorizontalOptions="Fill" BackgroundColor="AliceBlue"
+    <sb:CustomScrollView x:Name="scrollView"
              VerticalOptions="Fill" />
 
 
