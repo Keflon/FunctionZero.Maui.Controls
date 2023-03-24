@@ -48,8 +48,6 @@ namespace FunctionZero.Maui.Controls.ScrollBar
 
         }
 
-
-
         public double ContentHeight
         {
             get => (double)GetValue(ContentHeightProperty);

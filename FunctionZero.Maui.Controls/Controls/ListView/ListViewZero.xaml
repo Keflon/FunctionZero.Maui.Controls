@@ -40,8 +40,10 @@
 
     </ContentView.Resources>
 
-    <sb:CustomScrollView x:Name="scrollView" BackgroundColor="Yellow" >
-        <AbsoluteLayout BackgroundColor="Blue"
+    <!--An initial height and width must be specified otherwise Android 
+    stops propogating HeightRequest to Height-->
+    <sb:CustomScrollView x:Name="scrollView" >
+        <AbsoluteLayout 
             x:Name="canvas" 
                HeightRequest="200"        
                WidthRequest="200"        
