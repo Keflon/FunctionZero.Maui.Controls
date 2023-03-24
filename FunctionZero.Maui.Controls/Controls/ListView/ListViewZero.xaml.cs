@@ -323,13 +323,13 @@ public partial class ListViewZero : ContentView
 
 
 #if true
-                //canvas.HeightRequest = ItemHeight * ItemsSource.Count;
+                canvas.HeightRequest = ItemHeight * ItemsSource.Count;
 
                 //canvas.HeightRequest = 2090000;
                 //canvas.HeightRequest = 2100000;
                 //canvas.HeightRequest = 2097590;clip region slightly too big
                 //canvas.HeightRequest = 2098600; //clip region massive/ not working 
-                  canvas.HeightRequest = 2097589; 
+                //canvas.HeightRequest = 2097589; 
 
 
 #else // performs better, but clips on Android. (Set IsClippedToBounds to false on AbsoluteLayout. Droid clips, Windows doesn't even clip to the the parent! Why does nothing work consistently?)
