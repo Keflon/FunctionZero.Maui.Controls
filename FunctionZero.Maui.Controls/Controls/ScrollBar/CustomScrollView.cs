@@ -42,7 +42,7 @@ namespace FunctionZero.Maui.Controls.ScrollBar
         {
             var self = (CustomScrollView)bindable;
             //self.content = new Size(300, self.ContentHeight);
-            self.Content.Margin = new Thickness(0, 0, 0, self.ContentHeight);
+            self.Content.Margin = new Thickness(0, 0, 0, self.ContentHeight - self.Content.Height);
             //self.Content.Margin = new Thickness(0, 0, 0, 100);
 
 

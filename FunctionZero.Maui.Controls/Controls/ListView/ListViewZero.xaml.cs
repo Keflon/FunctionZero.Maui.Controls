@@ -320,6 +320,7 @@ public partial class ListViewZero : ContentView
 
     private void ScrollView_SizeChanged(object sender, EventArgs e)
     {
+        // This ought to be achievable in xaml, but doesn't work on every platform.
         canvas.WidthRequest = scrollView.Width;
         canvas.HeightRequest = scrollView.Height;
 
@@ -444,7 +445,7 @@ public partial class ListViewZero : ContentView
 
     private ListItemZero GetViewForBindingContextFromCanvas(object bindingContext)
     {
-        // TODO: Once working, use a map.
+        // TODO: Will a Map be quicker? Probably not.
         foreach (View item in this.canvas)
             if (item.BindingContext == bindingContext)
                 return (ListItemZero)item;
@@ -500,7 +501,6 @@ public partial class ListViewZero : ContentView
                         // SelectedItem must be set prior to that call.
                         SelectedItem = listItem.BindingContext;
                         SelectedItems.Add(listItem.BindingContext);
-
                     }
                     else
                     {
@@ -512,7 +512,6 @@ public partial class ListViewZero : ContentView
                             else
                                 SelectedItem = null;
                         }
-
                     }
                 }
                 else
