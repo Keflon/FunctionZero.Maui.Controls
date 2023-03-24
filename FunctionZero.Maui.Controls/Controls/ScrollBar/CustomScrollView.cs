@@ -68,7 +68,7 @@ namespace FunctionZero.Maui.Controls.ScrollBar
         private void TrySetMargin()
         {
             if (Content.HeightRequest > 0)
-                Content.Margin = new Thickness(0, 0, 0, ContentHeight - Content.Height);
+                Content.Margin = new Thickness(0, 0, 0, ContentHeight - Content.HeightRequest);
         }
 
         public double ContentHeight
