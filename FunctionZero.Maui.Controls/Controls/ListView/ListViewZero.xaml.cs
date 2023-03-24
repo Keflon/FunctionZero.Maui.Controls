@@ -148,13 +148,21 @@ public partial class ListViewZero : ContentView
     {
         var self = (ListViewZero)bindable;
 
+        // The following may no longer be true.
         // Calling immediately brings in containers before they have updated themselves, so they have old layouts.
         //self.UpdateItemContainers();
         // Deferring allows containers to update before they are rendered, so layouts are correct, 
         // but fast-scrolling can lead to empty space before they are rendered.
         // Could easily be mitigated by extending range of items offscreen. TODO: Lookahead and Lookbehind values.
+
+
+        //_ = self.scrollView.ScrollToAsync(0, self.ScrollOffset, false);
+        //self.UpdateItemContainers();
+
         self.DeferredUpdateItemContainers();
-        self.DeferredScrollTo(self.ScrollOffset);
+
+        if(self.scrollView.ScrollY != self.ScrollOffset)
+            self.DeferredScrollTo(self.ScrollOffset);
     }
     public double ScrollOffset
     {
@@ -266,32 +274,6 @@ public partial class ListViewZero : ContentView
             // and this buffers that down to 1 call to UpdateItemContainers.
             Dispatcher.Dispatch(() =>
             {
-                // TODO: This switch statement could be better placed.
-                switch (SelectionMode)
-                {
-                    case SelectionMode.None:
-                        SelectedItems.Clear();
-                        break;
-                    case SelectionMode.Single:
-                        if (SelectedItems.Count > 1)
-                        {
-                            var temp = SelectedItems[SelectedItems.Count - 1];
-                            SelectedItems.Clear();
-                            SelectedItems.Add(temp);
-                        }
-                        break;
-                    case SelectionMode.Multiple:
-                        break;
-                }
-
-                if (SelectedItems.Contains(SelectedItem) == false)
-                {
-                    if (SelectedItems.Count > 0)
-                        SelectedItem = SelectedItems[SelectedItems.Count - 1];
-                    else
-                        SelectedItem = null;
-                }
-
                 UpdateItemContainers();
                 _pendingUpdateItemContainers = false;
             }
