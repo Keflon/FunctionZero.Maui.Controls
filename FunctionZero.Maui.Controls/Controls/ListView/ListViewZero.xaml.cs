@@ -11,12 +11,16 @@ namespace FunctionZero.Maui.Controls;
 
 public partial class ListViewZero : ContentView
 {
-    private BucketDictionary<DataTemplate, ListItemZero> _cache;
+    private readonly BucketDictionary<DataTemplate, ListItemZero> _cache;
     private readonly List<ListItemZero> _killList;
-    bool _pendingUpdateItemContainers = false;
-    bool _updatingContainers = false;
+    private bool _pendingUpdateItemContainers = false;
+    private bool _pendingSelectionUpdate = false;
+    private bool _pendingScrollUpdate = false;
+    private bool _updatingItemContainers = false;
 
     #region bindable properties
+
+    #region ItemsSourceProperty
 
     public static readonly BindableProperty ItemsSourceProperty = BindableProperty.Create(nameof(ItemsSource), typeof(IList), typeof(ListViewZero), null, BindingMode.OneWay, null, ItemsSourceChanged);
 
@@ -36,17 +40,16 @@ public partial class ListViewZero : ContentView
         if (newValue is INotifyCollectionChanged newCollection)
             newCollection.CollectionChanged += self.ItemsSource_CollectionChanged;
 
-        self.UpdateScrollViewContentHeight();
+        self.DeferredUpdateScrollViewContentHeight();
         self.UpdateItemContainers();
     }
 
+    #endregion
+
+    #region SelectedItemsProperty
+
     public static readonly BindableProperty SelectedItemsProperty = BindableProperty.Create(nameof(SelectedItems), typeof(IList), typeof(ListViewZero), null, BindingMode.TwoWay, null, SelectedItemsChanged);
 
-    public IList SelectedItems
-    {
-        get { return (IList)GetValue(SelectedItemsProperty); }
-        set { SetValue(SelectedItemsProperty, value); }
-    }
     private static void SelectedItemsChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (ListViewZero)bindable;
@@ -60,6 +63,15 @@ public partial class ListViewZero : ContentView
         // This will bail early if the change was caused by SelectionUpdate.
         self.DeferredSelectionUpdate();
     }
+    public IList SelectedItems
+    {
+        get { return (IList)GetValue(SelectedItemsProperty); }
+        set { SetValue(SelectedItemsProperty, value); }
+    }
+
+    #endregion
+
+    #region SelectionModeProperty
 
     public static readonly BindableProperty SelectionModeProperty = BindableProperty.Create(nameof(SelectionMode), typeof(SelectionMode), typeof(ListViewZero), SelectionMode.None, BindingMode.OneWay, null, SelectionModeChanged);
 
@@ -76,13 +88,11 @@ public partial class ListViewZero : ContentView
         self.DeferredSelectionUpdate();
     }
 
-    public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(ListViewZero), null, BindingMode.TwoWay, null, SelectedItemChanged);
+    #endregion
 
-    public object SelectedItem
-    {
-        get { return (object)GetValue(SelectedItemProperty); }
-        set { SetValue(SelectedItemProperty, value); }
-    }
+    #region SelectedItemProperty
+
+    public static readonly BindableProperty SelectedItemProperty = BindableProperty.Create(nameof(SelectedItem), typeof(object), typeof(ListViewZero), null, BindingMode.TwoWay, null, SelectedItemChanged);
 
     private static void SelectedItemChanged(BindableObject bindable, object oldValue, object newValue)
     {
@@ -100,6 +110,15 @@ public partial class ListViewZero : ContentView
                 listItem.IsSelected = true;
         }
     }
+    public object SelectedItem
+    {
+        get { return (object)GetValue(SelectedItemProperty); }
+        set { SetValue(SelectedItemProperty, value); }
+    }
+
+    #endregion
+
+    #region ItemTemplateProperty
 
     public static readonly BindableProperty ItemTemplateProperty = BindableProperty.Create(nameof(ItemTemplate), typeof(DataTemplate), typeof(ListViewZero), null, BindingMode.OneWay);
 
@@ -108,6 +127,10 @@ public partial class ListViewZero : ContentView
         get { return (DataTemplate)GetValue(ItemTemplateProperty); }
         set { SetValue(ItemTemplateProperty, value); }
     }
+
+    #endregion
+
+    #region ScrollOffsetProperty
 
     public static readonly BindableProperty ScrollOffsetProperty = BindableProperty.Create(nameof(ScrollOffset), typeof(double), typeof(ListViewZero), (double)0.0, BindingMode.TwoWay, null, ScrollOffsetChanged, null, CoerceScrollOffsetValue);
     // ATTENTION: TwoWay Binding a double to a ScrollOffset on a ScrollView can lose precision by varying amounts on different platforms, causing an event storm!
@@ -121,16 +144,10 @@ public partial class ListViewZero : ContentView
         return value;
     }
 
-    public double ScrollOffset
-    {
-        get { return (double)GetValue(ScrollOffsetProperty); }
-        set { SetValue(ScrollOffsetProperty, value); }
-    }
-
     private static void ScrollOffsetChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (ListViewZero)bindable;
-        
+
         // Calling immediately brings in containers before they have updated themselves, so they have old layouts.
         //self.UpdateItemContainers();
         // Deferring allows containers to update before they are rendered, so layouts are correct, 
@@ -139,8 +156,14 @@ public partial class ListViewZero : ContentView
         self.DeferredUpdateItemContainers();
         self.DeferredScrollTo(self.ScrollOffset);
     }
+    public double ScrollOffset
+    {
+        get { return (double)GetValue(ScrollOffsetProperty); }
+        set { SetValue(ScrollOffsetProperty, value); }
+    }
 
-    bool _pendingScrollUpdate = false;
+    #endregion
+
     private void DeferredScrollTo(double scrollOffset)
     {
         if (_pendingScrollUpdate == false)
@@ -155,7 +178,6 @@ public partial class ListViewZero : ContentView
             }
             );
         }
-
     }
 
     public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(double), typeof(ListViewZero), (double)40.0, BindingMode.OneWay);
@@ -183,11 +205,9 @@ public partial class ListViewZero : ContentView
 
     private void ItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-        UpdateScrollViewContentHeight();
+        DeferredUpdateScrollViewContentHeight();
         DeferredUpdateItemContainers();
     }
-
-    private bool _pendingSelectionUpdate = false;
 
     private void DeferredSelectionUpdate()
     {
@@ -206,6 +226,7 @@ public partial class ListViewZero : ContentView
                     case SelectionMode.Single:
                         if (SelectedItems.Count > 1)
                         {
+                            // TODO: KillList, to reduce callbacks if SelectedItems is observable.
                             var temp = SelectedItems[SelectedItems.Count - 1];
                             SelectedItems.Clear();
                             SelectedItems.Add(temp);
@@ -225,10 +246,10 @@ public partial class ListViewZero : ContentView
 
                 foreach (View item in this.canvas)
                     if (item is ListItemZero listItem)
-                        {
-                            listItem.IsSelected = SelectedItems.Contains(listItem.BindingContext);
-                            listItem.IsPrimary = listItem.BindingContext == SelectedItem;
-                        }
+                    {
+                        listItem.IsSelected = SelectedItems.Contains(listItem.BindingContext);
+                        listItem.IsPrimary = listItem.BindingContext == SelectedItem;
+                    }
 
                 _pendingSelectionUpdate = false;
             }
@@ -293,24 +314,14 @@ public partial class ListViewZero : ContentView
 
         scrollView.Scrolled += ScrollView_Scrolled;
         scrollView.SizeChanged += ScrollView_SizeChanged;
-        canvas.SizeChanged += Canvas_SizeChanged;
 
         SelectedItems = new ObservableCollection<object>();
     }
 
-    private void Canvas_SizeChanged(object sender, EventArgs e)
-    {
-        //canvas.WidthRequest = scrollView.Width;
-        //canvas.HeightRequest = scrollView.Height;
-
-    }
-
     private void ScrollView_SizeChanged(object sender, EventArgs e)
     {
-        //UpdateItemContainers();
         canvas.WidthRequest = scrollView.Width;
         canvas.HeightRequest = scrollView.Height;
-        //scrollView.ForceLayout();
 
         DeferredUpdateItemContainers();
     }
@@ -318,37 +329,26 @@ public partial class ListViewZero : ContentView
     private void ScrollView_Scrolled(object sender, ScrolledEventArgs e)
     {
         ScrollOffset = e.ScrollY;
-        // ScrollOffsetChanged does our updates.
-        //UpdateItemContainers();
     }
 
     private bool _pendingUpdateScrollViewContentHeight = false;
 
-    private void UpdateScrollViewContentHeight()
+    private void DeferredUpdateScrollViewContentHeight()
     {
-        if(_pendingUpdateScrollViewContentHeight == false)
+        if (_pendingUpdateScrollViewContentHeight == false)
         {
             _pendingUpdateScrollViewContentHeight = true;
 
-            //Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(2),() =>
             Dispatcher.Dispatch(() =>
             {
-
                 scrollView.ContentHeight = ItemHeight * ItemsSource.Count;
 
 #if false
-                //canvas.HeightRequest = ItemHeight * ItemsSource.Count;
-
                 //canvas.HeightRequest = 2090000;
                 //canvas.HeightRequest = 2100000;
                 //canvas.HeightRequest = 2097590;clip region slightly too big
                 //canvas.HeightRequest = 2098600; //clip region massive/ not working 
                 //canvas.HeightRequest = 2097589; 
-
-
-#elif false // performs better, but clips on Android. (Set IsClippedToBounds to false on AbsoluteLayout. Droid clips, Windows doesn't even clip to the the parent! Why does nothing work consistently?)
-        canvas.HeightRequest = 100; // TODO: Track scrollView.Height.
-        canvas.Margin = new Thickness(0, 0, 0, ItemHeight * ItemsSource.Count - canvas.HeightRequest);
 #endif
                 _pendingUpdateScrollViewContentHeight = false;
             }
@@ -364,13 +364,13 @@ public partial class ListViewZero : ContentView
         if (ItemsSource == null)
             return;
 
-        if (_updatingContainers == true)
+        if (_updatingItemContainers == true)
         {
             Debug.WriteLine("Gotcha!");
             //return;
         }
 
-        _updatingContainers = true;
+        _updatingItemContainers = true;
 
         // Find the first item that is to be in view
         int firstVisibleIndex = Math.Max(0, (int)(ScrollOffset / ItemHeight));
@@ -397,14 +397,14 @@ public partial class ListViewZero : ContentView
             if (listItem == null)
             {
                 listItem = GetView(ItemsSource[c]);
+                //listItem is either newly created or retrieved from the cache.
+                // SMELL: BindingContext should already be unset, so no need to null. The TreeNodeSpacer needs this for some reason. Fix the TreeNodeSpacer.
                 listItem.BindingContext = null;
-                // To prevent the property-changed callback calling this method, 
-                // set IsSelected *before* adding to the canvas.
-                //itemContainer.IsSelected = (SelectedItem == ItemsSource[c]) || (SelectedItems.Contains(ItemsSource[c]));
-
+                // set IsSelected *before* it gets a BindingContext, i.e. before adding to the canvas.
                 listItem.IsSelected = SelectedItems.Contains(ItemsSource[c]);
                 listItem.IsPrimary = ItemsSource[c] == SelectedItem;
 
+                // SMELL: canvas will provide a BC, so we should set BC first. The TreeNodeSpacer needs this for some reason. Fix the TreeNodeSpacer.
                 canvas.Add(listItem);
                 listItem.BindingContext = ItemsSource[c];
             }
@@ -437,14 +437,9 @@ public partial class ListViewZero : ContentView
                 listItem.BindingContext = ItemsSource[listItem.ItemIndex];
                 listItem.TranslationY = itemOffset;
                 listItem.WidthRequest = this.Width;
-#if not_needed //?
-                listItem.IsSelected = SelectedItems.Contains(listItem.BindingContext);
-
-                listItem.IsPrimary = listItem.BindingContext == SelectedItem;
-#endif
             }
         }
-        _updatingContainers = false;
+        _updatingItemContainers = false;
     }
 
     private ListItemZero GetViewForBindingContextFromCanvas(object bindingContext)
@@ -469,9 +464,7 @@ public partial class ListViewZero : ContentView
             template = ItemTemplate;
 
         if (_cache.TryPopFromBucket(template, out var cachedThing, bindingContext))
-        {
             retVal = cachedThing;
-        }
 
         if (retVal == null)
         {
@@ -485,13 +478,9 @@ public partial class ListViewZero : ContentView
 
             // No need to unsubscribe, because this object is cached for re-use rather than disposed.
             retVal.PropertyChanged += ListItemZero_PropertyChanged;
-
-            //retVal.BindingContext = null;       // Stop it inheriting an unsuitable value.
-
         }
 
         retVal.HeightRequest = ItemHeight;
-
         return retVal;
     }
 
@@ -499,40 +488,35 @@ public partial class ListViewZero : ContentView
     {
         if (e.PropertyName == nameof(ListItemZero.IsSelected))
         {
-            // SMELL: why the condition?
-            //if (_updatingContainers == false)
+            var listItem = (ListItemZero)sender;
+
+            if (listItem.BindingContext != null)
             {
-                var listItem = (ListItemZero)sender;
-
-                if (listItem.BindingContext != null)
+                if (SelectionMode != SelectionMode.None)
                 {
-                    if (SelectionMode != SelectionMode.None)
+                    if (listItem.IsSelected)
                     {
-                        if (listItem.IsSelected)
-                        {
-                            // Adding to SelectedItems will cause a deferred update.
-                            // SelectedItem must be set prior to that call.
-                            SelectedItem = listItem.BindingContext;
-                            SelectedItems.Add(listItem.BindingContext);
+                        // Adding to SelectedItems will cause a deferred update.
+                        // SelectedItem must be set prior to that call.
+                        SelectedItem = listItem.BindingContext;
+                        SelectedItems.Add(listItem.BindingContext);
 
-                        }
-                        else
-                        {
-                            SelectedItems.Remove(listItem.BindingContext);
-                            if (SelectedItem == listItem.BindingContext)
-                            {
-                                if (SelectedItems?.Count > 0)
-                                    SelectedItem = SelectedItems[SelectedItems.Count - 1];
-                                else
-                                    SelectedItem = null;
-                            }
-
-                        }
-                        //UpdateItemContainers();
                     }
                     else
-                        listItem.IsSelected = false;
+                    {
+                        SelectedItems.Remove(listItem.BindingContext);
+                        if (SelectedItem == listItem.BindingContext)
+                        {
+                            if (SelectedItems?.Count > 0)
+                                SelectedItem = SelectedItems[SelectedItems.Count - 1];
+                            else
+                                SelectedItem = null;
+                        }
+
+                    }
                 }
+                else
+                    listItem.IsSelected = false;
             }
         }
     }
