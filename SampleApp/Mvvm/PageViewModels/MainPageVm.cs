@@ -118,7 +118,8 @@ namespace SampleApp.Mvvm.PageViewModels
 
             SampleListData = new ObservableCollection<ListItem>();
 
-            for (int c = 0; c < 52440; c++)
+            //for (int c = 0; c < 52440; c++)
+            for (int c = 0; c < 400; c++)
                 SampleListData.Add(new ListItem($"Hello {c}", (double)110.0 + (double)Math.Sin(c / 9.0) * 40));
 
             SelectedItems = new ObservableCollection<ListItem>();
