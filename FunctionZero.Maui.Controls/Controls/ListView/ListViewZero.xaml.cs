@@ -41,7 +41,7 @@ public partial class ListViewZero : ContentView
             newCollection.CollectionChanged += self.ItemsSource_CollectionChanged;
 
         self.DeferredUpdateScrollViewContentHeight();
-        self.UpdateItemContainers();
+        self.DeferredUpdateItemContainers();
     }
 
     #endregion
@@ -159,8 +159,11 @@ public partial class ListViewZero : ContentView
         //_ = self.scrollView.ScrollToAsync(0, self.ScrollOffset, false);
         //self.UpdateItemContainers();
 
+        // Windows is less flickery if we defer the update here. That doesn't make sense!
+        // iOS and Droid don't flicker and look the same either way. That doesn't make sense either!
         self.DeferredUpdateItemContainers();
 
+        // If the scroll movement came from the ScrollView don't write it back, because doing so upsets iOS when scrolling outside of bounds.
         if(self.scrollView.ScrollY != self.ScrollOffset)
             self.DeferredScrollTo(self.ScrollOffset);
     }

@@ -16,6 +16,7 @@ namespace FunctionZero.Maui.Controls.ScrollBar
             var view = new AbsoluteLayout();
             view.WidthRequest = 2;
             view.HeightRequest = 2;
+            view.VerticalOptions = LayoutOptions.Start;
             Content = view;
             
 
