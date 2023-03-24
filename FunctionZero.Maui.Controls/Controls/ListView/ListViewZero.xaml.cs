@@ -292,6 +292,7 @@ public partial class ListViewZero : ContentView
 
 
         scrollView.Scrolled += ScrollView_Scrolled;
+        scrollView.SizeChanged += ScrollView_SizeChanged;
         canvas.SizeChanged += Canvas_SizeChanged;
 
         SelectedItems = new ObservableCollection<object>();
@@ -299,7 +300,18 @@ public partial class ListViewZero : ContentView
 
     private void Canvas_SizeChanged(object sender, EventArgs e)
     {
+        //canvas.WidthRequest = scrollView.Width;
+        //canvas.HeightRequest = scrollView.Height;
+
+    }
+
+    private void ScrollView_SizeChanged(object sender, EventArgs e)
+    {
         //UpdateItemContainers();
+        canvas.WidthRequest = scrollView.Width;
+        canvas.HeightRequest = scrollView.Height;
+        //scrollView.ForceLayout();
+
         DeferredUpdateItemContainers();
     }
 
@@ -318,12 +330,14 @@ public partial class ListViewZero : ContentView
         {
             _pendingUpdateScrollViewContentHeight = true;
 
+            //Dispatcher.DispatchDelayed(TimeSpan.FromSeconds(2),() =>
             Dispatcher.Dispatch(() =>
             {
 
+                scrollView.ContentHeight = ItemHeight * ItemsSource.Count;
 
-#if true
-                canvas.HeightRequest = ItemHeight * ItemsSource.Count;
+#if false
+                //canvas.HeightRequest = ItemHeight * ItemsSource.Count;
 
                 //canvas.HeightRequest = 2090000;
                 //canvas.HeightRequest = 2100000;
@@ -332,7 +346,7 @@ public partial class ListViewZero : ContentView
                 //canvas.HeightRequest = 2097589; 
 
 
-#else // performs better, but clips on Android. (Set IsClippedToBounds to false on AbsoluteLayout. Droid clips, Windows doesn't even clip to the the parent! Why does nothing work consistently?)
+#elif false // performs better, but clips on Android. (Set IsClippedToBounds to false on AbsoluteLayout. Droid clips, Windows doesn't even clip to the the parent! Why does nothing work consistently?)
         canvas.HeightRequest = 100; // TODO: Track scrollView.Height.
         canvas.Margin = new Thickness(0, 0, 0, ItemHeight * ItemsSource.Count - canvas.HeightRequest);
 #endif
@@ -421,7 +435,7 @@ public partial class ListViewZero : ContentView
                 // Determine offset for item.
                 double itemOffset = listItem.ItemIndex * ItemHeight - ScrollOffset;
                 listItem.BindingContext = ItemsSource[listItem.ItemIndex];
-                listItem.TranslationY = itemOffset + ScrollOffset;
+                listItem.TranslationY = itemOffset;
                 listItem.WidthRequest = this.Width;
 #if not_needed //?
                 listItem.IsSelected = SelectedItems.Contains(listItem.BindingContext);

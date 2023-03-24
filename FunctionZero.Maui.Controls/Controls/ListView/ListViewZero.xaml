@@ -40,12 +40,12 @@
 
     </ContentView.Resources>
 
-    <ScrollView x:Name="scrollView">
-        <AbsoluteLayout 
+    <sb:CustomScrollView x:Name="scrollView" BackgroundColor="Yellow" >
+        <AbsoluteLayout BackgroundColor="Blue"
             x:Name="canvas" 
-            HorizontalOptions="Fill" 
-            VerticalOptions="Start" 
+               HeightRequest="200"        
+               WidthRequest="200"        
             />
-    </ScrollView>
+    </sb:CustomScrollView>
 </ContentView>
 <!--ZIndex breaks release build.-->

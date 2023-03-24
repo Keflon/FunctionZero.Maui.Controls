@@ -76,7 +76,7 @@
 
         </HorizontalStackLayout>
 
-        <cz:ListViewZero BackgroundColor="Green"
+        <cz:ListViewZero 
             x:Name="lv1" 
             Grid.Row="1" 
             Grid.Column="0" 
