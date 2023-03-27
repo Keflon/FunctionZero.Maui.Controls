@@ -9,7 +9,7 @@ namespace FunctionZero.Maui.Controls
         protected override DataTemplate OnSelectTemplate(object item, BindableObject container)
         {
             var itemData = ((TreeNodeContainer<object>)item).Data;
-            return OnSelectTemplateProvider(itemData).ItemTemplate;
+            return OnSelectTemplateProvider(itemData).DataTemplateContent;
         }
     }
 }

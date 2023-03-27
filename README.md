@@ -1,5 +1,7 @@
 # Breaking news  
-1. Updated to use .NET 7.  
+The ListViewZero and TreeViewZero both now use native scrollbars and therefore we gain all the platform goodness like 
+mouse-support, velocity and acceleration management etc.  
+Big shout out to [Jeff Siemens](https://github.com/jsiemensLatitudegeo) for the PR making all that happen!  
 
 # Upgrade from 1.x..
 Rename `TreeDataTemplateSelector` to `TreeItemDataTemplateSelector` in your xaml
@@ -102,15 +104,16 @@ In your view-model you can bind to the default collection (BindingMode OneWayToS
 The `ListViewZero` will maintain the contents of the collection for you, and you can modify the collection from your view-model to programatically select items
 
 ## Styling SelectedItems
-Selected items are rendered using a VisualStateManager and 3 of the 4 *CommonStates*  
 You can replace this styling by setting the `ItemContainerStyle` property on your `ListViewZero`  
+~~Selected items are rendered using a VisualStateManager and 3 of the 4 *CommonStates*~~  
+Selected items are rendered using a VisualStateManager and the following states  
 
 Common State | Description | IsSelected | IsPrimary | SelectionMode
-:-----   | :----                                             | :---- | :---- | :----
-Normal   | The ListViewItem is not selected                  | False | False | Any
-Focused  | The ListViewItem is the primary-selection         | True  | True  | Single or Multiple
-Selected | The ListViewItem is selected but not the primary  | True  | False | Multiple
-Disabled | Not used                                          | n/a   | n/a   | n/a
+:-----       | :----                                             | :---- | :---- | :----
+Normal       | The ListViewItem is not selected                  | False | False | Any
+ItemFocused  | The ListViewItem is the primary-selection         | True  | True  | Single or Multiple
+Selected     | The ListViewItem is selected but not the primary  | True  | False | Multiple
+Disabled     | Not used                                          | n/a   | n/a   | n/a
 
 This is the default `Style` used to modify the `BackgroundColor` of selected items, and can serve as a baseline for your own  
 ```xml
@@ -127,7 +130,7 @@ This is the default `Style` used to modify the `BackgroundColor` of selected ite
                     </VisualState.Setters>
                 </VisualState>
 
-                <VisualState x:Name="Focused">
+                <VisualState x:Name="ItemFocused">
                     <VisualState.Setters>
                         <Setter Property="BackgroundColor" Value="Cyan" />
                     </VisualState.Setters>
@@ -277,7 +280,7 @@ See [Styling SelectedItems](#styling-selecteditems) on the `ListViewZero` for de
                     </VisualState.Setters>
                 </VisualState>
 
-                <VisualState x:Name="Focused">
+                <VisualState x:Name="ItemFocused">
                     <VisualState.Setters>
                         <Setter Property="BackgroundColor" Value="Cyan" />
                     </VisualState.Setters>
