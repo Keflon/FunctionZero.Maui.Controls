@@ -25,11 +25,12 @@
 		<PackageProjectUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</RepositoryUrl>
 		<PackageTags>MAUI; ListView; ListViewZero; TreeView; TreeViewZero; iOS; WinUI; Windows; Tizen; Android; Control </PackageTags>
-		<PackageReleaseNotes>Built against .NET 7.</PackageReleaseNotes>
+		<PackageReleaseNotes>Native scroll-bars, velocity management, mouse support etc.
+</PackageReleaseNotes>
 		<PackageLicenseFile>License.md</PackageLicenseFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>2.1.0</Version>
+		<Version>2.2.0</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">

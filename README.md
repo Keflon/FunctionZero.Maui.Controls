@@ -1,21 +1,15 @@
 # Breaking news  
-The ListViewZero and TreeViewZero both now use native scrollbars and therefore we gain all the platform goodness like 
+The ListViewZero and TreeViewZero now use native scrollbars and therefore we gain all the platform goodness like 
 mouse-support, velocity and acceleration management etc.  
-Big shout out to [Jeff Siemens](https://github.com/jsiemensLatitudegeo) for the PR making all that happen!  
+Big shout out to [Jeff Siemens](https://github.com/jsiemensLatitudegeo) for the PR making all that happen, as well as fixing linting errors and a VSM ItemFocused issue!  
 
 # Upgrade from 1.x..
 Rename `TreeDataTemplateSelector` to `TreeItemDataTemplateSelector` in your xaml
-
-# Linting errors
-At the time of writing, the xaml editor linting has trouble with DataTemplates  
-within these controls. That's just the IDE and you can ignore them as long as the project builds!  
-If you know how to fix this please let me know :)
 
 # Controls
 [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)  
 
 Use package [2.0.0](https://www.nuget.org/packages/FunctionZero.Maui.Controls/2.0.0) if you are building against .NET 6.
-
 
 1. [ListViewZero](#listviewzero)
 1. [TreeViewZero](#treeviewzero)

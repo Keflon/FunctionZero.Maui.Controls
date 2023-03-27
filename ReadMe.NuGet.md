@@ -1,5 +1,11 @@
 ﻿# FunctionZero.Maui.Controls
 
+# Breaking news  
+The ListViewZero and TreeViewZero now use native scrollbars and therefore we gain all the platform goodness like 
+mouse-support, velocity and acceleration management etc.  
+Big shout out to [Jeff Siemens](https://github.com/jsiemensLatitudegeo) for the PR making all that happen, as well as fixing linting errors and a VSM ItemFocused issue!  
+
+
 ## ListViewZero
 
 Android, iOS, MacCatalyst, Tizen, Windows
