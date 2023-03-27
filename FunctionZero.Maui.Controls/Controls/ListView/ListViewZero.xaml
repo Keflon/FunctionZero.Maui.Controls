@@ -21,7 +21,7 @@
                             </VisualState.Setters>
                         </VisualState>
 
-                        <VisualState x:Name="Focused2">
+                        <VisualState x:Name="ItemFocused">
                             <VisualState.Setters>
                                 <Setter Property="BackgroundColor" Value="Cyan" />
                             </VisualState.Setters>
