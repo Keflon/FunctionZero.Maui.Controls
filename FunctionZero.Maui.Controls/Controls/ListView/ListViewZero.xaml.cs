@@ -17,6 +17,7 @@ public partial class ListViewZero : ContentView
     private bool _pendingSelectionUpdate = false;
     private bool _pendingScrollUpdate = false;
     private bool _updatingItemContainers = false;
+    private bool _pendingUpdateScrollViewContentHeight = false;
 
     #region bindable properties
 
@@ -303,8 +304,6 @@ public partial class ListViewZero : ContentView
     {
         ScrollOffset = e.ScrollY;
     }
-
-    private bool _pendingUpdateScrollViewContentHeight = false;
 
     private void DeferredUpdateScrollViewContentHeight()
     {
