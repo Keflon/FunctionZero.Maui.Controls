@@ -32,7 +32,6 @@ ItemHeight              | float            | Yes  | The height of each row in th
 ItemsSource             | object           | Yes  | Set this to the IEnumerable (usually found in your view-model) that contains your items  
 ItemTemplate            | DataTemplate     | Yes  | Used to draw the data for each node. Set this to a `DataTemplate` or a `DataTemplateSelector`. See below.
 ScrollOffset            | float            | YES! | This is the absolute offset and can bound to.
-ScrollVelocity          | float            | Yes  | The current scroll-velocity, in units per update. 
 SelectedItem            | object           | Yes  | Set to the currently selected item, i.e. an instance of your *ViewModel* data, or null
 SelectedItems           | IList            | Yes  | All currently selected items. Default is an `ObservableCollection<object>`. You can bind to it or set your own collection, and if it supports `INotifyCollectionChanged` the `ListViewZero` will track it.
 SelectionMode           | SelectionMode    | Yes  | Allows a `SelectionMode` of None, Single or Multiple.
