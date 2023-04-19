@@ -1,10 +1,8 @@
-# Breaking news  
-The ListViewZero and TreeViewZero now use native scrollbars and therefore we gain all the platform goodness like 
-mouse-support, velocity and acceleration management etc.  
-Big shout out to [Jeff Siemens](https://github.com/jsiemensLatitudegeo) for the PR making all that happen, as well as fixing linting errors and a VSM ItemFocused issue!  
-
-# Upgrade from 1.x..
-Rename `TreeDataTemplateSelector` to `TreeItemDataTemplateSelector` in your xaml
+# Updates  
+Added 2 new controls as temporary workarounds for MAUI bugs that affect the WinUI platform.  
+`AdaptedTabbedPage` fixes a crash when using `ItemsSource` and `ItemsTemplate` on a `TabbedPage`.  
+`AdaptedFlyoutPage` allows a `FlyoutPage` to set `IsPresented` to `false` when a `Popver` flyout is dismissed.  
+[Details](#workarounds)
 
 # Controls
 [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)  
@@ -437,14 +435,18 @@ You can base the `ControlTemplate` on the default, show here, or bake your own e
 </cz:TreeViewZero>
 ```
 
-## Known issues:
-~~There are two known issues, both in the **WinUI** platform, both relating to the underlying `CollectionView` used by `TreeViewZero`.~~  
-~~1. The `CollectionView` has a minimum item-spacing bug, reported [here](https://github.com/dotnet/maui/issues/4520)~~  
-~~2. The `CollectionView` is not recycling containers, reported [here](https://github.com/dotnet/maui/issues/8151)~~   
+## Workarounds:
 
-~~I'll update the source and [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls) once these bugs are fixed, if necessary.~~
+**`AdaptedTabbedPage`** [MAUI bug 14572](https://github.com/dotnet/maui/issues/14572)  
+- Use it when you want to use `ItemsSource` and `ItemTemplate`. Stick with `TabbedPage` if you're manipulating the `Children` collection directly.  
+- This implementation replaces `ItemsSource` by hiding the base implementation.
+This means if you set it up in code-behind, you must ensure you have a reference of type `AdaptedTabbedPage` when you set `ItemsSource`.
+If your reference is of type `TabbedPage` or `MultiPage<Page>` you'll be setting the _base_ `ItemsSource` and the crash will remain.  
 
-To work around some MAUI teething bugs, this no longer uses the MAUI CollectionView or ListView internally.  
+**`AdaptedFlyoutPage`** [MAUI bug 13496](https://github.com/dotnet/maui/issues/13496)  
+- Basically if the Flyout loses focus and the FlyoutLayoutBehavior is `Popover`, 
+it assumes the flyout has been dismissed and sets the `IsPresented` property to false.
+
 
 
   

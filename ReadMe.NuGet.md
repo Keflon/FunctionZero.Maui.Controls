@@ -1,10 +1,9 @@
 ﻿# FunctionZero.Maui.Controls
 
-# Breaking news  
-The ListViewZero and TreeViewZero now use native scrollbars and therefore we gain all the platform goodness like 
-mouse-support, velocity and acceleration management etc.  
-Big shout out to [Jeff Siemens](https://github.com/jsiemensLatitudegeo) for the PR making all that happen, as well as fixing linting errors and a VSM ItemFocused issue!  
+## Latest additions:
 
+**`AdaptedTabbedPage`** Workaround for [MAUI bug 14572](https://github.com/dotnet/maui/issues/14572)  
+**`AdaptedFlyoutPage`** Workaround for [MAUI bug 13496](https://github.com/dotnet/maui/issues/13496)  
 
 ## ListViewZero
 
