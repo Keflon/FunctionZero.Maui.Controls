@@ -435,7 +435,7 @@ You can base the `ControlTemplate` on the default, show here, or bake your own e
 </cz:TreeViewZero>
 ```
 
-## Workarounds:
+# Workarounds:
 
 **`AdaptedTabbedPage`** [MAUI bug 14572](https://github.com/dotnet/maui/issues/14572)  
 - Use it when you want to use `ItemsSource` and `ItemTemplate`. Stick with `TabbedPage` if you're manipulating the `Children` collection directly.  
