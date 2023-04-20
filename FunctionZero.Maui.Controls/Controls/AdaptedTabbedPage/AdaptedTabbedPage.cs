@@ -9,6 +9,31 @@ namespace FunctionZero.Maui.Controls
     /// </summary>
     public class AdaptedTabbedPage : TabbedPage
     {
+        public AdaptedTabbedPage()
+        {
+            this.PropertyChanged += AdaptedTabbedPage_PropertyChanged;
+        }
+
+        private void AdaptedTabbedPage_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SelectedItem))
+            {
+                if (UseExperimentalSelectedItem)
+                    if (Children != null)
+                        foreach (var page in Children)
+                            if (page.BindingContext == SelectedItem)
+                            {
+                                CurrentPage = page;
+                                break;
+                            }
+            }
+            else if (e.PropertyName == nameof(CurrentPage))
+            {
+                if (UseExperimentalSelectedItem)
+                    SelectedItem = CurrentPage?.BindingContext;
+            }
+        }
+
         protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             base.OnPropertyChanged(propertyName);
@@ -117,6 +142,18 @@ namespace FunctionZero.Maui.Controls
                     Children.Clear();
                     break;
             }
+        }
+
+
+        public static readonly BindableProperty UseExperimentalSelectedItemProperty = BindableProperty.Create(nameof(UseExperimentalSelectedItem), typeof(bool), typeof(AdaptedTabbedPage), true);
+
+        /// <summary>
+        /// ATTENTION: Hiding base implementation!
+        /// </summary>
+        public bool UseExperimentalSelectedItem
+        {
+            get { return (bool)GetValue(UseExperimentalSelectedItemProperty); }
+            set { SetValue(UseExperimentalSelectedItemProperty, value); }
         }
     }
 }

@@ -435,15 +435,17 @@ You can base the `ControlTemplate` on the default, show here, or bake your own e
 </cz:TreeViewZero>
 ```
 
-## Workarounds:
+# Workarounds:
 
-**`AdaptedTabbedPage`** [MAUI bug 14572](https://github.com/dotnet/maui/issues/14572)  
+## `AdaptedTabbedPage` [MAUI bug 14572](https://github.com/dotnet/maui/issues/14572)  
 - Use it when you want to use `ItemsSource` and `ItemTemplate`. Stick with `TabbedPage` if you're manipulating the `Children` collection directly.  
 - This implementation replaces `ItemsSource` by hiding the base implementation.
 This means if you set it up in code-behind, you must ensure you have a reference of type `AdaptedTabbedPage` when you set `ItemsSource`.
 If your reference is of type `TabbedPage` or `MultiPage<Page>` you'll be setting the _base_ `ItemsSource` and the crash will remain.  
+### Update:
+- `SelectedItem` is now supported. If it causes problems, set `UseExperimentalSelectedItem` to false.
 
-**`AdaptedFlyoutPage`** [MAUI bug 13496](https://github.com/dotnet/maui/issues/13496)  
+## `AdaptedFlyoutPage` [MAUI bug 13496](https://github.com/dotnet/maui/issues/13496)  
 - Basically if the Flyout loses focus and the FlyoutLayoutBehavior is `Popover`, 
 it assumes the flyout has been dismissed and sets the `IsPresented` property to false.
 
