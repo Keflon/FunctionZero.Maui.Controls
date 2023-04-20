@@ -29,8 +29,8 @@ namespace FunctionZero.Maui.Controls
             }
             else if (e.PropertyName == nameof(CurrentPage))
             {
-                if (UseExperimentalSelectedItem)
-                    SelectedItem = CurrentPage?.BindingContext;
+                //if (UseExperimentalSelectedItem)
+                //    SelectedItem = CurrentPage?.BindingContext;
             }
         }
 
