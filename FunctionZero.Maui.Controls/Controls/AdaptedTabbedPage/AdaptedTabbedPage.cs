@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace FunctionZero.Maui.Controls
@@ -14,7 +15,7 @@ namespace FunctionZero.Maui.Controls
             this.PropertyChanged += AdaptedTabbedPage_PropertyChanged;
         }
 
-        private void AdaptedTabbedPage_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void AdaptedTabbedPage_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(SelectedItem))
             {
@@ -29,8 +30,9 @@ namespace FunctionZero.Maui.Controls
             }
             else if (e.PropertyName == nameof(CurrentPage))
             {
-                if (UseExperimentalSelectedItem)
-                    SelectedItem = CurrentPage?.BindingContext;
+                // This causes a crash on WinUI.
+                //if (UseExperimentalSelectedItem)
+                //    SelectedItem = CurrentPage?.BindingContext;
             }
         }
 
