@@ -24,13 +24,13 @@
 		<Copyright>FunctionZero Ltd</Copyright>
 		<PackageProjectUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</RepositoryUrl>
-		<PackageTags>MAUI; ListView; ListViewZero; TreeView; TreeViewZero; iOS; WinUI; Windows; Tizen; Android; Control </PackageTags>
-		<PackageReleaseNotes>Includes drop-in replacements for FlyoutPage and TabbedPage for anyone affected by MAUI bugs 14572 or 13496.
+		<PackageTags>MAUI; ListView; ListViewZero; TreeView; TreeViewZero; iOS; WinUI; Windows; Android; Control </PackageTags>
+		<PackageReleaseNotes>Apologies for the churn. This release fixes a problem with two-way updates to the SelectedItem on the AdaptedTabbedPage.
 </PackageReleaseNotes>
 		<PackageLicenseFile>License.md</PackageLicenseFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>2.3.1.4</Version>
+		<Version>2.3.1.7</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">

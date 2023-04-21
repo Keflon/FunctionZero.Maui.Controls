@@ -15,7 +15,7 @@ namespace FunctionZero.Maui.Controls
             this.PropertyChanged += AdaptedTabbedPage_PropertyChanged;
         }
 
-        private void AdaptedTabbedPage_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private async void AdaptedTabbedPage_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(SelectedItem))
             {
@@ -30,9 +30,10 @@ namespace FunctionZero.Maui.Controls
             }
             else if (e.PropertyName == nameof(CurrentPage))
             {
-                // This causes a crash on WinUI.
-                //if (UseExperimentalSelectedItem)
-                //    SelectedItem = CurrentPage?.BindingContext;
+                // Setting SelectedItem directly causes a crash on WinUI.
+                await Task.Yield();
+                if (UseExperimentalSelectedItem)
+                    SelectedItem = CurrentPage?.BindingContext;
             }
         }
 
