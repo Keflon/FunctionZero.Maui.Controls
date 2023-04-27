@@ -443,9 +443,9 @@ You can base the `ControlTemplate` on the default, show here, or bake your own e
 This means if you set it up in code-behind, you must ensure you have a reference of type `AdaptedTabbedPage` when you set `ItemsSource`.
 If your reference is of type `TabbedPage` or `MultiPage<Page>` you'll be setting the _base_ `ItemsSource` and the crash will remain.  
 ### Update:
-- `SelectedItem` now has limited support. Setting it in code works fine and swaps to the correct Tab, however swapping by interacting with the UI does not 
-update `SelectedItem`, because doing so would cause the WinUI crash we're trying to dodge.  
-If it causes problems, set `UseExperimentalSelectedItem` to false.
+- ~~`SelectedItem` now has limited support. Setting it in code works fine and swaps to the correct Tab, however swapping by interacting with the UI does not 
+update `SelectedItem`, because doing so would cause the WinUI crash we're trying to dodge.~~  
+- `SelectedItem` is fine. If you think it's causing problems, set `UseExperimentalSelectedItem` to false.
 
 ## `AdaptedFlyoutPage` [MAUI bug 13496](https://github.com/dotnet/maui/issues/13496)  
 - Basically if the Flyout loses focus and the FlyoutLayoutBehavior is `Popover`, 
