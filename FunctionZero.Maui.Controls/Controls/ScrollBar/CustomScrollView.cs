@@ -41,19 +41,6 @@ namespace FunctionZero.Maui.Controls.ScrollBar
             Content.TranslationY = e.ScrollY;
         }
 
-        protected override Size MeasureOverride(double widthConstraint, double heightConstraint)
-        {
-            return base.MeasureOverride(widthConstraint, heightConstraint - 50.0);
-        }
-
-        protected override Size ArrangeOverride(Rect bounds)
-        {
-            //var newbounds = new Rect(bounds.X, bounds.Y, bounds.Width / 2.0, bounds.Height / 2.0);
-            //return base.ArrangeOverride(newbounds);
-            return base.ArrangeOverride(bounds);
-        }
-
-
         #region ContentHeight
 
         public static readonly BindableProperty ContentHeightProperty =

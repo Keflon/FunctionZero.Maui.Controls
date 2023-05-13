@@ -18,6 +18,9 @@ public partial class ListViewZero : ContentView
     private bool _pendingScrollUpdate = false;
     private bool _updatingItemContainers = false;
     private bool _pendingUpdateScrollViewContentHeight = false;
+    private double _scaleToControl = 1.0;
+
+    private const double MAX_SCROLL_HEIGHT = 3000.0;
 
     #region bindable properties
 
@@ -156,8 +159,11 @@ public partial class ListViewZero : ContentView
         self.DeferredUpdateItemContainers();
 
         // If the scroll movement came from the ScrollView don't write it back, because doing so upsets iOS when scrolling outside of bounds and is unnecessary anyway.
-        if(self.scrollView.ScrollY != self.ScrollOffset)
-            self.DeferredScrollTo(self.ScrollOffset);
+
+        double actualScrollOffset = self.scrollView.ScrollY / self._scaleToControl;
+
+        if(self.ScrollOffset != actualScrollOffset)
+            self.DeferredScrollTo(self.ScrollOffset * self._scaleToControl);
     }
     public double ScrollOffset
     {
@@ -297,12 +303,13 @@ public partial class ListViewZero : ContentView
 
     private void ScrollView_SizeChanged(object sender, EventArgs e)
     {
+        DeferredUpdateScrollViewContentHeight();
         DeferredUpdateItemContainers();
     }
 
     private void ScrollView_Scrolled(object sender, ScrolledEventArgs e)
     {
-        ScrollOffset = e.ScrollY;
+        ScrollOffset = e.ScrollY / _scaleToControl;
     }
 
     private void DeferredUpdateScrollViewContentHeight()
@@ -313,9 +320,26 @@ public partial class ListViewZero : ContentView
 
             Dispatcher.Dispatch(() =>
             {
-                scrollView.ContentHeight = ItemHeight * ItemsSource.Count;
+                double desiredHeight = ItemHeight * ItemsSource.Count;
+
+
+                if (desiredHeight > MAX_SCROLL_HEIGHT)
+                {
+                    _scaleToControl = MAX_SCROLL_HEIGHT / desiredHeight;
+                    //scrollView.ContentHeight = MAX_SCROLL_HEIGHT + (this.Height - this.Height * _scaleToControl);
+                    //scrollView.ContentHeight = MAX_SCROLL_HEIGHT + this.Height * (((1 / _scaleToControl) - 1) / (1 / _scaleToControl));
+                   scrollView.ContentHeight = MAX_SCROLL_HEIGHT + (this.Height - this.Height * (_scaleToControl));
+                     //scrollView.ContentHeight = MAX_SCROLL_HEIGHT;
+                }
+                else
+                {
+                    scrollView.ContentHeight = desiredHeight;
+                    _scaleToControl = 1.0;
+                }
 
 #if false
+// TODO: If anyone needs it, cap the HeightRequest to something manageable and scale the rendering offsets appropriately.
+
                 //canvas.HeightRequest = 2090000;
                 //canvas.HeightRequest = 2100000;
                 //canvas.HeightRequest = 2097590;clip region slightly too big
@@ -344,11 +368,16 @@ public partial class ListViewZero : ContentView
 
         _updatingItemContainers = true;
 
+        var adjustedScrollOffset = ScrollOffset;// / _scaleToControl;
+        //var adjustedScrollOffset = scrollView.ScrollY;
+
         // Find the first item that is to be in view
-        int firstVisibleIndex = Math.Max(0, (int)(ScrollOffset / ItemHeight));
+        int firstVisibleIndex = Math.Max(0, (int)(adjustedScrollOffset / ItemHeight));
 
         // Maximum number of ListItem instances that can be at least partially seen.
         int maxVisibleContainers = (int)(scrollView.Height / ItemHeight) + 1;
+
+        Debug.WriteLine($"ScrollOffset: {ScrollOffset}, scrollView.ScrollY: {scrollView.ScrollY}, scrollView.ScrollY / _scaleToControl: {scrollView.ScrollY / _scaleToControl}, ScrollOffset * _scaleToControl: {ScrollOffset * _scaleToControl}");
 
         int lastVisibleIndex = Math.Min(ItemsSource.Count - 1, firstVisibleIndex + maxVisibleContainers);
 
@@ -405,7 +434,8 @@ public partial class ListViewZero : ContentView
             if (item is ListItemZero listItem)
             {
                 // Determine offset for item.
-                double itemOffset = listItem.ItemIndex * ItemHeight - ScrollOffset;
+                double itemOffset = listItem.ItemIndex * ItemHeight - adjustedScrollOffset;
+                //double itemOffset = listItem.ItemIndex * ItemHeight - scrollView.ScrollY;
                 listItem.BindingContext = ItemsSource[listItem.ItemIndex];
                 listItem.TranslationY = itemOffset;
                 listItem.WidthRequest = this.Width;
