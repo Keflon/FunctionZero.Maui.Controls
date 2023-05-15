@@ -18,7 +18,6 @@ namespace FunctionZero.Maui.Controls.ScrollBar
             view.HeightRequest = 2;
             view.VerticalOptions = LayoutOptions.Start;
             Content = view;
-            
 
             base.Scrolled += CustomScrollView_Scrolled;
         }

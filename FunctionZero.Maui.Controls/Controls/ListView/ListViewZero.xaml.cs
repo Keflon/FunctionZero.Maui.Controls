@@ -303,7 +303,8 @@ public partial class ListViewZero : ContentView
 
     private void ScrollView_SizeChanged(object sender, EventArgs e)
     {
-        DeferredUpdateScrollViewContentHeight();
+        // DeferredUpdateScrollViewContentHeight causes problems on WinUI when control is in a fixed-size grid cell (and it's Monday and the weather is mild)
+        UpdateScrollViewContentHeight();
         DeferredUpdateItemContainers();
     }
 
@@ -320,22 +321,7 @@ public partial class ListViewZero : ContentView
 
             Dispatcher.Dispatch(() =>
             {
-                double desiredHeight = ItemHeight * ItemsSource.Count;
-
-
-                if (desiredHeight > MAX_SCROLL_HEIGHT)
-                {
-                    _scaleToControl = MAX_SCROLL_HEIGHT / desiredHeight;
-                    //scrollView.ContentHeight = MAX_SCROLL_HEIGHT + (this.Height - this.Height * _scaleToControl);
-                    //scrollView.ContentHeight = MAX_SCROLL_HEIGHT + this.Height * (((1 / _scaleToControl) - 1) / (1 / _scaleToControl));
-                   scrollView.ContentHeight = MAX_SCROLL_HEIGHT + (this.Height - this.Height * (_scaleToControl));
-                     //scrollView.ContentHeight = MAX_SCROLL_HEIGHT;
-                }
-                else
-                {
-                    scrollView.ContentHeight = desiredHeight;
-                    _scaleToControl = 1.0;
-                }
+                UpdateScrollViewContentHeight();
 
 #if false
 // TODO: If anyone needs it, cap the HeightRequest to something manageable and scale the rendering offsets appropriately.
@@ -349,6 +335,23 @@ public partial class ListViewZero : ContentView
                 _pendingUpdateScrollViewContentHeight = false;
             }
             );
+        }
+    }
+
+    private void UpdateScrollViewContentHeight()
+    {
+        double desiredHeight = ItemHeight * ItemsSource.Count;
+
+
+        if (desiredHeight > MAX_SCROLL_HEIGHT)
+        {
+            _scaleToControl = MAX_SCROLL_HEIGHT / desiredHeight;
+            scrollView.ContentHeight = MAX_SCROLL_HEIGHT + (this.Height - this.Height * (_scaleToControl));
+        }
+        else
+        {
+            scrollView.ContentHeight = desiredHeight;
+            _scaleToControl = 1.0;
         }
     }
 
