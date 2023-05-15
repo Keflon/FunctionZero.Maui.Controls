@@ -4,12 +4,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace SampleApp.Mvvm.PageViewModels
 {
@@ -112,6 +114,8 @@ namespace SampleApp.Mvvm.PageViewModels
 
             public event PropertyChangedEventHandler PropertyChanged;
         }
+
+        public ICommand RemainingItemsChangedCommand { get; }
         public MainPageVm()
         {
             SampleData = GetSampleTree();
@@ -124,6 +128,12 @@ namespace SampleApp.Mvvm.PageViewModels
 
             SelectedItems = new ObservableCollection<ListItem>();
             //SelectedItems.CollectionChanged += (sender, e) => { Debug.WriteLine($"VM Count:{SelectedItems.Count}"); };
+
+            SampleLazyListData = new ObservableCollection<ListItem>();
+            for (int c = 0; c < 14; c++)
+                SampleLazyListData.Add(new ListItem($"Hello {c}", (double)110.0 + (double)Math.Sin(c / 9.0) * 40));
+
+            RemainingItemsChangedCommand = new Command(RemainingItemsChangedCommandExecute);
 
             PickerData = new()
             {
@@ -143,6 +153,29 @@ namespace SampleApp.Mvvm.PageViewModels
             Task.Delay(1500).ContinueWith((d) => SelectedItem = (ListItem)SampleListData[4]);
             Task.Delay(2000).ContinueWith((d) => SelectedItem = (ListItem)SampleListData[5]);
             Task.Delay(2500).ContinueWith((d) => SelectedItem = (ListItem)SampleListData[6]);
+
+        }
+
+        bool _addingMore = false;
+        private async void RemainingItemsChangedCommandExecute(object obj)
+        {
+            var remainingItems = (int)obj;
+            var extraItemCount = 5 - remainingItems;
+
+            Debug.WriteLine($"Remaining Items: {remainingItems}");
+
+            if (_addingMore == false)
+            {
+                _addingMore = true;
+                if (extraItemCount > 0)
+                {
+                    int startIndex = SampleLazyListData.Count;
+                    for (int c= startIndex; c< startIndex+extraItemCount;c++)
+                        //await Task.Delay(200);
+                        SampleLazyListData.Add(new ListItem($"Hello {c}", (double)110.0 + (double)Math.Sin(c / 9.0) * 40));
+                }
+                _addingMore = false;
+            }
 
         }
 
@@ -259,6 +292,8 @@ namespace SampleApp.Mvvm.PageViewModels
         public object SampleData { get; }
         public IList SampleListData { get; }
         public LevelZero SampleTemplateTestData { get; }
+
+        public IList SampleLazyListData { get; }
 
         private object GetSampleTree()
         {

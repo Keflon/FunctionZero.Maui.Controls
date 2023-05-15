@@ -168,75 +168,19 @@
             </cz:TreeViewZero.TreeItemTemplate>
         </cz:TreeViewZero>
 
-        <!--<cz:TreeViewZero 
-            x:Name="tree1" 
+        <cz:ListViewZero 
             Grid.Row="2" 
             Grid.Column="1" 
-            ItemsSource="{Binding SampleData}" 
-            IndentMultiplier="40" 
-            TreeItemControlTemplate="{StaticResource CellTemplate}"
-            ScrollOffset="{Binding TreeViewScrollOffset, Mode=TwoWay}" 
-            ItemHeight="20"
-            
-            >
-
-            <cz:TreeViewZero.TreeItemTemplate>
-                <cz:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">
-                    <DataTemplate>
-                        <Label Text="{Binding Name}" BackgroundColor="Magenta" />
-                    </DataTemplate>
-                </cz:TreeItemDataTemplate>
-            </cz:TreeViewZero.TreeItemTemplate>
-        </cz:TreeViewZero>-->
-
-        <!--
-        
-            ItemsSource="{Binding SampleListData}"
-            SelectionMode="{Binding SelectionMode, Source={x:Reference multiTemplateTree}}" 
-        
-        -->
-
-
-        <!--<cz:ListViewZero 
-            Grid.Row="2" 
-            Grid.Column="1" 
-        ItemsSource="{Binding TreeChildren, Source={x:Reference multiTemplateTree}}"
-            SelectedItem="{Binding SelectedItem, Source={x:Reference multiTemplateTree}, Mode=TwoWay}" 
-            SelectedItems="{Binding SelectedItems, Source={x:Reference multiTemplateTree}}" 
-            SelectionMode="{Binding SelectionMode, Source={x:Reference multiTemplateTree}}" 
-            ScrollOffset="{Binding ScrollOffset, Source={x:Reference multiTemplateTree}, Mode=TwoWay}" 
-            ItemHeight="20"
+            ItemsSource="{Binding SampleLazyListData}"
+            ItemHeight="40"
+            RemainingItemsChangedCommand="{Binding RemainingItemsChangedCommand}"
             >
             <cz:ListViewZero.ItemTemplate>
                 <DataTemplate>
-                    <HorizontalStackLayout Margin="2">
-                        <Label Text="{Binding}" />
-                    </HorizontalStackLayout>
+                    <Label Text="{Binding Name}" WidthRequest="{Binding Offset}" />
                 </DataTemplate>
             </cz:ListViewZero.ItemTemplate>
-        </cz:ListViewZero>-->
-
-        <!--<cz:TreeViewZero 
-            x:Name="tree12" 
-            Grid.Row="2" 
-            Grid.Column="1" 
-            ItemsSource="{Binding SampleData}" 
-            IndentMultiplier="40"
-            ItemHeight="20"
-            >
-            <cz:TreeViewZero.TreeItemContainerStyle>
-                <Style TargetType="cz:TreeNodeZero">
-                    <Setter Property="ControlTemplate" Value="{StaticResource NodeTemplate}"/>
-                </Style>
-            </cz:TreeViewZero.TreeItemContainerStyle>
-            <cz:TreeViewZero.TreeItemTemplate>
-                <cz:TreeItemDataTemplate ChildrenPropertyName="Children" IsExpandedPropertyName="IsDataExpanded">
-                    <DataTemplate>
-                        <Label Text="{Binding Name}" BackgroundColor="Magenta" />
-                    </DataTemplate>
-                </cz:TreeItemDataTemplate>
-            </cz:TreeViewZero.TreeItemTemplate>
-        </cz:TreeViewZero>-->
+        </cz:ListViewZero>
     </Grid>
 
 </ContentPage>

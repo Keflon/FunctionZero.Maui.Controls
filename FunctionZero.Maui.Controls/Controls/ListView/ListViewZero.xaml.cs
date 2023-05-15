@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Windows.Input;
 
 namespace FunctionZero.Maui.Controls;
 
@@ -46,6 +47,42 @@ public partial class ListViewZero : ContentView
 
         self.DeferredUpdateScrollViewContentHeight();
         self.DeferredUpdateItemContainers();
+    }
+
+    #endregion
+
+    #region RemainingItemsProperty
+
+    public static readonly BindableProperty RemainingItemsProperty = BindableProperty.Create(nameof(RemainingItems), typeof(int), typeof(ListViewZero), -1, BindingMode.OneWay, null, RemainingItemsChanged);
+
+    public int RemainingItems
+    {
+        get { return (int)GetValue(RemainingItemsProperty); }
+        set { SetValue(RemainingItemsProperty, value); }
+    }
+
+    private static void RemainingItemsChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (ListViewZero)bindable;
+
+        self.RemainingItemsChangedCommand?.Execute(newValue);
+    }
+
+    #endregion
+
+    #region RemainingItemsChangedCommand
+
+    public static readonly BindableProperty RemainingItemsChangedCommandProperty = BindableProperty.Create(nameof(RemainingItemsChangedCommand), typeof(ICommand), typeof(ListViewZero), null, BindingMode.OneWay, null, RemainingItemsChangedCommandChanged);
+
+    public ICommand RemainingItemsChangedCommand
+    {
+        get { return (ICommand)GetValue(RemainingItemsChangedCommandProperty); }
+        set { SetValue(RemainingItemsChangedCommandProperty, value); }
+    }
+
+    private static void RemainingItemsChangedCommandChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (ListViewZero)bindable;
     }
 
     #endregion
@@ -303,7 +340,8 @@ public partial class ListViewZero : ContentView
 
     private void ScrollView_SizeChanged(object sender, EventArgs e)
     {
-        DeferredUpdateScrollViewContentHeight();
+        // DeferredUpdateScrollViewContentHeight causes problems on WinUI when control is in a fixed-size grid cell (and it's Monday and the weather is mild)
+        UpdateScrollViewContentHeight();
         DeferredUpdateItemContainers();
     }
 
@@ -320,22 +358,7 @@ public partial class ListViewZero : ContentView
 
             Dispatcher.Dispatch(() =>
             {
-                double desiredHeight = ItemHeight * ItemsSource.Count;
-
-
-                if (desiredHeight > MAX_SCROLL_HEIGHT)
-                {
-                    _scaleToControl = MAX_SCROLL_HEIGHT / desiredHeight;
-                    //scrollView.ContentHeight = MAX_SCROLL_HEIGHT + (this.Height - this.Height * _scaleToControl);
-                    //scrollView.ContentHeight = MAX_SCROLL_HEIGHT + this.Height * (((1 / _scaleToControl) - 1) / (1 / _scaleToControl));
-                   scrollView.ContentHeight = MAX_SCROLL_HEIGHT + (this.Height - this.Height * (_scaleToControl));
-                     //scrollView.ContentHeight = MAX_SCROLL_HEIGHT;
-                }
-                else
-                {
-                    scrollView.ContentHeight = desiredHeight;
-                    _scaleToControl = 1.0;
-                }
+                UpdateScrollViewContentHeight();
 
 #if false
 // TODO: If anyone needs it, cap the HeightRequest to something manageable and scale the rendering offsets appropriately.
@@ -349,6 +372,23 @@ public partial class ListViewZero : ContentView
                 _pendingUpdateScrollViewContentHeight = false;
             }
             );
+        }
+    }
+
+    private void UpdateScrollViewContentHeight()
+    {
+        double desiredHeight = ItemHeight * ItemsSource.Count;
+
+
+        if (desiredHeight > MAX_SCROLL_HEIGHT)
+        {
+            _scaleToControl = MAX_SCROLL_HEIGHT / desiredHeight;
+            scrollView.ContentHeight = MAX_SCROLL_HEIGHT + (this.Height - this.Height * (_scaleToControl));
+        }
+        else
+        {
+            scrollView.ContentHeight = desiredHeight;
+            _scaleToControl = 1.0;
         }
     }
 
@@ -377,9 +417,13 @@ public partial class ListViewZero : ContentView
         // Maximum number of ListItem instances that can be at least partially seen.
         int maxVisibleContainers = (int)(scrollView.Height / ItemHeight) + 1;
 
-        Debug.WriteLine($"ScrollOffset: {ScrollOffset}, scrollView.ScrollY: {scrollView.ScrollY}, scrollView.ScrollY / _scaleToControl: {scrollView.ScrollY / _scaleToControl}, ScrollOffset * _scaleToControl: {ScrollOffset * _scaleToControl}");
+        //Debug.WriteLine($"ScrollOffset: {ScrollOffset}, scrollView.ScrollY: {scrollView.ScrollY}, scrollView.ScrollY / _scaleToControl: {scrollView.ScrollY / _scaleToControl}, ScrollOffset * _scaleToControl: {ScrollOffset * _scaleToControl}");
 
         int lastVisibleIndex = Math.Min(ItemsSource.Count - 1, firstVisibleIndex + maxVisibleContainers);
+
+        RemainingItems = ItemsSource.Count - 1 - lastVisibleIndex;
+
+        //Debug.WriteLine($"RI:{RemainingItems}, from:{ItemsSource.Count - 1 - lastVisibleIndex}");
 
         // Foreach over each ListItemZero in this.Canvas and set ItemIndex to -1.
         // Then, after layout, kill any that still have ItemIndex of -1.
