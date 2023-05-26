@@ -21,7 +21,7 @@ public partial class ListViewZero : ContentView
     private bool _pendingUpdateScrollViewContentHeight = false;
     private double _scaleToControl = 1.0;
 
-    private const double MAX_SCROLL_HEIGHT = 3000.0;
+    private const double MAX_SCROLL_HEIGHT = 2000000.0;
 
     #region bindable properties
 

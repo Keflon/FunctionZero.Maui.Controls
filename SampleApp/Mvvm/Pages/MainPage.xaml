@@ -62,7 +62,7 @@
         </Style>
     </ContentPage.Resources>
 
-    <Grid RowDefinitions="Auto,100,*" ColumnDefinitions="*,*">
+    <Grid RowDefinitions="Auto,*,*" ColumnDefinitions="*,*">
 
         <HorizontalStackLayout Grid.Row="0" Grid.ColumnSpan="2">
             <Picker x:Name="SelectionModePicker" Title="Selection Mode" ItemsSource="{Binding PickerData}" ItemDisplayBinding="{Binding Name}"/>

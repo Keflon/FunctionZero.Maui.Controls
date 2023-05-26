@@ -156,27 +156,36 @@ namespace SampleApp.Mvvm.PageViewModels
 
         }
 
-        bool _addingMore = false;
+        int _addingMoreCount = 0;
         private async void RemainingItemsChangedCommandExecute(object obj)
         {
             var remainingItems = (int)obj;
-            var extraItemCount = 5 - remainingItems;
-
             Debug.WriteLine($"Remaining Items: {remainingItems}");
 
-            if (_addingMore == false)
+            if (remainingItems < 10)
             {
-                _addingMore = true;
-                if (extraItemCount > 0)
-                {
-                    int startIndex = SampleLazyListData.Count;
-                    for (int c= startIndex; c< startIndex+extraItemCount;c++)
-                        //await Task.Delay(200);
-                        SampleLazyListData.Add(new ListItem($"Hello {c}", (double)110.0 + (double)Math.Sin(c / 9.0) * 40));
-                }
-                _addingMore = false;
-            }
+                int numToRequest = (10 - remainingItems) - _addingMoreCount;
 
+                if (numToRequest > 0)
+                {
+                    bool startAdding = false;
+
+                    if (_addingMoreCount == 0)
+                        startAdding = true;
+
+                    _addingMoreCount += numToRequest;
+
+                    if (startAdding)
+                    {
+                        while (_addingMoreCount > 0)
+                        {
+                            await Task.Delay(200);
+                            SampleLazyListData.Add(new ListItem($"Hello {SampleLazyListData.Count}", (double)110.0 + (double)Math.Sin(SampleLazyListData.Count / 9.0) * 40));
+                            _addingMoreCount--;
+                        }
+                    }
+                }
+            }
         }
 
         private int _listCount;
