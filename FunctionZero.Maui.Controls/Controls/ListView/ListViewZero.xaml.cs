@@ -210,6 +210,37 @@ public partial class ListViewZero : ContentView
 
     #endregion
 
+    #region ItemHeightProperty
+
+    public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(double), typeof(ListViewZero), (double)40.0, BindingMode.OneWay);
+
+    public double ItemHeight
+    {
+        get { return (double)GetValue(ItemHeightProperty); }
+        set { SetValue(ItemHeightProperty, value); }
+    }
+
+    #endregion
+
+    #region ItemContainerStyleProperty
+
+    public static readonly BindableProperty ItemContainerStyleProperty = BindableProperty.Create(nameof(ItemContainerStyle), typeof(Style), typeof(ListViewZero), null, BindingMode.OneWay, null, ItemContainerStyleChanged);
+
+    public Style ItemContainerStyle
+    {
+        get { return (Style)GetValue(ItemContainerStyleProperty); }
+        set { SetValue(ItemContainerStyleProperty, value); }
+    }
+
+    private static void ItemContainerStyleChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (ListViewZero)bindable;
+    } 
+
+    #endregion
+
+    #endregion
+
     private void DeferredScrollTo(double scrollOffset)
     {
         if (_pendingScrollUpdate == false)
@@ -226,29 +257,6 @@ public partial class ListViewZero : ContentView
         }
     }
 
-    public static readonly BindableProperty ItemHeightProperty = BindableProperty.Create(nameof(ItemHeight), typeof(double), typeof(ListViewZero), (double)40.0, BindingMode.OneWay);
-
-    public double ItemHeight
-    {
-        get { return (double)GetValue(ItemHeightProperty); }
-        set { SetValue(ItemHeightProperty, value); }
-    }
-
-    public static readonly BindableProperty ItemContainerStyleProperty = BindableProperty.Create(nameof(ItemContainerStyle), typeof(Style), typeof(ListViewZero), null, BindingMode.OneWay, null, ItemContainerStyleChanged);
-
-    public Style ItemContainerStyle
-    {
-        get { return (Style)GetValue(ItemContainerStyleProperty); }
-        set { SetValue(ItemContainerStyleProperty, value); }
-    }
-
-    private static void ItemContainerStyleChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var self = (ListViewZero)bindable;
-    }
-
-    #endregion
-
     private void ItemsSource_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
         DeferredUpdateScrollViewContentHeight();
@@ -264,6 +272,9 @@ public partial class ListViewZero : ContentView
             // and this buffers that down to 1 operation.
             Dispatcher.Dispatch(() =>
             {
+                if (SelectedItems == null)
+                    return;
+
                 switch (SelectionMode)
                 {
                     case SelectionMode.None:
@@ -377,6 +388,10 @@ public partial class ListViewZero : ContentView
 
     private void UpdateScrollViewContentHeight()
     {
+        if (ItemsSource == null)
+            return;
+
+
         double desiredHeight = ItemHeight * ItemsSource.Count;
 
 

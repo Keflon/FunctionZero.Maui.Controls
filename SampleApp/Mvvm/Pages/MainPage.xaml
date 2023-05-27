@@ -76,7 +76,7 @@
 
         </HorizontalStackLayout>
 
-        <cz:ListViewZero 
+        <!--<cz:ListViewZero 
             x:Name="lv1" 
             Grid.Row="1" 
             Grid.Column="0" 
@@ -97,7 +97,7 @@
             </cz:ListViewZero.ItemTemplate>
         </cz:ListViewZero>
 
-        <!--<cz:ListViewZero Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampleListData}" ScrollOffset="{Binding ScrollOffset, Mode=TwoWay, Source={x:Reference lv1}}" ItemHeight="40">
+        --><!--<cz:ListViewZero Grid.Row="1" Grid.Column="1" ItemsSource="{Binding SampleListData}" ScrollOffset="{Binding ScrollOffset, Mode=TwoWay, Source={x:Reference lv1}}" ItemHeight="40">
             <cz:ListViewZero.ItemTemplate>
                 <DataTemplate>
                         <Label Text="{Binding Name}"/>
@@ -111,7 +111,7 @@
                     <Label Text="{Binding Name}"/>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
-        </CollectionView>-->
+        </CollectionView>--><!--
 
 
         <cz:TreeViewZero Grid.Row="1" Grid.Column="1"
@@ -166,21 +166,37 @@
                     </cz:TreeItemDataTemplate>
                 </cz:TreeItemDataTemplateSelector>
             </cz:TreeViewZero.TreeItemTemplate>
-        </cz:TreeViewZero>
+        </cz:TreeViewZero>-->
 
-        <cz:ListViewZero 
+        <cz:GridViewZero 
             Grid.Row="2" 
             Grid.Column="1" 
             ItemsSource="{Binding SampleLazyListData}"
-            ItemHeight="40"
-            RemainingItemsChangedCommand="{Binding RemainingItemsChangedCommand}"
+            SelectedItems="{Binding SelectedItems}"
+            ItemHeight="30"
             >
-            <cz:ListViewZero.ItemTemplate>
-                <DataTemplate>
-                    <Label Text="{Binding Name}" WidthRequest="{Binding Offset}" />
-                </DataTemplate>
-            </cz:ListViewZero.ItemTemplate>
-        </cz:ListViewZero>
+            <cz:GridViewZero.GridColumns>
+                <cz:GridColumnZero Width="200"  >
+                    <cz:GridColumnZero.ItemTemplate>
+                        <DataTemplate>
+                            <Label Text="{Binding Name}" WidthRequest="{Binding Offset}" />
+                        </DataTemplate>
+                    </cz:GridColumnZero.ItemTemplate>
+                </cz:GridColumnZero>
+
+                <cz:GridColumnZero Width="200"  >
+                    <cz:GridColumnZero.ItemTemplate>
+                        <DataTemplate>
+                            <Label Text="{Binding Name}" WidthRequest="{Binding Offset}" />
+                        </DataTemplate>
+                    </cz:GridColumnZero.ItemTemplate>
+                </cz:GridColumnZero>
+
+
+
+
+            </cz:GridViewZero.GridColumns>
+        </cz:GridViewZero>
     </Grid>
 
 </ContentPage>
