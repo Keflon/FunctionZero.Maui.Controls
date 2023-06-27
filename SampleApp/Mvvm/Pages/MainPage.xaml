@@ -176,7 +176,7 @@
             ItemHeight="30"
             >
             <cz:GridViewZero.GridColumns>
-                <cz:GridColumnZero Width="200"  >
+                <cz:GridColumnZero Width="50"  >
                     <cz:GridColumnZero.ItemTemplate>
                         <DataTemplate>
                             <Label Text="{Binding Name}" WidthRequest="{Binding Offset}" />
@@ -184,10 +184,18 @@
                     </cz:GridColumnZero.ItemTemplate>
                 </cz:GridColumnZero>
 
-                <cz:GridColumnZero Width="200"  >
+                <cz:GridColumnZero Width="50"  >
                     <cz:GridColumnZero.ItemTemplate>
                         <DataTemplate>
-                            <Label Text="{Binding Name}" WidthRequest="{Binding Offset}" />
+                            <Label Text="{Binding Offset}" />
+                        </DataTemplate>
+                    </cz:GridColumnZero.ItemTemplate>
+                </cz:GridColumnZero>
+                
+                <cz:GridColumnZero Width="50"  >
+                    <cz:GridColumnZero.ItemTemplate>
+                        <DataTemplate>
+                            <Label Text="{Binding Name}" BackgroundColor="AliceBlue" />
                         </DataTemplate>
                     </cz:GridColumnZero.ItemTemplate>
                 </cz:GridColumnZero>
