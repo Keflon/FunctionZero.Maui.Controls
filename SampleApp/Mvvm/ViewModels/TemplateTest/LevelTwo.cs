@@ -7,7 +7,7 @@ namespace SampleApp.Mvvm.ViewModels.TemplateTest
     {
         public ObservableCollection<LevelThree> LevelTwoChildren { get; }
 
-        public string Name { get; }
+        public string Name { get; set; }
 
         private bool _isLevelTwoExpanded;
 

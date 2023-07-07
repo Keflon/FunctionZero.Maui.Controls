@@ -237,6 +237,7 @@ namespace SampleApp.Mvvm.PageViewModels
 
         private int _count;
         private bool _isRootVisible;
+        private LevelTwo _interestingNode;
 
         public int Count { get => _count; set => SetProperty(ref _count, value); }
         public bool IsRootVisible { get => _isRootVisible; set => SetProperty(ref _isRootVisible, value); }
@@ -250,7 +251,35 @@ namespace SampleApp.Mvvm.PageViewModels
             //var scale = (Math.Sin(_listCount / 223.0 * Math.Cos(_listCount / 337.0))) / 2.0 + 1.0;
             var scale = Math.Sin(Count / 2.0) / 2.0;
             TreeViewScrollOffset = (float)scale * 100;
-#else
+#elif true
+            if ((Count % 64) == 0)
+            {
+                var node = SampleTemplateTestData.LevelZeroChildren[0].LevelOneChildren[0];
+                _interestingNode = _interestingNode ?? node;
+                _interestingNode.Name = "Hello";
+                if (SampleTemplateTestData.LevelZeroChildren[0].LevelOneChildren.Contains(_interestingNode))
+                {
+                    SampleTemplateTestData.LevelZeroChildren[0].LevelOneChildren.Remove(_interestingNode);
+                    SampleTemplateTestData.LevelZeroChildren[1].LevelOneChildren.Add(_interestingNode);
+                }
+                else
+                {
+                    SampleTemplateTestData.LevelZeroChildren[1].LevelOneChildren.Remove(_interestingNode);
+                    SampleTemplateTestData.LevelZeroChildren[0].LevelOneChildren.Add(_interestingNode);
+                }
+
+                if (((ListItem)SampleListData[5]).Name == "BANANA")
+                {
+                    SampleListData.RemoveAt(5);
+                }
+                else
+                {
+                    SampleListData.Insert(5, new ListItem("BANANA", 0));
+                }
+
+            }
+#elif false
+
 
             //IsRootVisible = (Count & 8)==0;
             if ((Count % 8) < 2)

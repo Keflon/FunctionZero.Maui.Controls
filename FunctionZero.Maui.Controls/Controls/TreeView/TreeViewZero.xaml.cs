@@ -253,7 +253,7 @@ namespace FunctionZero.Maui.Controls
         private void _rootContainer_NodeChanged(object sender, TreeNodeContainerEventArgs<object> e)
         {
             var treeNodeContainer = e.Node;
-
+            
 
             Debug.WriteLine($"Node Changed: {e.Node.Data}, {e.Action}");
 
