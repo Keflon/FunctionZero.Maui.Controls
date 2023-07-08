@@ -317,6 +317,11 @@ namespace FunctionZero.Maui.Controls
                     return value as IEnumerable;
                 }
             }
+            // If no property is specified for the children, see if the node is IEnumerable.
+            // TODO: Test this.
+            else if (node is IEnumerable children)
+                return children;
+            
             return Enumerable.Empty<object>();
         }
 

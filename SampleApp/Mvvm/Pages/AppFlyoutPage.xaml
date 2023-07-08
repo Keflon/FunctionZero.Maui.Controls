@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
+             xmlns:vm="clr-namespace:SampleApp.Mvvm.PageViewModels"
+             x:Class="SampleApp.Mvvm.Pages.AppFlyoutPage"
+             Title="AppFlyoutPage"
+             x:Name="Self">
+    <ContentPage.Resources>
+        <Style TargetType="Label" >
+            <Style.Setters>
+                <Setter Property="FontSize" Value="Large"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="BackgroundColor" Value="AliceBlue"/>
+                <Setter Property="Margin" Value="5,5,5,5"/>
+            </Style.Setters>
+        </Style>
+        <Style TargetType="cz:LabelZero" >
+            <Style.Setters>
+                <Setter Property="FontSize" Value="Large"/>
+                <Setter Property="FontAttributes" Value="Bold"/>
+                <Setter Property="BackgroundColor" Value="Aqua"/>
+                <Setter Property="Margin" Value="30,5,5,5"/>
+            </Style.Setters>
+        </Style>
+
+    </ContentPage.Resources>
+
+
+    <Grid BackgroundColor="Red">
+        <Label Text="MIND THE GAP"/>
+        <ScrollView Orientation="Vertical">
+            <VerticalStackLayout BackgroundColor="Purple">
+
+                <!--Trees-->
+                <cz:ExpanderZero 
+                    EaseIn="{x:Static Easing.BounceOut}"
+                    EaseOut="{x:Static Easing.BounceOut}"
+                    DurationMilliseconds="400"
+                >
+                    <cz:ExpanderZero.Header>
+                        <Label Text="Trees"/>
+                    </cz:ExpanderZero.Header>
+                    <VerticalStackLayout>
+                        <cz:LabelZero Text="Basic" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.BasicTree}"/>
+                        <cz:LabelZero Text="TemplateSelector" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.TemplateSelectorTree}"/>
+                        <cz:LabelZero Text="Self Enumerable" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.SelfEnumerableTree}"/>
+                    </VerticalStackLayout>
+
+
+                </cz:ExpanderZero>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
