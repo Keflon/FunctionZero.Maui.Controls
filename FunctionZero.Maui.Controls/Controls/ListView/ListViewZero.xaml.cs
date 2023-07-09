@@ -377,7 +377,7 @@ public partial class ListViewZero : ContentView
 
     private void UpdateScrollViewContentHeight()
     {
-        double desiredHeight = ItemHeight * ItemsSource.Count;
+        double desiredHeight = ItemHeight * ItemsSource?.Count ?? 0;
 
 
         if (desiredHeight > MAX_SCROLL_HEIGHT)
