@@ -1,12 +1,83 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
+             xmlns:test="clr-namespace:SampleApp.Mvvm.ViewModels.TemplateTest"
              x:Class="SampleApp.Mvvm.Pages.Tree.TemplateSelectorTreePage"
              Title="TemplateSelectorTreePage">
+    <ContentPage.Resources>
+
+        <Style x:Key="testItemStyle" TargetType="cz:ListItemZero">
+            <Setter Property="VisualStateManager.VisualStateGroups" >
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+
+                        <!-- BackgroundColor must have a value set or the other states cannot 'put back' the original color-->
+                        <!-- I think this is a bug in MAUI because unappyling a Setter ought to revert to the original value-->
+                        <VisualState x:Name="Normal" >
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Transparent" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                        <VisualState x:Name="ItemFocused">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Brown" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor" Value="Grey" />
+                            </VisualState.Setters>
+                        </VisualState>
+
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
+    </ContentPage.Resources>
+    <!--<VerticalStackLayout>
+        <cz:TreeViewZero x:Name="multiTemplateTree"
+            ItemHeight="40"
+            ScrollOffset="{Binding TreeViewScrollOffset, Mode=TwoWay}" 
+            SelectionMode="{Binding SelectedItem.Mode, Source={x:Reference SelectionModePicker}}"
+            ItemContainerStyle="{StaticResource testItemStyle}"
+
+            IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" Grid.Column="0"  ItemsSource="{Binding RootNode}" IndentMultiplier="20" >-->
+
     <VerticalStackLayout>
-        <Label 
-            Text="Welcome to TemplateSelectorTreePage!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+        <cz:TreeViewZero x:Name="multiTemplateTree"
+            ItemHeight="40"
+            IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" Grid.Column="0"  ItemsSource="{Binding RootNode}" IndentMultiplier="20" >
+
+            <cz:TreeViewZero.TreeItemTemplate>
+                <cz:TreeItemDataTemplateSelector>
+                    <cz:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
+                        <DataTemplate>
+                            <Label Text="{Binding Name}" BackgroundColor="Green" />
+                        </DataTemplate>
+                    </cz:TreeItemDataTemplate>
+
+                    <cz:TreeItemDataTemplate ChildrenPropertyName="LevelOneChildren" TargetType="{x:Type test:LevelOne}" IsExpandedPropertyName="IsLevelOneExpanded">
+                        <DataTemplate>
+                            <Label Text="{Binding Name}" BackgroundColor="Cyan" />
+                        </DataTemplate>
+                    </cz:TreeItemDataTemplate>
+
+                    <cz:TreeItemDataTemplate ChildrenPropertyName="LevelTwoChildren" TargetType="{x:Type test:LevelTwo}" IsExpandedPropertyName="IsLevelTwoExpanded">
+                        <DataTemplate>
+                            <Label Text="{Binding Name}" BackgroundColor="Pink" />
+                        </DataTemplate>
+                    </cz:TreeItemDataTemplate>
+
+                    <cz:TreeItemDataTemplate ChildrenPropertyName="LevelThreeChildren" TargetType="{x:Type test:LevelThree}" IsExpandedPropertyName="IsLevelThreeExpanded">
+                        <DataTemplate>
+                            <Label Text="{Binding Name}" BackgroundColor="Crimson" />
+                        </DataTemplate>
+                    </cz:TreeItemDataTemplate>
+                </cz:TreeItemDataTemplateSelector>
+            </cz:TreeViewZero.TreeItemTemplate>
+        </cz:TreeViewZero>
     </VerticalStackLayout>
 </ContentPage>

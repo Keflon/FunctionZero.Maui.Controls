@@ -1,4 +1,5 @@
 ﻿using SampleApp.Mvvm.ViewModels;
+using SampleApp.Mvvm.ViewModels.TemplateTest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,14 @@ namespace SampleApp.Mvvm.PageViewModels.Tree
 {
     public class TemplateSelectorTreePageVm : BasePageVm
     {
+        public LevelZero RootNode { get; }
+
+        public TemplateSelectorTreePageVm()
+        {
+            RootNode = new LevelZero("Root") { IsLevelZeroExpanded = true };
+
+        }
+
+
     }
 }
