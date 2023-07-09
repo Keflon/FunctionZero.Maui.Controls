@@ -8,7 +8,6 @@
                          BackgroundColor="Blue" 
                          ItemsSource="{Binding SampleData}" 
                          IndentMultiplier="20" 
-                         TreeItemControlTemplate="{StaticResource NodeTemplate}"
                          ItemHeight="60"
                          >
             <cz:TreeViewZero.TreeItemTemplate>
