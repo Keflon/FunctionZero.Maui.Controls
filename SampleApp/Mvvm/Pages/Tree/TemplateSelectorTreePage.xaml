@@ -37,20 +37,30 @@
             </Setter>
         </Style>
     </ContentPage.Resources>
-    <!--<VerticalStackLayout>
-        <cz:TreeViewZero x:Name="multiTemplateTree"
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <HorizontalStackLayout Grid.Row="0">
+            <Picker x:Name="SelectionModePicker" Title="Selection Mode" ItemsSource="{Binding PickerData}" ItemDisplayBinding="{Binding Name}"/>
+
+            <Label Text="Show Root"/>
+            <Switch x:Name="ShowRootSwitch" IsToggled="{Binding IsRootVisible}"/>
+            <Label Text="Dance"/>
+            <Switch IsToggled="{Binding IsDancing}"/>
+            <Switch />
+        </HorizontalStackLayout>
+
+        <cz:TreeViewZero 
+            Grid.Row="1"
             ItemHeight="40"
-            ScrollOffset="{Binding TreeViewScrollOffset, Mode=TwoWay}" 
+            IndentMultiplier="20" 
+            IsRootVisible="{Binding IsRootVisible}" 
+            ItemsSource="{Binding RootNode}" 
+            SelectedItem="{Binding SelectedItem}"
+            SelectedItems="{Binding SelectedItems}"
             SelectionMode="{Binding SelectedItem.Mode, Source={x:Reference SelectionModePicker}}"
-            ItemContainerStyle="{StaticResource testItemStyle}"
 
-            IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" Grid.Column="0"  ItemsSource="{Binding RootNode}" IndentMultiplier="20" >-->
-
-    <VerticalStackLayout>
-        <cz:TreeViewZero x:Name="multiTemplateTree"
-            ItemHeight="40"
-            IsRootVisible="{Binding IsRootVisible}" Grid.Row="2" Grid.Column="0"  ItemsSource="{Binding RootNode}" IndentMultiplier="20" >
-
+        >
             <cz:TreeViewZero.TreeItemTemplate>
                 <cz:TreeItemDataTemplateSelector>
                     <cz:TreeItemDataTemplate ChildrenPropertyName="LevelZeroChildren" TargetType="{x:Type test:LevelZero}" IsExpandedPropertyName="IsLevelZeroExpanded">
@@ -79,5 +89,17 @@
                 </cz:TreeItemDataTemplateSelector>
             </cz:TreeViewZero.TreeItemTemplate>
         </cz:TreeViewZero>
-    </VerticalStackLayout>
+
+        <ScrollView Grid.Row="2" Orientation="Horizontal">
+            <HorizontalStackLayout BindableLayout.ItemsSource="{Binding SelectedItems}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate>
+                        <Frame CornerRadius="5">
+                            <Label Text="{Binding Data.Name}"/>
+                        </Frame>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </HorizontalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>
