@@ -32,7 +32,7 @@
         <ScrollView Orientation="Vertical">
             <VerticalStackLayout BackgroundColor="Purple">
 
-                <!--Liata-->
+                <!--Lists-->
                 <cz:ExpanderZero 
                     EaseIn="{x:Static Easing.BounceOut}"
                     EaseOut="{x:Static Easing.BounceOut}"
@@ -63,6 +63,20 @@
                         <cz:LabelZero Text="TemplateSelector" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.TemplateSelectorTree}"/>
                         <cz:LabelZero Text="Self Enumerable" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.SelfEnumerableTree}"/>
                         <cz:LabelZero Text="Turbulent" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.TurbulentTree}"/>
+                    </VerticalStackLayout>
+                </cz:ExpanderZero>
+
+                <!--Masks-->
+                <cz:ExpanderZero 
+                    EaseIn="{x:Static Easing.CubicIn}"
+                    EaseOut="{x:Static Easing.CubicOut}"
+                    DurationMilliseconds="400"
+                >
+                    <cz:ExpanderZero.Header>
+                        <Label Text="Masks"/>
+                    </cz:ExpanderZero.Header>
+                    <VerticalStackLayout>
+                        <cz:LabelZero Text="Circle" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.CircleMask}"/>
                     </VerticalStackLayout>
                 </cz:ExpanderZero>
 

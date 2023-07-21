@@ -1,6 +1,7 @@
 ﻿using FunctionZero.CommandZero;
 using FunctionZero.Maui.MvvmZero;
 using SampleApp.Mvvm.PageViewModels.List;
+using SampleApp.Mvvm.PageViewModels.Mask;
 using SampleApp.Mvvm.PageViewModels.Tree;
 using SampleApp.Mvvm.ViewModels;
 using System;
@@ -20,12 +21,12 @@ namespace SampleApp.Mvvm.PageViewModels
         LazyListView,
         TurbulentListView,
 
-
         BasicTree,
         TemplateSelectorTree,
         SelfEnumerableTree,
-        TurbulentTree
-        
+        TurbulentTree,
+
+        CircleMask
     }
 
     public class AppFlyoutPageVm : BasePageVm
@@ -72,19 +73,21 @@ namespace SampleApp.Mvvm.PageViewModels
                 case AppFlyoutItems.TurbulentTree:
                     _pageService.FlyoutController.SetDetailVm(typeof(TurbulentTreePageVm), true);
                     break;
+                case AppFlyoutItems.CircleMask:
+                    _pageService.FlyoutController.SetDetailVm(typeof(CircleMaskPageVm), true);
+                    break;
             }
         }
 
         protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             base.OnPropertyChanged(propertyName);
-
         }
 
         public override void OnOwnerPageAppearing()
         {
             base.OnOwnerPageAppearing();
-                    _pageService.FlyoutController.SetDetailVm(typeof(BasicTreePageVm), true);
+            _pageService.FlyoutController.SetDetailVm(typeof(CircleMaskPageVm), true);
         }
     }
 }

@@ -69,6 +69,9 @@
 	  <MauiXaml Update="Controls\ListView\ListViewZero.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Controls\MaskZero\MaskZero.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\TreeView\TreeViewZero.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

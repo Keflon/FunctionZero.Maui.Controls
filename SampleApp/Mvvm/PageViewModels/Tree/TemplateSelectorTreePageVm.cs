@@ -17,7 +17,5 @@ namespace SampleApp.Mvvm.PageViewModels.Tree
             RootNode = new LevelZero("Root") { IsLevelZeroExpanded = true };
 
         }
-
-
     }
 }

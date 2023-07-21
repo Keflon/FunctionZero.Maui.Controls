@@ -2,9 +2,11 @@
 using FunctionZero.Maui.MvvmZero;
 using SampleApp.Mvvm.Pages;
 using SampleApp.Mvvm.Pages.List;
+using SampleApp.Mvvm.Pages.Mask;
 using SampleApp.Mvvm.Pages.Tree;
 using SampleApp.Mvvm.PageViewModels;
 using SampleApp.Mvvm.PageViewModels.List;
+using SampleApp.Mvvm.PageViewModels.Mask;
 using SampleApp.Mvvm.PageViewModels.Tree;
 
 namespace SampleApp
@@ -17,25 +19,22 @@ namespace SampleApp
             builder
                 .UseMauiApp<App>()
                 .UseMvvmZero(config =>
-                {
-                    config.MapVmToView<AppFlyoutPageVm, AppFlyoutPage>()
+                    {
+                        // Root controller
+                        config.MapVmToView<AppFlyoutPageVm, AppFlyoutPage>()
 
-
-
-                    .MapVmToView<LazyListPageVm, LazyListPage>()
-                    .MapVmToView<TurbulentListPageVm, TurbulentListPage>()
-                    .MapVmToView<WobblyListPageVm, WobblyListPage>()
-                    .MapVmToView<BasicTreePageVm, BasicTreePage>()
-                    .MapVmToView<TemplateSelectorTreePageVm, TemplateSelectorTreePage>()
-                    .MapVmToView<SelfEnumerableTreePageVm, SelfEnumerableTreePage>()
-                    .MapVmToView<TurbulentTreePageVm, TurbulentTreePage>()
-
-                    ;
-
-                }
-
+                        // 'Pages' that can be shown.
+                        .MapVmToView<LazyListPageVm, LazyListPage>()
+                        .MapVmToView<TurbulentListPageVm, TurbulentListPage>()
+                        .MapVmToView<WobblyListPageVm, WobblyListPage>()
+                        .MapVmToView<BasicTreePageVm, BasicTreePage>()
+                        .MapVmToView<TemplateSelectorTreePageVm, TemplateSelectorTreePage>()
+                        .MapVmToView<SelfEnumerableTreePageVm, SelfEnumerableTreePage>()
+                        .MapVmToView<TurbulentTreePageVm, TurbulentTreePage>()
+                        .MapVmToView<CircleMaskPageVm, CircleMaskPage>()
+                        ;
+                    }
                 )
-
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -48,15 +47,10 @@ namespace SampleApp
             //#endif
 
             builder.Services
-                //.AddSingleton<FlyoutPage>()
-                // because https://github.com/dotnet/maui/issues/14572
-                //.AddSingleton<TabbedPage>()
-                //.AddSingleton<MultiPage<Page>, AdaptedTabbedPage>()
-                //.AddSingleton<FlyoutPage, AdaptedFlyoutPage>()
+
                 .AddSingleton<FlyoutPage>()
                 .AddSingleton<AppFlyoutPageVm>()
                 .AddSingleton<AppFlyoutPage>()
-
 
                 .AddSingleton<LazyListPageVm>()
                 .AddSingleton<TurbulentListPageVm>()
@@ -66,6 +60,7 @@ namespace SampleApp
                 .AddSingleton<TemplateSelectorTreePageVm>()
                 .AddSingleton<SelfEnumerableTreePageVm>()
                 .AddSingleton<TurbulentTreePageVm>()
+                .AddSingleton<CircleMaskPageVm>()
 
 
                 .AddSingleton<LazyListPage>()
@@ -76,21 +71,7 @@ namespace SampleApp
                 .AddSingleton<TemplateSelectorTreePage>()
                 .AddSingleton<SelfEnumerableTreePage>()
                 .AddSingleton<TurbulentTreePage>()
-
-
-
-
-
-
-
-
-
-
-
-
-               //.AddSingleton<MainPage>()
-               //.AddSingleton<MainPageVm>()
-
+                .AddSingleton<CircleMaskPage>()
                ;
 
             return builder.Build();

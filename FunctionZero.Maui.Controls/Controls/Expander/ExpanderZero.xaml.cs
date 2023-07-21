@@ -48,8 +48,8 @@ public partial class ExpanderZero : ContentView
 
     public Easing EaseIn
     {
-        get { return (Easing)GetValue(EaseInProperty); }
-        set { SetValue(HeaderProperty, value); }
+        get => (Easing)GetValue(EaseInProperty);
+        set => SetValue(HeaderProperty, value);
     }
 
     public static readonly BindableProperty EaseOutProperty = BindableProperty.Create(nameof(EaseOut), typeof(Easing), typeof(ExpanderZero), Easing.Linear, BindingMode.OneWay, null, EaseOutChanged);
@@ -61,8 +61,8 @@ public partial class ExpanderZero : ContentView
 
     public Easing EaseOut
     {
-        get { return (Easing)GetValue(EaseOutProperty); }
-        set { SetValue(HeaderProperty, value); }
+        get => (Easing)GetValue(EaseOutProperty);
+        set => SetValue(HeaderProperty, value);
     }
 
     public static readonly BindableProperty DurationMillisecondsProperty = BindableProperty.Create(nameof(DurationMilliseconds), typeof(uint), typeof(ExpanderZero), (uint)500, BindingMode.OneWay, null, DurationMillisecondsChanged);
@@ -85,7 +85,8 @@ public partial class ExpanderZero : ContentView
         if (!IsExpanded)
             container.HeightRequest = 0;
     }
-
+    // Hello
+    // Hello - JCJ :)
     private void UpdateVisualState(bool isExpanded)
     {
         ContentPresenter container = (ContentPresenter)this.GetTemplateChild("DetailView");

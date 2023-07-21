@@ -77,6 +77,9 @@
 	  <MauiXaml Update="Mvvm\Pages\List\WobblyListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Mvvm\Pages\Mask\CircleMaskPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Mvvm\Pages\Tree\BasicTreePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

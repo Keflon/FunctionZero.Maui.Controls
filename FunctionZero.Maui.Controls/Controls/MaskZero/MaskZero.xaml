@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FunctionZero.Maui.Controls.MaskZero"
+             x:Name="Self">
+    <Path Stroke="Black" Opacity="0.5"
+      Fill="Cyan">
+        <Path.Data>
+            <GeometryGroup FillRule="Nonzero">
+                <RoundRectangleGeometry x:Name="Oblong" CornerRadius="5"
+                                Rect="0,0,550,500" />
+
+                <PathGeometry>
+                    <PathGeometry.Figures>
+
+                        <PathFigure x:Name="Cutout" StartPoint="120,70" IsClosed="True">
+                            <PathFigure.Segments>
+                                <PathSegmentCollection>
+                                    <ArcSegment x:Name="Arc" Size="100,100"
+                                             IsLargeArc="True"
+                                             SweepDirection="CounterClockwise"
+                                             Point="121,70" />
+                                </PathSegmentCollection>
+                            </PathFigure.Segments>
+                        </PathFigure>
+
+                    </PathGeometry.Figures>
+                </PathGeometry>
+            </GeometryGroup>
+        </Path.Data>
+    </Path>
+</ContentView>
