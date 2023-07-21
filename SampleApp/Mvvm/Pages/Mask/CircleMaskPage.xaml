@@ -7,14 +7,14 @@
     <ContentPage.ControlTemplate>
         <ControlTemplate>
             <Grid>
-                <cz:MaskZero/>
                 <ContentPresenter/>
+                <cz:MaskZero/>
             </Grid>
         </ControlTemplate>
     </ContentPage.ControlTemplate>
-    <VerticalStackLayout>
+    <VerticalStackLayout HeightRequest="200">
         <Label 
-            Text="Welcome to .NET MAUI!"
+            Text="Welcome to .NET MAUI!" FontSize="32"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
     </VerticalStackLayout>
