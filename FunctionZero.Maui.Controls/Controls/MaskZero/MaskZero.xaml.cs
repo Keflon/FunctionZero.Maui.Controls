@@ -1,13 +1,23 @@
 using Microsoft.Maui.Controls.Shapes;
+using System;
 using System.Collections.Specialized;
+using System.Diagnostics;
 
 namespace FunctionZero.Maui.Controls;
 
-public partial class MaskZero : ContentView
+public partial class MaskZero : GraphicsView
 {
+    private readonly MaskViewZero _mvz;
+
     public MaskZero()
     {
         InitializeComponent();
+
+        _mvz = new  MaskViewZero();
+
+        _viewLookup = new();
+
+        this.Drawable = _mvz;
 
         CenterX = 0;
         CenterY = 0;
@@ -24,8 +34,8 @@ public partial class MaskZero : ContentView
             await Task.Delay(2000);
             CenterYRequest = 200;
             await Task.Delay(2000);
-            CenterXRequest = 300;
-            CenterYRequest = 250;
+            //CenterXRequest = 300;
+            //CenterYRequest = 250;
             RadiusRequest = 100;
             await Task.Delay(2000);
             CenterXRequest = 30;
@@ -49,7 +59,7 @@ public partial class MaskZero : ContentView
     private static void CenterXChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (MaskZero)bindable;
-        self.RequestMove();
+        self.RequestUpdate();
     }
 
     #endregion
@@ -67,25 +77,25 @@ public partial class MaskZero : ContentView
     private static void CenterYChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (MaskZero)bindable;
-        self.RequestMove();
+        self.RequestUpdate();
 
     }
-    private bool _moveRequested = false;
-    private void RequestMove()
+    private bool _updateRequested = false;
+
+    private void RequestUpdate()
     {
-        if(_moveRequested == false)
+        if(_updateRequested == false)
         {
-            _moveRequested = true;
-            this.Dispatcher.Dispatch(DoMove);
+            _updateRequested = true;
+            this.Dispatcher.Dispatch(DoUpdate);
         }
     }
 
-    private void DoMove()
+    private void DoUpdate()
     {
-        Cutout.StartPoint = new Point(CenterX, CenterY);
-        Arc.Point = new Point(CenterX+1, CenterY);
-        this.InvalidateLayout();
-        _moveRequested = false;
+        _mvz.Update(CenterX, CenterY, Radius, BackgroundAlpha, Colors.Green, Colors.Blue, 1 );
+        this.Invalidate();
+        _updateRequested = false;
     }
 
     #endregion
@@ -103,9 +113,7 @@ public partial class MaskZero : ContentView
     private static void RadiusChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (MaskZero)bindable;
-
-        double radius = newValue is double newRadius ? newRadius : 0;
-        self.Arc.Size = new Size(radius, radius);
+        self.RequestUpdate();
     }
 
     #endregion
@@ -133,7 +141,7 @@ public partial class MaskZero : ContentView
         double endValue = newValue is double ? (double)newValue : 0;
 
         var animation = new Animation(v => self.CenterX = v, startValue, endValue);
-        animation.Commit(self, "XAnimation", 16, 800, Easing.CubicInOut, (v, c) => self.CenterX = endValue, () => false);
+        animation.Commit(self, "XAnimation", 16, 800, self.MovementEasing, (v, c) => self.CenterX = endValue, () => false);
     }
 
     #endregion
@@ -158,7 +166,7 @@ public partial class MaskZero : ContentView
         double endValue = newValue is double ? (double)newValue : 0;
 
         var animation = new Animation(v => self.CenterY = v, startValue, endValue);
-        animation.Commit(self, "YAnimation", 16, 800, Easing.CubicInOut, (v, c) => self.CenterY = endValue, () => false);
+        animation.Commit(self, "YAnimation", 16, 800, self.MovementEasing, (v, c) => self.CenterY = endValue, () => false);
     }
 
     #endregion
@@ -183,18 +191,118 @@ public partial class MaskZero : ContentView
         double endValue = newValue is double ? (double)newValue : 0;
 
         var animation = new Animation(v => self.Radius = v, startValue, endValue);
-        animation.Commit(self, "RadiusAnimation", 16, 800, Easing.CubicInOut, (v, c) => self.Radius = endValue, () => false);
+        animation.Commit(self, "RadiusAnimation", 16, 800, self.RadiusEasing, (v, c) => self.Radius = endValue, () => false);
     }
 
     #endregion
 
+
+    #region MovementEasingProperty
+
+    public static readonly BindableProperty MovementEasingProperty = BindableProperty.Create(nameof(MovementEasing), typeof(Easing), typeof(MaskZero), Easing.CubicInOut, BindingMode.OneWay, null, MovementEasingChanged);
+
+    public Easing MovementEasing
+    {
+        get { return (Easing)GetValue(MovementEasingProperty); }
+        set { SetValue(MovementEasingProperty, value); }
+    }
+
+    private static void MovementEasingChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+    }
+
     #endregion
 
-    protected override async void OnSizeAllocated(double width, double height)
-    {
-        base.OnSizeAllocated(width, height);
+    #region RadiusEasingProperty
 
-        if (Oblong != null)
-            Oblong.Rect = new Rect(0, 0, width, height);
+    public static readonly BindableProperty RadiusEasingProperty = BindableProperty.Create(nameof(RadiusEasing), typeof(Easing), typeof(MaskZero), Easing.CubicInOut, BindingMode.OneWay, null, RadiusEasingChanged);
+
+    public Easing RadiusEasing
+    {
+        get { return (Easing)GetValue(RadiusEasingProperty); }
+        set { SetValue(RadiusEasingProperty, value); }
+    }
+
+    private static void RadiusEasingChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+    }
+
+    #endregion
+
+
+    #region BackgroundAlphaProperty
+
+    public static readonly BindableProperty BackgroundAlphaProperty = BindableProperty.Create(nameof(BackgroundAlpha), typeof(double), typeof(MaskZero), 0.7, BindingMode.OneWay, null, BackgroundAlphaChanged);
+
+    public double BackgroundAlpha
+    {
+        get { return (double)GetValue(BackgroundAlphaProperty); }
+        set { SetValue(BackgroundAlphaProperty, value); }
+    }
+
+    private static void BackgroundAlphaChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+        self.RequestUpdate();
+    }
+
+    #endregion
+
+
+    #endregion
+
+    #region AttachedProperties
+
+    public static readonly BindableProperty MaskNameProperty =
+    BindableProperty.CreateAttached("MaskName", typeof(string), typeof(MaskZero), "", BindingMode.OneWay, null, MaskNamePropertyChanged);
+
+    private static void MaskNamePropertyChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        if(bindable is Element namedElement)
+        {
+            var parentMaskZero = FindAncestor<MaskZero>(namedElement);
+
+            if (parentMaskZero != null)
+            {
+                parentMaskZero.AddDescendant(bindable, oldValue, newValue);
+            }
+        }
+        Debug.WriteLine($"Object: {bindable}, oldValue: {oldValue}, newValue: {newValue}");
+    }
+
+
+
+    private static T FindAncestor<T>(Element namedElement) where T : Element
+    {
+        if (namedElement is null)
+            return null;
+
+        if (namedElement is T result)
+            return result;
+
+        return FindAncestor<T>(namedElement.Parent);
+    }
+
+ 
+
+    public static string GetMaskName(BindableObject view)
+    {
+        return (string)view.GetValue(MaskNameProperty);
+    }
+
+    public static void SetHasShadow(BindableObject view, string value)
+    {
+        view.SetValue(MaskNameProperty, value);
+    }
+    #endregion
+
+
+    private Dictionary<string, BindableObject> _viewLookup;
+
+    private void AddDescendant(BindableObject namedObject, object oldValue, object newValue)
+    {
+        _viewLookup[(string)newValue] = namedObject;
     }
 }

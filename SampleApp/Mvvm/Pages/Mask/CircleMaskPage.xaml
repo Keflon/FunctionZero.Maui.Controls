@@ -8,13 +8,13 @@
         <ControlTemplate>
             <Grid>
                 <ContentPresenter/>
-                <cz:MaskZero/>
+                <cz:MaskZero BackgroundAlpha="0.2"/>
             </Grid>
         </ControlTemplate>
     </ContentPage.ControlTemplate>
     <VerticalStackLayout HeightRequest="200">
         <Label 
-            Text="Welcome to .NET MAUI!" FontSize="32"
+            Text="Welcome to .NET MAUI!" FontSize="32" cz:MaskZero.MaskName="banana"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
     </VerticalStackLayout>
