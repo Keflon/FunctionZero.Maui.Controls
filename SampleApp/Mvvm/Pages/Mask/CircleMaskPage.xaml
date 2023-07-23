@@ -6,16 +6,32 @@
              Title="CircleMaskPage">
     <ContentPage.ControlTemplate>
         <ControlTemplate>
-            <Grid>
-                <ContentPresenter/>
-                <cz:MaskZero BackgroundAlpha="0.2"/>
-            </Grid>
+            <cz:MaskZero BackgroundAlpha="0.5" MaskTargetName="{TemplateBinding BindingContext.TargetName}">
+                <cz:MaskZero.Content>
+                    <ContentPresenter/>
+
+                </cz:MaskZero.Content>
+            </cz:MaskZero>
         </ControlTemplate>
     </ContentPage.ControlTemplate>
-    <VerticalStackLayout HeightRequest="200">
-        <Label 
-            Text="Welcome to .NET MAUI!" FontSize="32" cz:MaskZero.MaskName="banana"
+    <ScrollView>
+        <Grid RowDefinitions="*,*" ColumnDefinitions="*,*" HeightRequest="900">
+            <Label Grid.Row="0" Grid.Column="0"
+            Text="Banana!" FontSize="32" cz:MaskZero.MaskName="banana" BackgroundColor="Yellow"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
-    </VerticalStackLayout>
+            <Label Grid.Row="0" Grid.Column="1"
+            Text="Pear!" FontSize="32" cz:MaskZero.MaskName="radish" BackgroundColor="Yellow"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+            <Label Grid.Row="1" Grid.Column="0"
+            Text="Melon!" FontSize="32" cz:MaskZero.MaskName="melon" BackgroundColor="Yellow"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+            <Label Grid.Row="1" Grid.Column="1"
+            Text="Grapefruit!" FontSize="32" cz:MaskZero.MaskName="grapefruit" BackgroundColor="Yellow"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        </Grid>
+    </ScrollView>
 </ContentPage>

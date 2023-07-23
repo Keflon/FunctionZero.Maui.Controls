@@ -1,3 +1,4 @@
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
 using System;
 using System.Collections.Specialized;
@@ -5,24 +6,61 @@ using System.Diagnostics;
 
 namespace FunctionZero.Maui.Controls;
 
-public partial class MaskZero : GraphicsView
+public partial class MaskZero : ContentView
 {
-    private readonly MaskViewZero _mvz;
 
+
+    private Dictionary<string, BindableObject> _viewLookup;
+    private GraphicsView _gv;
+    private readonly MaskViewZero _mv;
     public MaskZero()
     {
+        _mv = new MaskViewZero();
+
         InitializeComponent();
 
-        _mvz = new  MaskViewZero();
-
         _viewLookup = new();
-
-        this.Drawable = _mvz;
 
         CenterX = 0;
         CenterY = 0;
         Radius = 50;
-        _ = BadTestAsync();
+        //_ = BadTestAsync();
+
+        DescendantAdded += MaskZero_DescendantAdded;
+        DescendantRemoved += MaskZero_DescendantRemoved;
+    }
+
+    private void MaskZero_DescendantRemoved(object sender, ElementEventArgs e)
+    {
+        var name = e.Element.GetValue(MaskNameProperty) as string;
+        if (!string.IsNullOrEmpty(name))
+        {
+            _viewLookup.Remove(name);
+        }
+
+        if (e.Element is ScrollView scrollView)
+        {
+            scrollView.Scrolled -= ScrollView_Scrolled;
+        }
+    }
+
+    private void MaskZero_DescendantAdded(object sender, ElementEventArgs e)
+    {
+        if(e.Element is ScrollView scrollView)
+        {
+            scrollView.Scrolled += ScrollView_Scrolled;
+        }
+
+        var name = e.Element.GetValue(MaskNameProperty) as string;
+        if (!string.IsNullOrEmpty(name))
+        {
+            _viewLookup[name] = e.Element;
+        }
+    }
+
+    private void ScrollView_Scrolled(object sender, ScrolledEventArgs e)
+    {
+        RequestUpdate();
     }
 
     private async Task BadTestAsync()
@@ -81,10 +119,11 @@ public partial class MaskZero : GraphicsView
 
     }
     private bool _updateRequested = false;
+    private View _actualTarget;
 
     private void RequestUpdate()
     {
-        if(_updateRequested == false)
+        if (_updateRequested == false)
         {
             _updateRequested = true;
             this.Dispatcher.Dispatch(DoUpdate);
@@ -93,8 +132,21 @@ public partial class MaskZero : GraphicsView
 
     private void DoUpdate()
     {
-        _mvz.Update(CenterX, CenterY, Radius, BackgroundAlpha, Colors.Green, Colors.Blue, 1 );
-        this.Invalidate();
+        if ((_actualTarget != null))
+        {
+            var point = GetScreenCoords(_actualTarget);
+
+
+            CenterXRequest = point.X + _actualTarget.Width/2;
+            CenterYRequest = point.Y + _actualTarget.Height/2;
+
+            RadiusRequest = _actualTarget.Width/2;
+
+        }
+
+        _mv.Update(CenterX, CenterY, Radius, BackgroundAlpha, Colors.Green, Colors.Blue, 1);
+
+        _gv?.Invalidate();
         _updateRequested = false;
     }
 
@@ -251,16 +303,72 @@ public partial class MaskZero : GraphicsView
     #endregion
 
 
+
+
+
+    #region MaskTargetNameProperty
+
+    public static readonly BindableProperty MaskTargetNameProperty = BindableProperty.Create(nameof(MaskTargetName), typeof(string), typeof(MaskZero), "", BindingMode.OneWay, null, MaskTargetNameChanged);
+
+    public string MaskTargetName
+    {
+        get { return (string)GetValue(MaskTargetNameProperty); }
+        set { SetValue(MaskTargetNameProperty, value); }
+    }
+
+    private static void MaskTargetNameChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+
+        // Get bounds of the control
+        if (self._viewLookup.TryGetValue(newValue as string ?? "", out var target))
+        {
+            self._actualTarget = (View)target;
+
+            self.RequestUpdate();
+        }
+        else
+            self._actualTarget = null;
+    }
+
+
+    /// <summary>
+    /// A view's default X- and Y-coordinates are LOCAL with respect to the boundaries of its parent,
+    /// and NOT with respect to the screen. This method calculates the SCREEN coordinates of a view.
+    /// The coordinates returned refer to the top left corner of the view.
+    /// </summary>
+    public static Point GetScreenCoords(VisualElement element)
+    {
+        double x = 0; double y = 0;
+
+        while (element != null)
+        {
+            x += element.Bounds.Left;
+            y += element.Bounds.Top;
+
+            if(element is IScrollView scrollView)
+            {
+                x -= scrollView.HorizontalOffset;
+                y -= scrollView.VerticalOffset;
+            }
+
+            element = element.Parent as VisualElement;
+        }
+        return new Point(x, y);
+    }
+
+    #endregion
+
     #endregion
 
     #region AttachedProperties
 
     public static readonly BindableProperty MaskNameProperty =
-    BindableProperty.CreateAttached("MaskName", typeof(string), typeof(MaskZero), "", BindingMode.OneWay, null, MaskNamePropertyChanged);
+BindableProperty.CreateAttached("MaskName", typeof(string), typeof(MaskZero), "", BindingMode.OneWay, null, MaskNamePropertyChanged);
 
     private static void MaskNamePropertyChanged(BindableObject bindable, object oldValue, object newValue)
     {
-        if(bindable is Element namedElement)
+        if (bindable is Element namedElement)
         {
             var parentMaskZero = FindAncestor<MaskZero>(namedElement);
 
@@ -285,24 +393,34 @@ public partial class MaskZero : GraphicsView
         return FindAncestor<T>(namedElement.Parent);
     }
 
- 
+
 
     public static string GetMaskName(BindableObject view)
     {
         return (string)view.GetValue(MaskNameProperty);
     }
 
-    public static void SetHasShadow(BindableObject view, string value)
+    public static void SetMaskName(BindableObject view, string value)
     {
         view.SetValue(MaskNameProperty, value);
     }
     #endregion
 
 
-    private Dictionary<string, BindableObject> _viewLookup;
-
     private void AddDescendant(BindableObject namedObject, object oldValue, object newValue)
     {
         _viewLookup[(string)newValue] = namedObject;
     }
+
+
+    private void GraphicsView_ParentChanged(object sender, EventArgs e)
+    {
+        _gv = (GraphicsView)sender;
+        _gv.Drawable = _mv;
+
+    }
+
+
+
+
 }
