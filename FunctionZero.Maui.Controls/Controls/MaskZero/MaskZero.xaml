@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<GraphicsView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:test="clr-namespace:FunctionZero.Maui.Controls"
+             xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
              x:Class="FunctionZero.Maui.Controls.MaskZero"
-             x:Name="Self">
+             x:Name="Self"
+             
+             
+             >
+    <ContentView.ControlTemplate>
+        <ControlTemplate>
+            <Grid>
+                <ContentPresenter />
+                <GraphicsView ParentChanged="GraphicsView_ParentChanged" InputTransparent="True" >
+                    <GraphicsView.Drawable>
+                        <cz:MaskViewZero />
+                    </GraphicsView.Drawable>
+                </GraphicsView>
+            </Grid>
 
+        </ControlTemplate>
+    </ContentView.ControlTemplate>
 
-</GraphicsView>
+</ContentView>
