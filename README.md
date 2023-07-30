@@ -11,6 +11,7 @@ Use package [2.0.0](https://www.nuget.org/packages/FunctionZero.Maui.Controls/2.
 
 1. [ListViewZero](#listviewzero)
 1. [TreeViewZero](#treeviewzero)
+1. [MaskViewZero](#maskviewzero)
 
 ## ListViewZero
 ### Features
@@ -24,15 +25,17 @@ TODO: Sample image
 
 ### ListViewZero exposes the following properties
 Property | Type | Bindable | Purpose
-:----- | :---- | :----: | :-----
-ItemContainerStyle      | Style            | Yes  | An optional `Style` that can be applied to the `ListItemZero` instances that represent each node. This can be used to modify how selected-items are rendered.
-ItemHeight              | float            | Yes  | The height of each row in the list-view
-ItemsSource             | object           | Yes  | Set this to the IEnumerable (usually found in your view-model) that contains your items  
-ItemTemplate            | DataTemplate     | Yes  | Used to draw the data for each node. Set this to a `DataTemplate` or a `DataTemplateSelector`. See below.
-ScrollOffset            | float            | YES! | This is the absolute offset and can bound to.
-SelectedItem            | object           | Yes  | Set to the currently selected item, i.e. an instance of your *ViewModel* data, or null
-SelectedItems           | IList            | Yes  | All currently selected items. Default is an `ObservableCollection<object>`. You can bind to it or set your own collection, and if it supports `INotifyCollectionChanged` the `ListViewZero` will track it.
-SelectionMode           | SelectionMode    | Yes  | Allows a `SelectionMode` of None, Single or Multiple.
+:----- | :---- | :----:      | :-----
+ItemContainerStyle           | Style            | Yes  | An optional `Style` that can be applied to the `ListItemZero` instances that represent each node. This can be used to modify how selected-items are rendered.
+ItemHeight                   | float            | Yes  | The height of each row in the list-view
+ItemsSource                  | object           | Yes  | Set this to the IEnumerable (usually found in your view-model) that contains your items  
+ItemTemplate                 | DataTemplate     | Yes  | Used to draw the data for each node. Set this to a `DataTemplate` or a `DataTemplateSelector`. See below.
+ScrollOffset                 | float            | YES! | This is the absolute offset and can bound to.
+SelectedItem                 | object           | Yes  | Set to the currently selected item, i.e. an instance of your *ViewModel* data, or null
+SelectedItems                | IList            | Yes  | All currently selected items. Default is an `ObservableCollection<object>`. You can bind to it or set your own collection, and if it supports `INotifyCollectionChanged` the `ListViewZero` will track it.
+SelectionMode                | SelectionMode    | Yes  | Allows a `SelectionMode` of None, Single or Multiple.
+RemainingItems               | int              | Yes  | This tracks the number of items in the `ItemsSource` that are below the bottom of the `ListViewZero`.
+RemainingItemsChangedCommand | ICommand         | Yes  | This is raised whenever `RemainingItems` changes. The _command parameter_ is set to `RemainingItems`.
 
 ### Create a ListViewZero
 Given a collection of items
@@ -434,6 +437,80 @@ You can base the `ControlTemplate` on the default, show here, or bake your own e
     </cz:TreeViewZero.TreeItemTemplate>
 </cz:TreeViewZero>
 ```
+
+
+## MaskViewZero
+There's a cool new control for masking out areas of the screen.  
+It's really boring writing documentation so here's a quick sample whilst I finish the control off.
+
+### Put your UI inside a `MaskZero` control, e.g. using a `ControlTemplate` ...
+```xaml
+<ContentPage.ControlTemplate>
+    <ControlTemplate>
+        <cz:MaskZero 
+            BackgroundAlpha="0.5" 
+            MaskTargetName="{TemplateBinding BindingContext.TargetName}"
+            MovementEasing="{x:Static Easing.CubicInOut}"
+            MaskRoundnessEasing="{x:Static Easing.CubicInOut}"
+            Duration="450"
+            MaskColorRequest="{TemplateBinding BindingContext.MaskColor}"
+            MaskEdgeColorRequest="{TemplateBinding BindingContext.MaskEdgeColor}"
+            >
+            <cz:MaskZero.Content>
+                <ContentPresenter/>
+            </cz:MaskZero.Content>
+        </cz:MaskZero>
+    </ControlTemplate>
+</ContentPage.ControlTemplate>
+```
+Notice we are binding to the control's `~Request` properties. 
+This means any changes will be animated, using the `Easing` functions you provide.  
+
+Now give some of your controls a `MaskZero.MaskName`  
+```xaml
+<Grid xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
+      RowDefinitions="*,*" ColumnDefinitions="*,*" >
+    <Label Grid.Row="0" Grid.Column="0" Text="Banana!"     cz:MaskZero.MaskName="banana" />
+    <Label Grid.Row="0" Grid.Column="1" Text="Radish!"     cz:MaskZero.MaskName="radish" />
+    <Label Grid.Row="1" Grid.Column="0" Text="Melon!"      cz:MaskZero.MaskName="melon" />
+    <Label Grid.Row="1" Grid.Column="1" Text="Grapefruit!" cz:MaskZero.MaskName="grapefruit" />
+</Grid>
+```
+
+
+Finally, add to your `ViewModel` the properties the `ControlTemplate` binds to, and set them, simple as that!  
+```csharp 
+private async Task DoTheThingAsync()
+{
+    while (true)
+    {
+        await Task.Delay(2000);
+
+        TargetName = "banana";
+        MaskColor = Colors.Red;
+        MaskEdgeColor = Colors.Black;
+        await Task.Delay(2000);
+
+        TargetName = "radish";
+        MaskColor = Colors.Purple;
+        MaskEdgeColor = Colors.Black;
+        await Task.Delay(2000);
+
+        TargetName = "melon";
+        MaskColor = Colors.Blue;
+        MaskEdgeColor = Colors.Red;
+        await Task.Delay(2000);
+
+        TargetName = "grapefruit";
+        MaskColor = Colors.Yellow;
+        MaskEdgeColor = Colors.Black;
+    }
+}
+```
+
+Run the demo to see different controls highlighted, with animated color, shape and opacity changes. Code is here:
+- [CircleMaskPage.xaml](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/SampleApp/Mvvm/Pages/Mask/CircleMaskPage.xaml)
+- [CircleMaskPageVm.cs](https://github.com/Keflon/FunctionZero.Maui.Controls/blob/master/SampleApp/Mvvm/PageViewModels/Mask/CircleMaskPageVm.cs)
 
 # Workarounds:
 

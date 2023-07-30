@@ -4,23 +4,23 @@
              xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
              x:Class="SampleApp.Mvvm.Pages.Mask.CircleMaskPage"
              Title="CircleMaskPage">
-    <ContentPage.ControlTemplate>
-        <ControlTemplate>
-            <cz:MaskZero 
-                BackgroundAlpha="0.5" 
-                MaskTargetName="{TemplateBinding BindingContext.TargetName}"
-                MovementEasing="{x:Static Easing.CubicInOut}"
-                MaskRoundnessEasing="{x:Static Easing.CubicInOut}"
-                Duration="450"
-                MaskColorRequest="{TemplateBinding BindingContext.MaskColor}"
-                MaskEdgeColorRequest="{TemplateBinding BindingContext.MaskEdgeColor}"
-                >
-                <cz:MaskZero.Content>
-                    <ContentPresenter/>
-                </cz:MaskZero.Content>
-            </cz:MaskZero>
-        </ControlTemplate>
-    </ContentPage.ControlTemplate>
+<ContentPage.ControlTemplate>
+    <ControlTemplate>
+        <cz:MaskZero 
+            BackgroundAlphaRequest="{TemplateBinding BindingContext.BackgroundAlpha}" 
+            MaskTargetName="{TemplateBinding BindingContext.TargetName}"
+            MovementEasing="{x:Static Easing.CubicInOut}"
+            MaskRoundnessEasing="{x:Static Easing.CubicInOut}"
+            Duration="450"
+            MaskColorRequest="{TemplateBinding BindingContext.MaskColor}"
+            MaskEdgeColorRequest="{TemplateBinding BindingContext.MaskEdgeColor}"
+            >
+            <cz:MaskZero.Content>
+                <ContentPresenter/>
+            </cz:MaskZero.Content>
+        </cz:MaskZero>
+    </ControlTemplate>
+</ContentPage.ControlTemplate>
     <ScrollView>
         <Grid RowDefinitions="*,*" ColumnDefinitions="*,*" HeightRequest="900">
             <Label Grid.Row="0" Grid.Column="0"

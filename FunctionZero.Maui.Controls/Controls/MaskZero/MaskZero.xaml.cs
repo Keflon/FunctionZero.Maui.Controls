@@ -13,6 +13,7 @@ public partial class MaskZero : ContentView
     private readonly MaskViewZero _mv;
     private bool _updateRequested = false;
     private View _actualTarget;
+    private double _alphaMultiplier;
 
     public MaskZero()
     {
@@ -87,21 +88,21 @@ public partial class MaskZero : ContentView
         {
             var point = GetScreenCoords(_actualTarget);
 
-
-            var radius = Math.Min(MaskWidth, MaskHeight) / 2.0 * MaskRoundness;
-
-            delta = (1 - Math.Sin(Math.PI / 4)) * radius;
-
             MaskLeftRequest = point.X;
             MaskTopRequest = point.Y;
             MaskWidthRequest = _actualTarget.Width;
             MaskHeightRequest = _actualTarget.Height;
         }
-        _mv.Update(MaskLeft - delta, MaskTop - delta, MaskWidth + delta + delta, MaskHeight + delta + delta, MaskRoundness, BackgroundAlpha, MaskColor, MaskEdgeColor, 1);
+        var radius = Math.Min(MaskWidth, MaskHeight) / 2.0 * MaskRoundness;
+
+        delta = (1 - Math.Sin(Math.PI / 4)) * radius;
+
+        _mv.Update(MaskLeft - delta, MaskTop - delta, MaskWidth + delta + delta, MaskHeight + delta + delta, MaskRoundness, BackgroundAlpha, MaskColor, MaskEdgeColor, 1, _alphaMultiplier);
 
         _gv?.Invalidate();
         _updateRequested = false;
     }
+
 
     /// <summary>
     /// A view's default X- and Y-coordinates are LOCAL with respect to the boundaries of its parent,
@@ -493,6 +494,34 @@ public partial class MaskZero : ContentView
 
     #endregion
 
+
+    #region BackgroundAlphaRequestProperty
+
+    public static readonly BindableProperty BackgroundAlphaRequestProperty = BindableProperty.Create(nameof(BackgroundAlphaRequest), typeof(double), typeof(MaskZero), 0.7, BindingMode.OneWay, null, BackgroundAlphaRequestChanged);
+
+    public double BackgroundAlphaRequest
+    {
+        get { return (double)GetValue(BackgroundAlphaRequestProperty); }
+        set { SetValue(BackgroundAlphaRequestProperty, value); }
+    }
+
+    private static void BackgroundAlphaRequestChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+
+        self.AbortAnimation("BackgroundAlphaAnimation");
+
+        double startValue = oldValue is double ? (double)oldValue : 0;
+        double endValue = newValue is double ? (double)newValue : 0;
+
+        var animation = new Animation(v => self.BackgroundAlpha = v, startValue, endValue);
+        animation.Commit(self, "BackgroundAlphaAnimation", 16, self.Duration, self.MaskRoundnessEasing, (v, c) => self.BackgroundAlpha = endValue, () => false);
+    }
+
+    #endregion
+
+
+
     #region MaskColorRequestProperty
 
     public static readonly BindableProperty MaskColorRequestProperty = BindableProperty.Create(nameof(MaskColorRequest), typeof(Color), typeof(MaskZero), Colors.Black, BindingMode.OneWay, null, MaskColorRequestChanged);
@@ -559,10 +588,29 @@ public partial class MaskZero : ContentView
         {
             self._actualTarget = (View)target;
 
+            self.AbortAnimation("_alphaMultiplierAnimation");
+
+            var animation = new Animation(v => { self._alphaMultiplier = v; self.RequestUpdate(); }, self._alphaMultiplier, 1);
+            animation.Commit(self, "_alphaMultiplierAnimation", 16, self.Duration, Easing.Linear, (v, c) => self._alphaMultiplier = 1, () => false);
+
             self.RequestUpdate();
         }
         else
+        {
             self._actualTarget = null;
+
+            var radius = 600;
+
+            self.MaskLeftRequest = self.MaskLeft - radius;
+            self.MaskTopRequest = self.MaskTop - radius;
+            self.MaskWidthRequest = self.MaskWidth + radius + radius;
+            self.MaskHeightRequest = self.MaskHeight + radius + radius;
+
+            self.AbortAnimation("_alphaMultiplierAnimation");
+
+            var animation = new Animation(v => { self._alphaMultiplier = v; self.RequestUpdate(); }, self._alphaMultiplier, 0);
+            animation.Commit(self, "_alphaMultiplierAnimation", 16, self.Duration, Easing.Linear, (v, c) => self._alphaMultiplier = 0, () => false);
+        }
     }
 
     #endregion

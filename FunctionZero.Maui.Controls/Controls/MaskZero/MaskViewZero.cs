@@ -14,6 +14,8 @@ namespace FunctionZero.Maui.Controls
         private Color _fillColor;
         private Color _strokeColor;
         private float _strokeThickness;
+        private float _alphaMultiplier;
+
         public MaskViewZero()
         {
             _x = 100; _y = 100; _w = 200; _h = 70; _radius = 0.0F;
@@ -43,13 +45,13 @@ namespace FunctionZero.Maui.Controls
             canvas.StrokeLineJoin = LineJoin.Round;
             canvas.StrokeColor = _strokeColor;
             canvas.FillColor = _fillColor;
-            canvas.Alpha = _alpha;
+            canvas.Alpha = _alpha * _alphaMultiplier;
             canvas.FillPath(path, WindingMode.EvenOdd);
-            canvas.Alpha = 1F;
+            canvas.Alpha = _alphaMultiplier;
             canvas.DrawRoundedRectangle(_x, _y, _w, _h, _radius);
         }
 
-        public void Update(double x, double y, double w, double h, double roundness, double backgroundAlpha, Color fillColor, Color strokeColor, double strokeThickness)
+        public void Update(double x, double y, double w, double h, double roundness, double backgroundAlpha, Color fillColor, Color strokeColor, double strokeThickness, double alphaMultiplier)
         {
             _x = (float)x;
             _y = (float)y;
@@ -60,6 +62,7 @@ namespace FunctionZero.Maui.Controls
             _fillColor = fillColor;
             _strokeColor = strokeColor;
             _strokeThickness = (float)strokeThickness;
+            _alphaMultiplier = (float)alphaMultiplier;
         }
     }
 }
