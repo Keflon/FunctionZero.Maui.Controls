@@ -421,7 +421,11 @@ public partial class ListViewZero : ContentView
 
         int lastVisibleIndex = Math.Min(ItemsSource.Count - 1, firstVisibleIndex + maxVisibleContainers);
 
-        RemainingItems = ItemsSource.Count - 1 - lastVisibleIndex;
+        int lastVisibleCellIndex = firstVisibleIndex + maxVisibleContainers;
+        //RemainingItems = ItemsSource.Count - 1 - lastVisibleIndex;
+
+        // RemainingItems can go -ve if there are not enough items to fill the view.
+        RemainingItems = ItemsSource.Count - lastVisibleCellIndex;
 
         //Debug.WriteLine($"RI:{RemainingItems}, from:{ItemsSource.Count - 1 - lastVisibleIndex}");
 

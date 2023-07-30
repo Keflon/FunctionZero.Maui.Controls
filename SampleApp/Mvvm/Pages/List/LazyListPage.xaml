@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
              x:Class="SampleApp.Mvvm.Pages.List.LazyListPage"
              Title="LazyListPage">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <Grid RowDefinitions="Auto,*">
+        <Label Grid.Row="0" Text="This demo loads data when there are less that 10 items out of view. Items load one at a time with a delay between each, to simulate a difficult situation. Windows has layout problems that are allegedly fixed in MAUI NET 8."/>
+        <cz:ListViewZero Grid.Row="1"
+            ItemsSource="{Binding SampleLazyListData}"
+            ItemHeight="40"
+            RemainingItemsChangedCommand="{Binding RemainingItemsChangedCommand}"
+            >
+            <cz:ListViewZero.ItemTemplate>
+                <DataTemplate>
+                    <Label Text="{Binding Name}" WidthRequest="{Binding Offset}" />
+                </DataTemplate>
+            </cz:ListViewZero.ItemTemplate>
+        </cz:ListViewZero>
+    </Grid>
 </ContentPage>

@@ -8,8 +8,6 @@ namespace FunctionZero.Maui.Controls;
 
 public partial class MaskZero : ContentView
 {
-
-
     private Dictionary<string, BindableObject> _viewLookup;
     private GraphicsView _gv;
     private readonly MaskViewZero _mv;
@@ -145,7 +143,6 @@ public partial class MaskZero : ContentView
     {
         _viewLookup[name] = namedObject;
     }
-
 
     private void GraphicsView_ParentChanged(object sender, EventArgs e)
     {
