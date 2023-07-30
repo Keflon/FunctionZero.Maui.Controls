@@ -154,6 +154,19 @@ public partial class MaskZero : ContentView
 
     }
 
+    private void AnimateColor(string name, Color startValue, Color endValue, Action<float, float, float> thing)
+    {
+        float r = 0, g = 0, b = 0;
+
+        var a = new Animation
+        {
+            {0, 1, new Animation(val => {r = (float)val;thing(r, g, b);}, startValue.Red, endValue.Red, Easing.CubicInOut)},
+            {0, 1, new Animation(val => {g = (float)val;thing(r, g, b);}, startValue.Green, endValue.Green, Easing.CubicInOut)},
+            {0, 1, new Animation(val => {b = (float)val;thing(r, g, b); }, startValue.Blue, endValue.Blue, Easing.CubicInOut)}
+        };
+        a.Commit(this, name, 16, Duration, Easing.Linear, null, () => false);
+    }
+
     #region bindable properties
 
     #region MaskLeftProperty
@@ -249,7 +262,6 @@ public partial class MaskZero : ContentView
 
     #endregion
 
-
     #region DurationProperty
 
     public static readonly BindableProperty DurationProperty = BindableProperty.Create(nameof(Duration), typeof(uint), typeof(MaskZero), (uint)1, BindingMode.OneWay, null, DurationChanged);
@@ -304,7 +316,6 @@ public partial class MaskZero : ContentView
 
     #endregion
 
-
     /// <summary>
     /// /////////
     /// </summary>
@@ -358,7 +369,6 @@ public partial class MaskZero : ContentView
 
     #endregion
 
-
     #region MaskWidthRequestProperty
 
     public static readonly BindableProperty MaskWidthRequestProperty = BindableProperty.Create(nameof(MaskWidthRequest), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskWidthRequestChanged);
@@ -409,7 +419,6 @@ public partial class MaskZero : ContentView
 
     #endregion
 
-
     #region MaskRoundnessRequestProperty
 
     public static readonly BindableProperty MaskRoundnessRequestProperty = BindableProperty.Create(nameof(MaskRoundnessRequest), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskRoundnessRequestChanged);
@@ -434,7 +443,6 @@ public partial class MaskZero : ContentView
     }
 
     #endregion
-
 
     #region MovementEasingProperty
 
@@ -507,19 +515,6 @@ public partial class MaskZero : ContentView
         Color startValue = self.MaskColor;
         Color endValue = newValue is Color ? (Color)newValue : Colors.Black;
         self.AnimateColor("MaskColorAnimation", startValue, endValue, (r, g, b) => { self.MaskColor = new Color(r, g, b); self.RequestUpdate(); });
-    }
-
-    private void AnimateColor(string name, Color startValue, Color endValue, Action<float, float, float> thing)
-    {
-        float r = 0, g = 0, b = 0;
-
-        var a = new Animation
-        {
-            {0, 1, new Animation(val => {r = (float)val;thing(r, g, b);}, startValue.Red, endValue.Red, Easing.CubicInOut)},
-            {0, 1, new Animation(val => {g = (float)val;thing(r, g, b);}, startValue.Green, endValue.Green, Easing.CubicInOut)},
-            {0, 1, new Animation(val => {b = (float)val;thing(r, g, b); }, startValue.Blue, endValue.Blue, Easing.CubicInOut)}
-        };
-        a.Commit(this, name, 16, Duration, Easing.Linear, null, () => false);
     }
 
     #endregion
