@@ -13,6 +13,9 @@ public partial class MaskZero : ContentView
     private Dictionary<string, BindableObject> _viewLookup;
     private GraphicsView _gv;
     private readonly MaskViewZero _mv;
+    private bool _updateRequested = false;
+    private View _actualTarget;
+
     public MaskZero()
     {
         _mv = new MaskViewZero();
@@ -21,13 +24,20 @@ public partial class MaskZero : ContentView
 
         _viewLookup = new();
 
-        CenterX = 0;
-        CenterY = 0;
-        Radius = 50;
-        //_ = BadTestAsync();
+        MaskLeft = 0;
+        MaskTop = 0;
+        MaskRoundnessRequest = 1.0;
 
         DescendantAdded += MaskZero_DescendantAdded;
         DescendantRemoved += MaskZero_DescendantRemoved;
+
+
+    }
+
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        base.OnSizeAllocated(width, height);
+        RequestUpdate();
     }
 
     private void MaskZero_DescendantRemoved(object sender, ElementEventArgs e)
@@ -63,64 +73,6 @@ public partial class MaskZero : ContentView
         RequestUpdate();
     }
 
-    private async Task BadTestAsync()
-    {
-        while (true)
-        {
-            await Task.Delay(2000);
-            CenterXRequest = 200;
-            await Task.Delay(2000);
-            CenterYRequest = 200;
-            await Task.Delay(2000);
-            //CenterXRequest = 300;
-            //CenterYRequest = 250;
-            RadiusRequest = 100;
-            await Task.Delay(2000);
-            CenterXRequest = 30;
-            CenterYRequest = 25;
-            RadiusRequest = 10;
-        }
-    }
-
-    #region bindable properties
-
-    #region CenterXProperty
-
-    public static readonly BindableProperty CenterXProperty = BindableProperty.Create(nameof(CenterX), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, CenterXChanged);
-
-    public double CenterX
-    {
-        get { return (double)GetValue(CenterXProperty); }
-        private set { SetValue(CenterXProperty, value); }
-    }
-
-    private static void CenterXChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var self = (MaskZero)bindable;
-        self.RequestUpdate();
-    }
-
-    #endregion
-
-    #region CenterYProperty
-
-    public static readonly BindableProperty CenterYProperty = BindableProperty.Create(nameof(CenterY), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, CenterYChanged);
-
-    public double CenterY
-    {
-        get { return (double)GetValue(CenterYProperty); }
-        private set { SetValue(CenterYProperty, value); }
-    }
-
-    private static void CenterYChanged(BindableObject bindable, object oldValue, object newValue)
-    {
-        var self = (MaskZero)bindable;
-        self.RequestUpdate();
-
-    }
-    private bool _updateRequested = false;
-    private View _actualTarget;
-
     private void RequestUpdate()
     {
         if (_updateRequested == false)
@@ -132,37 +84,98 @@ public partial class MaskZero : ContentView
 
     private void DoUpdate()
     {
+        double delta = 0;
         if ((_actualTarget != null))
         {
             var point = GetScreenCoords(_actualTarget);
 
 
-            CenterXRequest = point.X + _actualTarget.Width/2;
-            CenterYRequest = point.Y + _actualTarget.Height/2;
+            var radius = Math.Min(MaskWidth, MaskHeight) / 2.0 * MaskRoundness;
 
-            RadiusRequest = _actualTarget.Width/2;
+            delta = (1 - Math.Sin(Math.PI / 4)) * radius;
+
+            MaskLeftRequest = point.X;
+            MaskTopRequest = point.Y;
+            MaskWidthRequest  = _actualTarget.Width;
+            MaskHeightRequest = _actualTarget.Height;
+
+            //MaskLeftRequest = point.X + _actualTarget.Width / 2;
+            //MaskTopRequest = point.Y + _actualTarget.Height / 2;
 
         }
-
-        _mv.Update(CenterX, CenterY, Radius, BackgroundAlpha, Colors.Green, Colors.Blue, 1);
+        _mv.Update(MaskLeft - delta, MaskTop - delta, MaskWidth + delta + delta, MaskHeight + delta + delta, MaskRoundness, BackgroundAlpha, Colors.Green, Colors.Blue, 1);
 
         _gv?.Invalidate();
         _updateRequested = false;
     }
 
-    #endregion
-
-    #region RadiusProperty
-
-    public static readonly BindableProperty RadiusProperty = BindableProperty.Create(nameof(Radius), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, RadiusChanged);
-
-    public double Radius
+    /// <summary>
+    /// A view's default X- and Y-coordinates are LOCAL with respect to the boundaries of its parent,
+    /// and NOT with respect to the screen. This method calculates the SCREEN coordinates of a view.
+    /// The coordinates returned refer to the top left corner of the view.
+    /// </summary>
+    public static Point GetScreenCoords(VisualElement element)
     {
-        get { return (double)GetValue(RadiusProperty); }
-        private set { SetValue(RadiusProperty, value); }
+        double x = 0; double y = 0;
+
+        while (element != null)
+        {
+            x += element.Bounds.Left;
+            y += element.Bounds.Top;
+
+            if (element is IScrollView scrollView)
+            {
+                x -= scrollView.HorizontalOffset;
+                y -= scrollView.VerticalOffset;
+            }
+
+            element = element.Parent as VisualElement;
+        }
+        return new Point(x, y);
     }
 
-    private static void RadiusChanged(BindableObject bindable, object oldValue, object newValue)
+    private static T FindAncestor<T>(Element namedElement) where T : Element
+    {
+        if (namedElement is null)
+            return null;
+
+        if (namedElement is T result)
+            return result;
+
+        return FindAncestor<T>(namedElement.Parent);
+    }
+
+
+    //private void AddDescendant(BindableObject namedObject, object oldValue, object newValue)
+    //{
+    //    _viewLookup[(string)newValue] = namedObject;
+    //}
+    private void AddDescendant(string name, BindableObject namedObject)
+    {
+        _viewLookup[name] = namedObject;
+    }
+
+
+    private void GraphicsView_ParentChanged(object sender, EventArgs e)
+    {
+        _gv = (GraphicsView)sender;
+        _gv.Drawable = _mv;
+
+    }
+
+    #region bindable properties
+
+    #region MaskLeftProperty
+
+    public static readonly BindableProperty MaskLeftProperty = BindableProperty.Create(nameof(MaskLeft), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskLeftChanged);
+
+    public double MaskLeft
+    {
+        get { return (double)GetValue(MaskLeftProperty); }
+        private set { SetValue(MaskLeftProperty, value); }
+    }
+
+    private static void MaskLeftChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (MaskZero)bindable;
         self.RequestUpdate();
@@ -170,80 +183,229 @@ public partial class MaskZero : ContentView
 
     #endregion
 
+    #region MaskTopProperty
+
+    public static readonly BindableProperty MaskTopProperty = BindableProperty.Create(nameof(MaskTop), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskTopChanged);
+
+    public double MaskTop
+    {
+        get { return (double)GetValue(MaskTopProperty); }
+        private set { SetValue(MaskTopProperty, value); }
+    }
+
+    private static void MaskTopChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+        self.RequestUpdate();
+
+    }
+
+    #endregion
+
+    #region MaskWidthProperty
+
+    public static readonly BindableProperty MaskWidthProperty = BindableProperty.Create(nameof(MaskWidth), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskWidthChanged);
+
+    public double MaskWidth
+    {
+        get { return (double)GetValue(MaskWidthProperty); }
+        private set { SetValue(MaskWidthProperty, value); }
+    }
+
+    private static void MaskWidthChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+        self.RequestUpdate();
+
+    }
+
+    #endregion    
+    
+    #region MaskHeightProperty
+
+    public static readonly BindableProperty MaskHeightProperty = BindableProperty.Create(nameof(MaskHeight), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskHeightChanged);
+
+    public double MaskHeight
+    {
+        get { return (double)GetValue(MaskHeightProperty); }
+        private set { SetValue(MaskHeightProperty, value); }
+    }
+
+    private static void MaskHeightChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+        self.RequestUpdate();
+
+    }
+
+    #endregion
+
+    #region MaskRoundnessProperty
+
+    public static readonly BindableProperty MaskRoundnessProperty = BindableProperty.Create(nameof(MaskRoundness), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskRoundnessChanged);
+
+    public double MaskRoundness
+    {
+        get { return (double)GetValue(MaskRoundnessProperty); }
+        private set { SetValue(MaskRoundnessProperty, value); }
+    }
+
+    private static void MaskRoundnessChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+        self.RequestUpdate();
+    }
+
+    #endregion
+
+
+    #region DurationProperty
+
+    public static readonly BindableProperty DurationProperty = BindableProperty.Create(nameof(Duration), typeof(uint), typeof(MaskZero), (uint)1, BindingMode.OneWay, null, DurationChanged);
+
+    public uint Duration
+    {
+        get { return (uint)GetValue(DurationProperty); }
+        set { SetValue(DurationProperty, value); }
+    }
+
+    private static void DurationChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+        //self.RequestUpdate();
+    }
+
+    #endregion
+
+
+
+
     /// <summary>
     /// /////////
     /// </summary>
-        #region CenterXRequestProperty
+    #region MaskLeftRequestProperty
 
-    public static readonly BindableProperty CenterXRequestProperty = BindableProperty.Create(nameof(CenterXRequest), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, CenterXRequestChanged);
+    public static readonly BindableProperty MaskLeftRequestProperty = BindableProperty.Create(nameof(MaskLeftRequest), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskLeftRequestChanged);
 
-    public double CenterXRequest
+    public double MaskLeftRequest
     {
-        get { return (double)GetValue(CenterXRequestProperty); }
-        set { SetValue(CenterXRequestProperty, value); }
+        get { return (double)GetValue(MaskLeftRequestProperty); }
+        set { SetValue(MaskLeftRequestProperty, value); }
     }
 
-    private static void CenterXRequestChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void MaskLeftRequestChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (MaskZero)bindable;
 
-        self.AbortAnimation("XAnimation");
+        self.AbortAnimation("MaskLeftAnimation");
 
         double startValue = oldValue is double ? (double)oldValue : 0;
         double endValue = newValue is double ? (double)newValue : 0;
 
-        var animation = new Animation(v => self.CenterX = v, startValue, endValue);
-        animation.Commit(self, "XAnimation", 16, 800, self.MovementEasing, (v, c) => self.CenterX = endValue, () => false);
+        var animation = new Animation(v => self.MaskLeft = v, startValue, endValue);
+        animation.Commit(self, "MaskLeftAnimation", 16, self.Duration, self.MovementEasing, (v, c) => self.MaskLeft = endValue, () => false);
     }
 
     #endregion
 
-    #region CenterYRequestProperty
+    #region MaskTopRequestProperty
 
-    public static readonly BindableProperty CenterYRequestProperty = BindableProperty.Create(nameof(CenterYRequest), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, CenterYRequestChanged);
+    public static readonly BindableProperty MaskTopRequestProperty = BindableProperty.Create(nameof(MaskTopRequest), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskTopRequestChanged);
 
-    public double CenterYRequest
+    public double MaskTopRequest
     {
-        get { return (double)GetValue(CenterYRequestProperty); }
-        set { SetValue(CenterYRequestProperty, value); }
+        get { return (double)GetValue(MaskTopRequestProperty); }
+        set { SetValue(MaskTopRequestProperty, value); }
     }
 
-    private static void CenterYRequestChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void MaskTopRequestChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (MaskZero)bindable;
 
-        self.AbortAnimation("YAnimation");
+        self.AbortAnimation("MaskTopAnimation");
 
         double startValue = oldValue is double ? (double)oldValue : 0;
         double endValue = newValue is double ? (double)newValue : 0;
 
-        var animation = new Animation(v => self.CenterY = v, startValue, endValue);
-        animation.Commit(self, "YAnimation", 16, 800, self.MovementEasing, (v, c) => self.CenterY = endValue, () => false);
+        var animation = new Animation(v => self.MaskTop = v, startValue, endValue);
+        animation.Commit(self, "MaskTopAnimation", 16, self.Duration, self.MovementEasing, (v, c) => self.MaskTop = endValue, () => false);
     }
 
     #endregion
 
-    #region RadiusRequestProperty
 
-    public static readonly BindableProperty RadiusRequestProperty = BindableProperty.Create(nameof(RadiusRequest), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, RadiusRequestChanged);
+    #region MaskWidthRequestProperty
 
-    public double RadiusRequest
+    public static readonly BindableProperty MaskWidthRequestProperty = BindableProperty.Create(nameof(MaskWidthRequest), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskWidthRequestChanged);
+
+    public double MaskWidthRequest
     {
-        get { return (double)GetValue(RadiusRequestProperty); }
-        set { SetValue(RadiusRequestProperty, value); }
+        get { return (double)GetValue(MaskWidthRequestProperty); }
+        set { SetValue(MaskWidthRequestProperty, value); }
     }
 
-    private static void RadiusRequestChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void MaskWidthRequestChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (MaskZero)bindable;
-
-        self.AbortAnimation("RadiusAnimation");
+        self.AbortAnimation("MaskWidthAnimation");
 
         double startValue = oldValue is double ? (double)oldValue : 0;
         double endValue = newValue is double ? (double)newValue : 0;
 
-        var animation = new Animation(v => self.Radius = v, startValue, endValue);
-        animation.Commit(self, "RadiusAnimation", 16, 800, self.RadiusEasing, (v, c) => self.Radius = endValue, () => false);
+        var animation = new Animation(v => self.MaskWidth = v, startValue, endValue);
+        animation.Commit(self, "MaskWidthAnimation", 16, self.Duration, self.MovementEasing, (v, c) => self.MaskWidth = endValue, () => false);
+
+    }
+
+    #endregion
+
+    #region MaskHeightRequestProperty
+
+    public static readonly BindableProperty MaskHeightRequestProperty = BindableProperty.Create(nameof(MaskHeightRequest), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskHeightRequestChanged);
+
+    public double MaskHeightRequest
+    {
+        get { return (double)GetValue(MaskHeightRequestProperty); }
+        set { SetValue(MaskHeightRequestProperty, value); }
+    }
+
+    private static void MaskHeightRequestChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+        self.AbortAnimation("MaskHeightAnimation");
+
+        double startValue = oldValue is double ? (double)oldValue : 0;
+        double endValue = newValue is double ? (double)newValue : 0;
+
+        var animation = new Animation(v => self.MaskHeight = v, startValue, endValue);
+        animation.Commit(self, "MaskHeightAnimation", 16, self.Duration, self.MovementEasing, (v, c) => self.MaskHeight = endValue, () => false);
+
+    }
+
+    #endregion
+
+
+    #region MaskRoundnessRequestProperty
+
+    public static readonly BindableProperty MaskRoundnessRequestProperty = BindableProperty.Create(nameof(MaskRoundnessRequest), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskRoundnessRequestChanged);
+
+    public double MaskRoundnessRequest
+    {
+        get { return (double)GetValue(MaskRoundnessRequestProperty); }
+        set { SetValue(MaskRoundnessRequestProperty, value); }
+    }
+
+    private static void MaskRoundnessRequestChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+
+        self.AbortAnimation("MaskRoundnessAnimation");
+
+        double startValue = oldValue is double ? (double)oldValue : 0;
+        double endValue = newValue is double ? (double)newValue : 0;
+
+        var animation = new Animation(v => self.MaskRoundness = v, startValue, endValue);
+        animation.Commit(self, "MaskRoundnessAnimation", 16, self.Duration, self.MaskRoundnessEasing, (v, c) => self.MaskRoundness = endValue, () => false);
     }
 
     #endregion
@@ -266,17 +428,17 @@ public partial class MaskZero : ContentView
 
     #endregion
 
-    #region RadiusEasingProperty
+    #region MaskRoundnessEasingProperty
 
-    public static readonly BindableProperty RadiusEasingProperty = BindableProperty.Create(nameof(RadiusEasing), typeof(Easing), typeof(MaskZero), Easing.CubicInOut, BindingMode.OneWay, null, RadiusEasingChanged);
+    public static readonly BindableProperty MaskRoundnessEasingProperty = BindableProperty.Create(nameof(MaskRoundnessEasing), typeof(Easing), typeof(MaskZero), Easing.CubicInOut, BindingMode.OneWay, null, MaskRoundnessEasingChanged);
 
-    public Easing RadiusEasing
+    public Easing MaskRoundnessEasing
     {
-        get { return (Easing)GetValue(RadiusEasingProperty); }
-        set { SetValue(RadiusEasingProperty, value); }
+        get { return (Easing)GetValue(MaskRoundnessEasingProperty); }
+        set { SetValue(MaskRoundnessEasingProperty, value); }
     }
 
-    private static void RadiusEasingChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void MaskRoundnessEasingChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (MaskZero)bindable;
     }
@@ -331,32 +493,6 @@ public partial class MaskZero : ContentView
             self._actualTarget = null;
     }
 
-
-    /// <summary>
-    /// A view's default X- and Y-coordinates are LOCAL with respect to the boundaries of its parent,
-    /// and NOT with respect to the screen. This method calculates the SCREEN coordinates of a view.
-    /// The coordinates returned refer to the top left corner of the view.
-    /// </summary>
-    public static Point GetScreenCoords(VisualElement element)
-    {
-        double x = 0; double y = 0;
-
-        while (element != null)
-        {
-            x += element.Bounds.Left;
-            y += element.Bounds.Top;
-
-            if(element is IScrollView scrollView)
-            {
-                x -= scrollView.HorizontalOffset;
-                y -= scrollView.VerticalOffset;
-            }
-
-            element = element.Parent as VisualElement;
-        }
-        return new Point(x, y);
-    }
-
     #endregion
 
     #endregion
@@ -373,27 +509,10 @@ BindableProperty.CreateAttached("MaskName", typeof(string), typeof(MaskZero), ""
             var parentMaskZero = FindAncestor<MaskZero>(namedElement);
 
             if (parentMaskZero != null)
-            {
-                parentMaskZero.AddDescendant(bindable, oldValue, newValue);
-            }
+                parentMaskZero.AddDescendant((string)newValue, bindable);
         }
         Debug.WriteLine($"Object: {bindable}, oldValue: {oldValue}, newValue: {newValue}");
     }
-
-
-
-    private static T FindAncestor<T>(Element namedElement) where T : Element
-    {
-        if (namedElement is null)
-            return null;
-
-        if (namedElement is T result)
-            return result;
-
-        return FindAncestor<T>(namedElement.Parent);
-    }
-
-
 
     public static string GetMaskName(BindableObject view)
     {
@@ -405,22 +524,4 @@ BindableProperty.CreateAttached("MaskName", typeof(string), typeof(MaskZero), ""
         view.SetValue(MaskNameProperty, value);
     }
     #endregion
-
-
-    private void AddDescendant(BindableObject namedObject, object oldValue, object newValue)
-    {
-        _viewLookup[(string)newValue] = namedObject;
-    }
-
-
-    private void GraphicsView_ParentChanged(object sender, EventArgs e)
-    {
-        _gv = (GraphicsView)sender;
-        _gv.Drawable = _mv;
-
-    }
-
-
-
-
 }

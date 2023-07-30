@@ -8,14 +8,15 @@ namespace FunctionZero.Maui.Controls
 {
     public class MaskViewZero : GraphicsView, IDrawable
     {
-        private float _x, _y, _radius;
+        private float _x, _y, _w, _h;
+        private float _radius;
         private float _alpha;
         private Color _fillColor;
         private Color _strokeColor;
         private float _strokeThickness;
         public MaskViewZero()
         {
-            _x = 100;_y = 100;_radius = 90;
+            _x = 100; _y = 100; _w = 200; _h = 70; _radius = 0.0F;
         }
         public void Draw(ICanvas canvas, RectF dirtyRect)
         {
@@ -25,8 +26,7 @@ namespace FunctionZero.Maui.Controls
             PathF path = new PathF();
             //path.MoveTo(_x+_radius , _y);  2 consecutive MoveTo make crash.
 
-            path.AppendCircle(new Point(_x, _y), (float)_radius);
-
+            path.AppendRoundedRectangle(_x, _y, _w, _h, _radius);
             var width = dirtyRect.Width;
             var height = dirtyRect.Height;
 
@@ -38,7 +38,7 @@ namespace FunctionZero.Maui.Controls
             path.LineTo(0, 0);
 
             path.Close();
-            
+
             canvas.StrokeSize = _strokeThickness;
             canvas.StrokeLineJoin = LineJoin.Round;
             canvas.StrokeColor = _strokeColor;
@@ -46,15 +46,17 @@ namespace FunctionZero.Maui.Controls
             canvas.Alpha = _alpha;
             canvas.FillPath(path, WindingMode.EvenOdd);
             canvas.Alpha = 1F;
-            canvas.DrawEllipse(_x - _radius, _y - _radius, _radius * 2, _radius * 2);
+            canvas.DrawRoundedRectangle(_x, _y, _w, _h, _radius);
         }
 
-        public void Update(double x, double y, double radius, double alpha, Color fillColor, Color strokeColor, double strokeThickness)
+        public void Update(double x, double y, double w, double h, double roundness, double backgroundAlpha, Color fillColor, Color strokeColor, double strokeThickness)
         {
             _x = (float)x;
             _y = (float)y;
-            _radius = (float)radius;
-            _alpha = (float)alpha;
+            _w = (float)w;
+            _h = (float)h;
+            _radius = (float)roundness * Math.Min(_w, _h) / 2.0F;
+            _alpha = (float)backgroundAlpha;
             _fillColor = fillColor;
             _strokeColor = strokeColor;
             _strokeThickness = (float)strokeThickness;
