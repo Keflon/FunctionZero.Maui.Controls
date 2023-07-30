@@ -37,16 +37,16 @@
             Text="Grapefruit!" FontSize="32" cz:MaskZero.MaskName="grapefruit" BackgroundColor="Yellow"
             VerticalOptions="Center" 
             HorizontalOptions="Center">
-                <cz:MaskZero.Tooltip>
-                    <!-- 
+                <!--<cz:MaskZero.Tooltip>
+                    --><!-- 
                     Can put any ContentControl here; a TooltipZero allows behavioural properties to be set.
                     Maybe dodge it entirely and use attached properties? E.g. MaskZero.TooltipPosition, ~.Fade, ~.
-                    -->
+                    --><!--
                     <cz:TooltipZero PositionInfo="Above, Left">
                         <Label Text="Tap for Grapefruit"/>
                     </cz:TooltipZero>
                     <Label Text=""
-                </cz:MaskZero.Tooltip>
+                </cz:MaskZero.Tooltip>-->
             </Label>
         </Grid>
     </ScrollView>
