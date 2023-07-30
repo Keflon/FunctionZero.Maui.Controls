@@ -56,7 +56,7 @@ public partial class MaskZero : ContentView
 
     private void MaskZero_DescendantAdded(object sender, ElementEventArgs e)
     {
-        if(e.Element is ScrollView scrollView)
+        if (e.Element is ScrollView scrollView)
         {
             scrollView.Scrolled += ScrollView_Scrolled;
         }
@@ -96,14 +96,10 @@ public partial class MaskZero : ContentView
 
             MaskLeftRequest = point.X;
             MaskTopRequest = point.Y;
-            MaskWidthRequest  = _actualTarget.Width;
+            MaskWidthRequest = _actualTarget.Width;
             MaskHeightRequest = _actualTarget.Height;
-
-            //MaskLeftRequest = point.X + _actualTarget.Width / 2;
-            //MaskTopRequest = point.Y + _actualTarget.Height / 2;
-
         }
-        _mv.Update(MaskLeft - delta, MaskTop - delta, MaskWidth + delta + delta, MaskHeight + delta + delta, MaskRoundness, BackgroundAlpha, Colors.Green, Colors.Blue, 1);
+        _mv.Update(MaskLeft - delta, MaskTop - delta, MaskWidth + delta + delta, MaskHeight + delta + delta, MaskRoundness, BackgroundAlpha, MaskColor, MaskEdgeColor, 1);
 
         _gv?.Invalidate();
         _updateRequested = false;
@@ -145,11 +141,6 @@ public partial class MaskZero : ContentView
         return FindAncestor<T>(namedElement.Parent);
     }
 
-
-    //private void AddDescendant(BindableObject namedObject, object oldValue, object newValue)
-    //{
-    //    _viewLookup[(string)newValue] = namedObject;
-    //}
     private void AddDescendant(string name, BindableObject namedObject)
     {
         _viewLookup[name] = namedObject;
@@ -219,8 +210,8 @@ public partial class MaskZero : ContentView
 
     }
 
-    #endregion    
-    
+    #endregion
+
     #region MaskHeightProperty
 
     public static readonly BindableProperty MaskHeightProperty = BindableProperty.Create(nameof(MaskHeight), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskHeightChanged);
@@ -277,7 +268,41 @@ public partial class MaskZero : ContentView
 
     #endregion
 
+    #region MaskColorProperty
 
+    public static readonly BindableProperty MaskColorProperty = BindableProperty.Create(nameof(MaskColor), typeof(Color), typeof(MaskZero), Colors.Black, BindingMode.OneWay, null, MaskColorChanged);
+
+    public Color MaskColor
+    {
+        get { return (Color)GetValue(MaskColorProperty); }
+        set { SetValue(MaskColorProperty, value); }
+    }
+
+    private static void MaskColorChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+        self.RequestUpdate();
+    }
+
+    #endregion
+
+    #region MaskEdgeColorProperty
+
+    public static readonly BindableProperty MaskEdgeColorProperty = BindableProperty.Create(nameof(MaskEdgeColor), typeof(Color), typeof(MaskZero), Colors.Black, BindingMode.OneWay, null, MaskEdgeColorChanged);
+
+    public Color MaskEdgeColor
+    {
+        get { return (Color)GetValue(MaskEdgeColorProperty); }
+        set { SetValue(MaskEdgeColorProperty, value); }
+    }
+
+    private static void MaskEdgeColorChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+        self.RequestUpdate();
+    }
+
+    #endregion
 
 
     /// <summary>
@@ -445,7 +470,6 @@ public partial class MaskZero : ContentView
 
     #endregion
 
-
     #region BackgroundAlphaProperty
 
     public static readonly BindableProperty BackgroundAlphaProperty = BindableProperty.Create(nameof(BackgroundAlpha), typeof(double), typeof(MaskZero), 0.7, BindingMode.OneWay, null, BackgroundAlphaChanged);
@@ -464,9 +488,65 @@ public partial class MaskZero : ContentView
 
     #endregion
 
+    #region MaskColorRequestProperty
+
+    public static readonly BindableProperty MaskColorRequestProperty = BindableProperty.Create(nameof(MaskColorRequest), typeof(Color), typeof(MaskZero), Colors.Black, BindingMode.OneWay, null, MaskColorRequestChanged);
+
+    public Color MaskColorRequest
+    {
+        get { return (Color)GetValue(MaskColorRequestProperty); }
+        set { SetValue(MaskColorRequestProperty, value); }
+    }
+
+    private static void MaskColorRequestChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+
+        self.AbortAnimation("MaskColorAnimation");
+
+        Color startValue = self.MaskColor;
+        Color endValue = newValue is Color ? (Color)newValue : Colors.Black;
+        self.AnimateColor("MaskColorAnimation", startValue, endValue, (r, g, b) => { self.MaskColor = new Color(r, g, b); self.RequestUpdate(); });
+    }
+
+    private void AnimateColor(string name, Color startValue, Color endValue, Action<float, float, float> thing)
+    {
+        float r = 0, g = 0, b = 0;
+
+        var a = new Animation
+        {
+            {0, 1, new Animation(val => {r = (float)val;thing(r, g, b);}, startValue.Red, endValue.Red, Easing.CubicInOut)},
+            {0, 1, new Animation(val => {g = (float)val;thing(r, g, b);}, startValue.Green, endValue.Green, Easing.CubicInOut)},
+            {0, 1, new Animation(val => {b = (float)val;thing(r, g, b); }, startValue.Blue, endValue.Blue, Easing.CubicInOut)}
+        };
+        a.Commit(this, name, 16, Duration, Easing.Linear, null, () => false);
+    }
+
+    #endregion
+
+    #region MaskEdgeColorRequestProperty
+
+    public static readonly BindableProperty MaskEdgeColorRequestProperty = BindableProperty.Create(nameof(MaskEdgeColorRequest), typeof(Color), typeof(MaskZero), Colors.Black, BindingMode.OneWay, null, MaskEdgeColorRequestChanged);
+
+    public Color MaskEdgeColorRequest
+    {
+        get { return (Color)GetValue(MaskEdgeColorRequestProperty); }
+        set { SetValue(MaskEdgeColorRequestProperty, value); }
+    }
+
+    private static void MaskEdgeColorRequestChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+        self.AbortAnimation("MaskEdgeColorAnimation");
+
+        Color startValue = self.MaskColor;
+        Color endValue = newValue is Color ? (Color)newValue : Colors.Black;
+        self.AnimateColor("MaskEdgeColorAnimation", startValue, endValue, (r, g, b) => { self.MaskEdgeColor = new Color(r, g, b); self.RequestUpdate(); });
 
 
+    }
 
+    #endregion
 
     #region MaskTargetNameProperty
 

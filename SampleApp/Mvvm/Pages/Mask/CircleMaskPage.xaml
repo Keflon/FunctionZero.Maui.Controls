@@ -12,6 +12,8 @@
                 MovementEasing="{x:Static Easing.CubicInOut}"
                 MaskRoundnessEasing="{x:Static Easing.CubicInOut}"
                 Duration="450"
+                MaskColorRequest="{TemplateBinding BindingContext.MaskColor}"
+                MaskEdgeColorRequest="{TemplateBinding BindingContext.MaskEdgeColor}"
                 >
                 <cz:MaskZero.Content>
                     <ContentPresenter/>
@@ -26,17 +28,26 @@
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
             <Label Grid.Row="0" Grid.Column="1"
-            Text="Pear!" FontSize="32" cz:MaskZero.MaskName="radish" BackgroundColor="Yellow"
+            Text="Radish!" FontSize="32" cz:MaskZero.MaskName="radish" BackgroundColor="Yellow"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
             <Label Grid.Row="1" Grid.Column="0"
             Text="Melon!" FontSize="32" cz:MaskZero.MaskName="melon" BackgroundColor="Yellow"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
-            <Label Grid.Row="1" Grid.Column="1"
-            Text="Grapefruit!" FontSize="32" cz:MaskZero.MaskName="grapefruit" BackgroundColor="Yellow"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center">
+
+            <VerticalStackLayout Grid.Row="1" Grid.Column="1" cz:MaskZero.MaskName="grapefruit" VerticalOptions="Center" HorizontalOptions="Center">
+                <Label
+                    Text="Grapefruit!" FontSize="32" BackgroundColor="Yellow"
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Center"/>
+                <Label
+                    Text="Grapefruit!" FontSize="32" BackgroundColor="Yellow"
+                    VerticalOptions="Center" 
+                    HorizontalOptions="Center"/>
+            </VerticalStackLayout>
+            
+                
                 <!--<cz:MaskZero.Tooltip>
                     --><!-- 
                     Can put any ContentControl here; a TooltipZero allows behavioural properties to be set.
@@ -47,7 +58,6 @@
                     </cz:TooltipZero>
                     <Label Text=""
                 </cz:MaskZero.Tooltip>-->
-            </Label>
         </Grid>
     </ScrollView>
 </ContentPage>

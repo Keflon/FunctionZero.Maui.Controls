@@ -10,6 +10,8 @@ namespace SampleApp.Mvvm.PageViewModels.Mask
     public class CircleMaskPageVm : BasePageVm
     {
         private string _targetName;
+        private Color _maskColor;
+        private Color _maskEdgeColor;
 
         public string TargetName
         {
@@ -22,18 +24,41 @@ namespace SampleApp.Mvvm.PageViewModels.Mask
             _ = DoTheThingAsync();
         }
 
+        public Color MaskColor
+        {
+            get => _maskColor;
+            set => SetProperty(ref _maskColor, value);
+        }
+        public Color MaskEdgeColor
+        {
+            get => _maskEdgeColor;
+            set => SetProperty(ref _maskEdgeColor, value);
+        }
+
         private async Task DoTheThingAsync()
         {
             while (true)
             {
                 await Task.Delay(2000);
+
                 TargetName = "banana";
+                MaskColor = Colors.Red;
+                MaskEdgeColor = Colors.Black;
                 await Task.Delay(2000);
+
                 TargetName = "radish";
+                MaskColor = Colors.Purple;
+                MaskEdgeColor = Colors.Black;
                 await Task.Delay(2000);
+
                 TargetName = "melon";
+                MaskColor = Colors.Blue;
+                MaskEdgeColor = Colors.Red;
                 await Task.Delay(2000);
+
                 TargetName = "grapefruit";
+                MaskColor = Colors.Yellow;
+                MaskEdgeColor = Colors.Black;
             }
         }
     }
