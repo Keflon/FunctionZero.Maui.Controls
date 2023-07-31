@@ -70,6 +70,8 @@ namespace SampleApp.Mvvm.PageViewModels.Mask
                 MaskEdgeColor = Colors.Red;
                 await Task.Delay(2000);
 
+
+
                 BackgroundAlpha = 0.8F;
                 await Task.Delay(1000);
 
