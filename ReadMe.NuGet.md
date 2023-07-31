@@ -6,6 +6,9 @@
 **`AdaptedFlyoutPage`** Workaround for [MAUI bug 13496](https://github.com/dotnet/maui/issues/13496)  
 - Updated to support `SelectedItem`. See [Documentation](https://github.com/Keflon/FunctionZero.Maui.Controls)
 
+**`ExpanderZero`** A nice expander with configurable in/out animations.  
+**`MaskZero`** Too cool to talk about, just pull the code and see it for yourself! ;)
+
 ## ListViewZero
 
 Android, iOS, MacCatalyst, Tizen, Windows

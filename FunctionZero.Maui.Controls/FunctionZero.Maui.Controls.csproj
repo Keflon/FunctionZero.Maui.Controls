@@ -20,17 +20,19 @@
 		<Title>FunctionZero Controls library including TreeViewZero</Title>
 		<Authors>Keith Pickford</Authors>
 		<Company>FunctionZero Ltd</Company>
-		<Description>A MAUI Controls library featuring a cross-platform virtualizing TreeView and ListView for WinUI, iOS, Mac and Android.</Description>
+		<Description>A MAUI Controls library featuring a cross-platform virtualizing TreeView and ListView and a really cool MaskControl and more, for WinUI, iOS, Mac and Android.</Description>
 		<Copyright>FunctionZero Ltd</Copyright>
 		<PackageProjectUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</RepositoryUrl>
-		<PackageTags>MAUI; ListView; ListViewZero; TreeView; TreeViewZero; iOS; WinUI; Windows; Android; Control </PackageTags>
-		<PackageReleaseNotes>Apologies for the churn. This release fixes a problem with two-way updates to the SelectedItem on the AdaptedTabbedPage.
+		<PackageTags>MAUI; ListView; ListViewZero; TreeView; TreeViewZero; MaskView; iOS; WinUI; Windows; Android; Control </PackageTags>
+		<PackageReleaseNotes>Added ExpanderZero and MaskViewZero. Added RemaingItems and RemainingItemsChangedCommand to ListViewZero.
+Build and run the sample app to see the new controls in action.
+
 </PackageReleaseNotes>
 		<PackageLicenseFile>License.md</PackageLicenseFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>2.3.3.0-pre1</Version>
+		<Version>2.3.4.0-pre1</Version>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
