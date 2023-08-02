@@ -15,6 +15,7 @@
             MaskColorRequest="{TemplateBinding BindingContext.MaskColor}"
             MaskEdgeColorRequest="{TemplateBinding BindingContext.MaskEdgeColor}"
             MaskRoundnessRequest="{TemplateBinding BindingContext.MaskRoundness}"
+            MaskEdgeThicknessRequest="{TemplateBinding BindingContext.MaskEdgeThickness}"
             >
             <cz:MaskZero.Content>
                 <ContentPresenter/>

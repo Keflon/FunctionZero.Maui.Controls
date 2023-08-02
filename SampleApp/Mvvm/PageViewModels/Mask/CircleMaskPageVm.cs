@@ -14,6 +14,7 @@ namespace SampleApp.Mvvm.PageViewModels.Mask
         private Color _maskEdgeColor;
         private float _backgroundAlpha;
         private float _maskRoundness;
+        private float _maskEdgeThickness;
 
         public string TargetName
         {
@@ -29,6 +30,12 @@ namespace SampleApp.Mvvm.PageViewModels.Mask
         {
             get => _maskRoundness;
             set => SetProperty(ref _maskRoundness, value);
+        }
+
+        public float MaskEdgeThickness
+        {
+            get => _maskEdgeThickness;
+            set => SetProperty(ref _maskEdgeThickness, value);
         }
 
         public CircleMaskPageVm()
@@ -79,7 +86,12 @@ namespace SampleApp.Mvvm.PageViewModels.Mask
                 MaskRoundness = 0.0f;
                 await Task.Delay(1000);
 
-              
+                MaskEdgeThickness = 15f;
+                await Task.Delay(1000);
+                MaskEdgeThickness = 5f;
+
+
+
                 BackgroundAlpha = 0.5F;
                 MaskRoundness = 1.0f;
                 await Task.Delay(1000);

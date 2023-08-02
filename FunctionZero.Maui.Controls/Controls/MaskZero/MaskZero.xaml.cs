@@ -97,7 +97,7 @@ public partial class MaskZero : ContentView
 
         delta = (1 - Math.Sin(Math.PI / 4)) * radius;
 
-        _mv.Update(MaskLeft - delta, MaskTop - delta, MaskWidth + delta + delta, MaskHeight + delta + delta, MaskRoundness, BackgroundAlpha, MaskColor, MaskEdgeColor, 1, _alphaMultiplier);
+        _mv.Update(MaskLeft - delta, MaskTop - delta, MaskWidth + delta + delta, MaskHeight + delta + delta, MaskRoundness, BackgroundAlpha, MaskColor, MaskEdgeColor, MaskEdgeThickness, _alphaMultiplier);
 
         _gv?.Invalidate();
         _updateRequested = false;
@@ -307,6 +307,24 @@ public partial class MaskZero : ContentView
     }
 
     private static void MaskEdgeColorChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+        self.RequestUpdate();
+    }
+
+    #endregion
+
+    #region MaskEdgeThicknessProperty
+
+    public static readonly BindableProperty MaskEdgeThicknessProperty = BindableProperty.Create(nameof(MaskEdgeThickness), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskEdgeThicknessChanged);
+
+    public double MaskEdgeThickness
+    {
+        get { return (double)GetValue(MaskEdgeThicknessProperty); }
+        private set { SetValue(MaskEdgeThicknessProperty, value); }
+    }
+
+    private static void MaskEdgeThicknessChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (MaskZero)bindable;
         self.RequestUpdate();
@@ -565,6 +583,31 @@ public partial class MaskZero : ContentView
         self.AnimateColor("MaskEdgeColorAnimation", startValue, endValue, (r, g, b) => { self.MaskEdgeColor = new Color(r, g, b); self.RequestUpdate(); });
 
 
+    }
+
+    #endregion
+
+    #region MaskEdgeThicknessRequestProperty
+
+    public static readonly BindableProperty MaskEdgeThicknessRequestProperty = BindableProperty.Create(nameof(MaskEdgeThicknessRequest), typeof(double), typeof(MaskZero), null, BindingMode.OneWay, null, MaskEdgeThicknessRequestChanged);
+
+    public double MaskEdgeThicknessRequest
+    {
+        get { return (double)GetValue(MaskEdgeThicknessRequestProperty); }
+        private set { SetValue(MaskEdgeThicknessRequestProperty, value); }
+    }
+
+    private static void MaskEdgeThicknessRequestChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (MaskZero)bindable;
+
+        self.AbortAnimation("EdgeThicknessAnimation");
+
+        double startValue = oldValue is double ? (double)oldValue : 0;
+        double endValue = newValue is double ? (double)newValue : 0;
+
+        var animation = new Animation(v => self.MaskEdgeThickness = v, startValue, endValue);
+        animation.Commit(self, "EdgeThicknessAnimation", 16, self.Duration, self.MaskRoundnessEasing, (v, c) => self.MaskEdgeThickness = endValue, () => false);
     }
 
     #endregion

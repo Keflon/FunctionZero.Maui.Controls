@@ -48,7 +48,7 @@ namespace FunctionZero.Maui.Controls
             canvas.Alpha = _alpha * _alphaMultiplier;
             canvas.FillPath(path, WindingMode.EvenOdd);
             canvas.Alpha = _alphaMultiplier;
-            canvas.DrawRoundedRectangle(_x, _y, _w, _h, _radius);
+            canvas.DrawRoundedRectangle(_x - _strokeThickness/2, _y - _strokeThickness/2, _w + _strokeThickness/2 + _strokeThickness/2, _h + _strokeThickness/2 + _strokeThickness/2, _radius);
         }
 
         public void Update(double x, double y, double w, double h, double roundness, double backgroundAlpha, Color fillColor, Color strokeColor, double strokeThickness, double alphaMultiplier)
