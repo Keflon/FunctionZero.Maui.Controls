@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
+             x:Class="SampleApp.Mvvm.Pages.Mask.JayBirthdayPage"
+             Title="JayBirthdayPage">
+    <ContentPage.Resources>
+        <Style TargetType="Label">
+            <Style.Setters>
+                <Setter Property="Margin" Value="5,0,5,0" />
+                <Setter Property="MaxLines" Value="1" />
+                <Setter Property="FontSize" Value="16" />
+            </Style.Setters>
+        </Style>
+    </ContentPage.Resources>
+    <ContentPage.ControlTemplate>
+        <ControlTemplate>
+            <cz:MaskZero 
+            BackgroundAlphaRequest="{TemplateBinding BindingContext.BackgroundAlpha}" 
+            MaskTargetName="{TemplateBinding BindingContext.TargetName}"
+            MovementEasing="{x:Static Easing.CubicInOut}"
+            MaskRoundnessEasing="{x:Static Easing.CubicInOut}"
+            Duration="450"
+            MaskColorRequest="{TemplateBinding BindingContext.MaskColor}"
+            MaskEdgeColorRequest="{TemplateBinding BindingContext.MaskEdgeColor}"
+            MaskRoundnessRequest="{TemplateBinding BindingContext.MaskRoundness}"
+            MaskEdgeThicknessRequest="{TemplateBinding BindingContext.MaskEdgeThickness}"
+            >
+                <cz:MaskZero.Content>
+                    <ContentPresenter/>
+                </cz:MaskZero.Content>
+            </cz:MaskZero>
+        </ControlTemplate>
+    </ContentPage.ControlTemplate>
+    <VerticalStackLayout>
+        <FlexLayout BackgroundColor="AliceBlue" Wrap="Wrap" 
+            VerticalOptions="Fill" 
+            HorizontalOptions="Fill" >
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}" cz:MaskZero.MaskName="Jay"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}" cz:MaskZero.MaskName="Happy"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"  cz:MaskZero.MaskName="Dear"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}" cz:MaskZero.MaskName="you"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}" cz:MaskZero.MaskName="Birthday"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"  cz:MaskZero.MaskName="to"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+            <Label Text="{Binding NextText}"/>
+        </FlexLayout>
+    </VerticalStackLayout>
+</ContentPage>

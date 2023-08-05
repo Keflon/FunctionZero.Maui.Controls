@@ -80,6 +80,9 @@
 	  <MauiXaml Update="Mvvm\Pages\Mask\CircleMaskPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Mvvm\Pages\Mask\JayBirthdayPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Mvvm\Pages\Tree\BasicTreePage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

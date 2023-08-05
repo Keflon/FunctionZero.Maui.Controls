@@ -26,7 +26,9 @@ namespace SampleApp.Mvvm.PageViewModels
         SelfEnumerableTree,
         TurbulentTree,
 
-        CircleMask
+        CircleMask,
+
+        Jay
     }
 
     public class AppFlyoutPageVm : BasePageVm
@@ -75,6 +77,9 @@ namespace SampleApp.Mvvm.PageViewModels
                     break;
                 case AppFlyoutItems.CircleMask:
                     _pageService.FlyoutController.SetDetailVm(typeof(CircleMaskPageVm), true);
+                    break;
+                case AppFlyoutItems.Jay:
+                    _pageService.FlyoutController.SetDetailVm(typeof(JayBirthdayPageVm), true);
                     break;
             }
         }

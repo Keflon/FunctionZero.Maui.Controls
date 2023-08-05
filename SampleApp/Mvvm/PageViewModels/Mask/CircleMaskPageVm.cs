@@ -38,10 +38,6 @@ namespace SampleApp.Mvvm.PageViewModels.Mask
             set => SetProperty(ref _maskEdgeThickness, value);
         }
 
-        public CircleMaskPageVm()
-        {
-            _ = DoTheThingAsync();
-        }
 
         public Color MaskColor
         {
@@ -53,6 +49,12 @@ namespace SampleApp.Mvvm.PageViewModels.Mask
             get => _maskEdgeColor;
             set => SetProperty(ref _maskEdgeColor, value);
         }
+
+        public CircleMaskPageVm()
+        {
+            _ = DoTheThingAsync();
+        }
+
 
         private async Task DoTheThingAsync()
         {

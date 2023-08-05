@@ -32,6 +32,7 @@ namespace SampleApp
                         .MapVmToView<SelfEnumerableTreePageVm, SelfEnumerableTreePage>()
                         .MapVmToView<TurbulentTreePageVm, TurbulentTreePage>()
                         .MapVmToView<CircleMaskPageVm, CircleMaskPage>()
+                        .MapVmToView<JayBirthdayPageVm, JayBirthdayPage>()
                         ;
                     }
                 )
@@ -61,6 +62,7 @@ namespace SampleApp
                 .AddSingleton<SelfEnumerableTreePageVm>()
                 .AddSingleton<TurbulentTreePageVm>()
                 .AddSingleton<CircleMaskPageVm>()
+                .AddSingleton<JayBirthdayPageVm>()
 
 
                 .AddSingleton<LazyListPage>()
@@ -72,6 +74,7 @@ namespace SampleApp
                 .AddSingleton<SelfEnumerableTreePage>()
                 .AddSingleton<TurbulentTreePage>()
                 .AddSingleton<CircleMaskPage>()
+                .AddSingleton<JayBirthdayPage>()
                ;
 
             return builder.Build();
