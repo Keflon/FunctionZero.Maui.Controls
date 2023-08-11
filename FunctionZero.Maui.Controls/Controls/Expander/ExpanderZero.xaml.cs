@@ -18,7 +18,7 @@ public partial class ExpanderZero : ContentView
         set { SetValue(IsExpandedProperty, value); }
     }
 
-    private static async void IsExpandedChanged(BindableObject bindable, object oldValue, object newValue)
+    private static void IsExpandedChanged(BindableObject bindable, object oldValue, object newValue)
     {
         var self = (ExpanderZero)bindable;
 
@@ -85,8 +85,6 @@ public partial class ExpanderZero : ContentView
         if (!IsExpanded)
             container.HeightRequest = 0;
     }
-    // Hello
-    // Hello - JCJ :)
     private void UpdateVisualState(bool isExpanded)
     {
         ContentPresenter container = (ContentPresenter)this.GetTemplateChild("DetailView");
@@ -96,7 +94,7 @@ public partial class ExpanderZero : ContentView
         {
             Animation animation;
 
-            SizeRequest desiredSize = container.Content.Measure(container.Width, double.MaxValue, MeasureFlags.None);
+            SizeRequest desiredSize = container.Content.Measure(container.Width, double.PositiveInfinity, MeasureFlags.None);
 
             this.AbortAnimation("SimpleAnimation");
 

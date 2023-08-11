@@ -7,7 +7,7 @@
     <ContentView.ControlTemplate>
         <ControlTemplate>
             <VerticalStackLayout IsClippedToBounds="True">
-                <ContentView x:Name="HeaderView" Grid.Row="0" Content="{TemplateBinding Header}">
+                <ContentView x:Name="HeaderView" Content="{TemplateBinding Header}">
                     <ContentView.GestureRecognizers>
                         <TapGestureRecognizer Tapped="HeaderTapped"/>
                     </ContentView.GestureRecognizers>
