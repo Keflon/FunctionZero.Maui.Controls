@@ -1,5 +1,6 @@
 ﻿using FunctionZero.CommandZero;
 using FunctionZero.Maui.MvvmZero;
+using SampleApp.Mvvm.PageViewModels.Expander;
 using SampleApp.Mvvm.PageViewModels.List;
 using SampleApp.Mvvm.PageViewModels.Mask;
 using SampleApp.Mvvm.PageViewModels.Tree;
@@ -28,7 +29,9 @@ namespace SampleApp.Mvvm.PageViewModels
 
         CircleMask,
 
-        Jay
+        Jay,
+
+        ExpanderBar
     }
 
 
@@ -90,6 +93,9 @@ namespace SampleApp.Mvvm.PageViewModels
                     break;
                 case AppFlyoutItems.Jay:
                     _pageService.FlyoutController.SetDetailVm(typeof(JayBirthdayPageVm), true);
+                    break;
+                case AppFlyoutItems.ExpanderBar:
+                    _pageService.FlyoutController.SetDetailVm(typeof(ExpanderBarPageVm), true);
                     break;
             }
         }

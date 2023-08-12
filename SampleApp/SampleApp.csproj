@@ -68,6 +68,9 @@
 	  <MauiXaml Update="Mvvm\Pages\AppFlyoutPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Mvvm\Pages\Expander\ExpanderBarPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Mvvm\Pages\List\LazyListPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

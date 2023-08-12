@@ -3,9 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
              xmlns:vm="clr-namespace:SampleApp.Mvvm.PageViewModels"
-             x:Class="SampleApp.Mvvm.Pages.AppFlyoutPage"
-             Title="AppFlyoutPage"
-             x:Name="Self">
+             x:Class="SampleApp.Mvvm.Pages.Expander.ExpanderBarPage"
+             Title="ExpanderBarPage">
     <ContentPage.Resources>
         <Style TargetType="Label" >
             <Style.Setters>
@@ -25,15 +24,11 @@
         </Style>
 
     </ContentPage.Resources>
-
-
-    <Grid BackgroundColor="Red">
-        <Label Text="MIND THE GAP"/>
-        <ScrollView Orientation="Vertical">
-            <VerticalStackLayout BackgroundColor="Purple">
-
+    <VerticalStackLayout>
+        <cz:FocusScrollZero>
+            <HorizontalStackLayout>
                 <!--Lists-->
-                <cz:ExpanderZero 
+                <cz:ExpanderZero Orientation="Horizontal"
                     EaseIn="{x:Static Easing.BounceOut}"
                     EaseOut="{x:Static Easing.BounceOut}"
                     DurationMilliseconds="400"
@@ -41,16 +36,16 @@
                     <cz:ExpanderZero.Header>
                         <Label Text="Lists"/>
                     </cz:ExpanderZero.Header>
-                    <VerticalStackLayout>
+                    <HorizontalStackLayout>
                         <cz:LabelZero Text="Wobbly" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.WobblyListView}"/>
                         <cz:LabelZero Text="Lazy" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.LazyListView}"/>
                         <cz:LabelZero Text="Turbulent" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.TurbulentListView}"/>
-                    </VerticalStackLayout>
+                    </HorizontalStackLayout>
                 </cz:ExpanderZero>
 
 
                 <!--Trees-->
-                <cz:ExpanderZero  IsExpanded="True"
+                <cz:ExpanderZero  IsExpanded="True" Orientation="Horizontal"
                     EaseIn="{x:Static Easing.BounceOut}"
                     EaseOut="{x:Static Easing.BounceOut}"
                     DurationMilliseconds="1000" 
@@ -58,12 +53,12 @@
                     <cz:ExpanderZero.Header>
                         <Label Text="Trees"/>
                     </cz:ExpanderZero.Header>
-                    <VerticalStackLayout>
+                    <HorizontalStackLayout>
                         <cz:LabelZero Text="Basic" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.BasicTree}"/>
                         <cz:LabelZero Text="TemplateSelector" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.TemplateSelectorTree}"/>
                         <cz:LabelZero Text="Self Enumerable" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.SelfEnumerableTree}"/>
                         <cz:LabelZero Text="Turbulent" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.TurbulentTree}"/>
-                    </VerticalStackLayout>
+                    </HorizontalStackLayout>
                 </cz:ExpanderZero>
 
                 <!--Masks-->
@@ -82,7 +77,7 @@
                 </cz:ExpanderZero>
 
                 <!--Expanders-->
-                <cz:ExpanderZero
+                <cz:ExpanderZero Orientation="Horizontal"
                     EaseIn="{x:Static Easing.BounceOut}"
                     EaseOut="{x:Static Easing.BounceOut}"
                     DurationMilliseconds="1000" 
@@ -94,8 +89,7 @@
                         <cz:LabelZero Text="Expander Bar" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.ExpanderBar}"/>
                     </HorizontalStackLayout>
                 </cz:ExpanderZero>
-
-            </VerticalStackLayout>
-        </ScrollView>
-    </Grid>
-</ContentPage> 
+            </HorizontalStackLayout>
+        </cz:FocusScrollZero>
+    </VerticalStackLayout>
+</ContentPage>

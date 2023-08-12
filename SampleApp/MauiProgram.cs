@@ -1,10 +1,12 @@
 ﻿using FunctionZero.Maui.Controls;
 using FunctionZero.Maui.MvvmZero;
 using SampleApp.Mvvm.Pages;
+using SampleApp.Mvvm.Pages.Expander;
 using SampleApp.Mvvm.Pages.List;
 using SampleApp.Mvvm.Pages.Mask;
 using SampleApp.Mvvm.Pages.Tree;
 using SampleApp.Mvvm.PageViewModels;
+using SampleApp.Mvvm.PageViewModels.Expander;
 using SampleApp.Mvvm.PageViewModels.List;
 using SampleApp.Mvvm.PageViewModels.Mask;
 using SampleApp.Mvvm.PageViewModels.Tree;
@@ -33,6 +35,7 @@ namespace SampleApp
                         .MapVmToView<TurbulentTreePageVm, TurbulentTreePage>()
                         .MapVmToView<CircleMaskPageVm, CircleMaskPage>()
                         .MapVmToView<JayBirthdayPageVm, JayBirthdayPage>()
+                        .MapVmToView<ExpanderBarPageVm, ExpanderBarPage>()
                         ;
                     }
                 )
@@ -63,6 +66,7 @@ namespace SampleApp
                 .AddSingleton<TurbulentTreePageVm>()
                 .AddSingleton<CircleMaskPageVm>()
                 .AddSingleton<JayBirthdayPageVm>()
+                .AddSingleton<ExpanderBarPageVm>()
 
 
                 .AddSingleton<LazyListPage>()
@@ -75,6 +79,7 @@ namespace SampleApp
                 .AddSingleton<TurbulentTreePage>()
                 .AddSingleton<CircleMaskPage>()
                 .AddSingleton<JayBirthdayPage>()
+                .AddSingleton<ExpanderBarPage>()
                ;
 
             return builder.Build();

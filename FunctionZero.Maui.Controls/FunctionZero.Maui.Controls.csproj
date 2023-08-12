@@ -65,6 +65,9 @@ Build and run the sample app to see the new controls in action.
 	  <MauiXaml Update="Controls\Expander\ExpanderZero.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Controls\FocusScroll\FocusScrollZero.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\ListView\ListItemZero.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
