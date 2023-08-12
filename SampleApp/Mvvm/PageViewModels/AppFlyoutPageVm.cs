@@ -31,10 +31,18 @@ namespace SampleApp.Mvvm.PageViewModels
         Jay
     }
 
+
+
     public class AppFlyoutPageVm : BasePageVm
     {
         private readonly IPageServiceZero _pageService;
+    private bool _isExpanded;
 
+    public bool IsExpanded
+    {
+            get => _isExpanded;
+            set=> SetProperty(ref _isExpanded, value);
+    }
         public ICommand ItemTappedCommand { get; }
 
         public AppFlyoutPageVm(IPageServiceZero pageService)
@@ -44,6 +52,8 @@ namespace SampleApp.Mvvm.PageViewModels
             _pageService.FlyoutController.FlyoutLayoutBehavior = FlyoutLayoutBehavior.Popover;
 
             ItemTappedCommand = new CommandBuilder().AddGuard(this).SetExecute(ItemTappedCommandExecute).Build();
+
+            AddPageTimer(1000, (obj) => IsExpanded = !IsExpanded, null, null);
         }
         private bool VmInitializer(object obj)
         {

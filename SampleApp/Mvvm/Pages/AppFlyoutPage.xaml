@@ -67,25 +67,11 @@
                 </cz:ExpanderZero>
 
                 <!--Masks-->
-                <cz:ExpanderZero Orientation="Horizontal" 
+                <!--<cz:ExpanderZero Orientation="Horizontal"--> 
+                <cz:ExpanderZero Orientation="Horizontal"
                     EaseIn="{x:Static Easing.BounceOut}"
                     EaseOut="{x:Static Easing.BounceOut}"
                     DurationMilliseconds="1000" 
-                >
-                    <cz:ExpanderZero.Header>
-                        <Label Text="Masks"/>
-                    </cz:ExpanderZero.Header>
-                    <HorizontalStackLayout  >
-                        <cz:LabelZero Text="Circle" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.CircleMask}"/>
-                        <cz:LabelZero Text="Jay" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.Jay}"/>
-                    </HorizontalStackLayout>
-                </cz:ExpanderZero>
-                
-                <!--Masks 2-->
-                <cz:ExpanderZero Orientation="Horizontal" IsExpanded="True"
-                    EaseIn="{x:Static Easing.BounceOut}"
-                    EaseOut="{x:Static Easing.BounceOut}"
-                    DurationMilliseconds="4000" 
                 >
                     <cz:ExpanderZero.Header>
                         <Label Text="Masks"/>
