@@ -6,14 +6,14 @@
              >
     <ContentView.ControlTemplate>
         <ControlTemplate>
-            <VerticalStackLayout IsClippedToBounds="True">
-                <ContentView x:Name="HeaderView" Content="{TemplateBinding Header}">
+            <StackLayout x:Name="RootStackLayout" Orientation="{TemplateBinding Orientation}" IsClippedToBounds="True">
+                <ContentView x:Name="HeaderView" Content="{TemplateBinding Header}" >
                     <ContentView.GestureRecognizers>
                         <TapGestureRecognizer Tapped="HeaderTapped"/>
                     </ContentView.GestureRecognizers>
                 </ContentView>
-                <ContentPresenter x:Name="DetailView" />
-            </VerticalStackLayout>
+                <ContentPresenter x:Name="DetailView"/>
+            </StackLayout>
         </ControlTemplate>
     </ContentView.ControlTemplate>
 </ContentView>

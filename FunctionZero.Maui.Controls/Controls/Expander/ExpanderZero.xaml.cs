@@ -1,13 +1,55 @@
 using Microsoft.Maui.Controls;
 using Microsoft.Maui.Layouts;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace FunctionZero.Maui.Controls;
 
 public partial class ExpanderZero : ContentView
 {
+    private ContentPresenter _detailView;
     public ExpanderZero()
     {
         InitializeComponent();
+    }
+
+    public static readonly BindableProperty OrientationProperty = BindableProperty.Create(nameof(Orientation), typeof(StackOrientation), typeof(ExpanderZero), StackOrientation.Vertical, BindingMode.OneWay, null, OrientationChanged);
+
+    public StackOrientation Orientation
+    {
+        get { return (StackOrientation)GetValue(OrientationProperty); }
+        set { SetValue(OrientationProperty, value); }
+    }
+
+    private static async void OrientationChanged(BindableObject bindable, object oldValue, object newValue)
+    {
+        var self = (ExpanderZero)bindable;
+        await Task.Yield();
+        self.SetOrientation();
+    }
+
+    private void SetOrientation()
+    {
+        StackLayout root = (StackLayout)this.GetTemplateChild("RootStackLayout");
+
+        ContentPresenter container = _detailView;
+
+        if (Orientation == StackOrientation.Vertical)
+        {
+            root.HorizontalOptions = LayoutOptions.Fill;
+            root.VerticalOptions = LayoutOptions.Start;
+            if (!IsExpanded)
+                container.HeightRequest = 0;
+            container.ClearValue(WidthRequestProperty);
+        }
+        else
+        {
+            root.HorizontalOptions = LayoutOptions.Start;
+            root.VerticalOptions = LayoutOptions.Fill;
+            if (!IsExpanded)
+                container.WidthRequest = 0;
+            container.ClearValue(HeightRequestProperty);
+        }
     }
 
     public static readonly BindableProperty IsExpandedProperty = BindableProperty.Create(nameof(IsExpanded), typeof(bool), typeof(ExpanderZero), false, BindingMode.OneWay, null, IsExpandedChanged);
@@ -78,32 +120,49 @@ public partial class ExpanderZero : ContentView
         set { SetValue(DurationMillisecondsProperty, value); }
     }
 
-    protected override void OnApplyTemplate()
+    protected override async void OnApplyTemplate()
     {
         base.OnApplyTemplate();
-        ContentPresenter container = (ContentPresenter)this.GetTemplateChild("DetailView");
-        if (!IsExpanded)
-            container.HeightRequest = 0;
+        _detailView = (ContentPresenter)this.GetTemplateChild("DetailView");
+        // Needed. Why?
+        await Task.Yield();
+        SetOrientation();
     }
     private void UpdateVisualState(bool isExpanded)
     {
-        ContentPresenter container = (ContentPresenter)this.GetTemplateChild("DetailView");
+
+        ContentPresenter container = _detailView;
+        _detailView.IsClippedToBounds = true;
+
         var detail = container.Content;
 
         if (detail != null)
         {
             Animation animation;
 
-            SizeRequest desiredSize = container.Content.Measure(container.Width, double.PositiveInfinity, MeasureFlags.None);
-
             this.AbortAnimation("SimpleAnimation");
 
-            if ((isExpanded))
-                animation = new Animation(h => container.HeightRequest = h, container.Height, desiredSize.Request.Height, EaseIn);
-            else
-                animation = new Animation(h => container.HeightRequest = h, container.Height, 0, EaseOut);
+            if (Orientation == StackOrientation.Horizontal)
+            {
+                SizeRequest desiredSize = container.Content.Measure(double.PositiveInfinity, container.Height, MeasureFlags.None);
 
-            animation.Commit(this, "SimpleAnimation", 16, DurationMilliseconds, Easing.Linear, (v, c) => { }, () => false);
+                if (isExpanded)
+                    animation = new Animation(w => container.WidthRequest = w, container.Width, desiredSize.Request.Width, EaseIn);
+                else
+                    animation = new Animation(w => container.WidthRequest = w, container.Width, 0, EaseOut);
+            }
+            else
+            {
+
+
+                SizeRequest desiredSize = container.Content.Measure(container.Width, double.PositiveInfinity, MeasureFlags.None);
+                if (isExpanded)
+                    animation = new Animation(h => container.HeightRequest = h, container.Height, desiredSize.Request.Height, EaseIn);
+                else
+                    animation = new Animation(h => container.HeightRequest = h, container.Height, 0, EaseOut);
+            }
+
+            animation.Commit(this, "SimpleAnimation", 16, DurationMilliseconds/*5000*/, Easing.Linear, (v, c) => { }, () => false);
         }
     }
 

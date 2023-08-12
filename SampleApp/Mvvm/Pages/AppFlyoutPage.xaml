@@ -20,7 +20,7 @@
                 <Setter Property="FontSize" Value="Large"/>
                 <Setter Property="FontAttributes" Value="Bold"/>
                 <Setter Property="BackgroundColor" Value="Aqua"/>
-                <Setter Property="Margin" Value="30,5,5,5"/>
+                <Setter Property="Margin" Value="15,5,5,5"/>
             </Style.Setters>
         </Style>
 
@@ -50,10 +50,10 @@
 
 
                 <!--Trees-->
-                <cz:ExpanderZero 
+                <cz:ExpanderZero  IsExpanded="True"
                     EaseIn="{x:Static Easing.BounceOut}"
                     EaseOut="{x:Static Easing.BounceOut}"
-                    DurationMilliseconds="400"
+                    DurationMilliseconds="1000" 
                 >
                     <cz:ExpanderZero.Header>
                         <Label Text="Trees"/>
@@ -67,21 +67,36 @@
                 </cz:ExpanderZero>
 
                 <!--Masks-->
-                <cz:ExpanderZero 
-                    EaseIn="{x:Static Easing.CubicIn}"
-                    EaseOut="{x:Static Easing.CubicOut}"
-                    DurationMilliseconds="400"
+                <cz:ExpanderZero Orientation="Horizontal" 
+                    EaseIn="{x:Static Easing.BounceOut}"
+                    EaseOut="{x:Static Easing.BounceOut}"
+                    DurationMilliseconds="1000" 
                 >
                     <cz:ExpanderZero.Header>
                         <Label Text="Masks"/>
                     </cz:ExpanderZero.Header>
-                    <VerticalStackLayout>
+                    <HorizontalStackLayout  >
                         <cz:LabelZero Text="Circle" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.CircleMask}"/>
                         <cz:LabelZero Text="Jay" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.Jay}"/>
-                    </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </cz:ExpanderZero>
+                
+                <!--Masks 2-->
+                <cz:ExpanderZero Orientation="Horizontal" IsExpanded="True"
+                    EaseIn="{x:Static Easing.BounceOut}"
+                    EaseOut="{x:Static Easing.BounceOut}"
+                    DurationMilliseconds="4000" 
+                >
+                    <cz:ExpanderZero.Header>
+                        <Label Text="Masks"/>
+                    </cz:ExpanderZero.Header>
+                    <HorizontalStackLayout  >
+                        <cz:LabelZero Text="Circle" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.CircleMask}"/>
+                        <cz:LabelZero Text="Jay" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.Jay}"/>
+                    </HorizontalStackLayout>
                 </cz:ExpanderZero>
 
             </VerticalStackLayout>
         </ScrollView>
     </Grid>
-</ContentPage>
+</ContentPage> 
