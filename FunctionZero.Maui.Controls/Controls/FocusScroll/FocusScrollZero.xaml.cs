@@ -1,20 +1,30 @@
+using Microsoft.Maui.Controls.Shapes;
+using System.ComponentModel;
+using System.Diagnostics;
+
 namespace FunctionZero.Maui.Controls;
 
 public partial class FocusScrollZero : ContentView
 {
-	public FocusScrollZero()
-	{
-		InitializeComponent();
-	}
+    private readonly List<ExpanderZero> _expanderList;
+
+    public FocusScrollZero()
+    {
+        _expanderList = new();
+
+        InitializeComponent();
+    }
 
     protected override void OnApplyTemplate()
     {
         base.OnApplyTemplate();
         _theScrollView = (ScrollView)this.GetTemplateChild("TheScrollView");
+        _theSpacer = (Rectangle)this.GetTemplateChild("TheSpacer");
 
     }
     public static readonly BindableProperty OrientationProperty = BindableProperty.Create(nameof(Orientation), typeof(StackOrientation), typeof(FocusScrollZero), StackOrientation.Vertical, BindingMode.OneWay, null, OrientationChanged);
     private ScrollView _theScrollView;
+    private Rectangle _theSpacer;
 
     public StackOrientation Orientation
     {
@@ -45,9 +55,10 @@ public partial class FocusScrollZero : ContentView
 
     private void TheScrollView_DescendantAdded(object sender, ElementEventArgs e)
     {
-        if(e.Element is ExpanderZero expander)
+        if (e.Element is ExpanderZero expander)
         {
             expander.PropertyChanged += Expander_PropertyChanged;
+            _expanderList.Add(expander);
         }
     }
 
@@ -56,6 +67,7 @@ public partial class FocusScrollZero : ContentView
     {
         if (sender is ExpanderZero expander)
         {
+            _expanderList.Remove(expander);
             expander.PropertyChanged -= Expander_PropertyChanged;
         }
     }
@@ -63,15 +75,54 @@ public partial class FocusScrollZero : ContentView
 
     private async void Expander_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if(e.PropertyName == nameof(ExpanderZero.IsExpanded))
+        if (e.PropertyName == nameof(ExpanderZero.IsExpanded))
         {
             var expander = (ExpanderZero)sender;
+            await Task.Yield();
 
-            await _theScrollView.ScrollToAsync(expander, 0, true);
-            await Task.Delay((int)expander.DurationMilliseconds);
+            //var thing = MaskZero.GetScreenCoords(expander);
+            var thing = expander.X + expander.Header.Width + expander.Header.Margin.HorizontalThickness;
+            var minScrollOffset = thing + expander.PaddingWidth - _theScrollView.Width;
 
-            await _theScrollView.ScrollToAsync(expander, 0, true);
-            await _theScrollView.ScrollToAsync(expander.Header, 0, true);
+            if (_theScrollView.ScrollX < minScrollOffset)
+            {
+                //await Task.Delay(5000);
+                this.AbortAnimation("SimpleAnimation");
+                var animation = new Animation(offset => _theScrollView.ScrollToAsync(offset, 0, false), _theScrollView.ScrollX, minScrollOffset, expander.EaseIn);
+                animation.Commit(this, "SimpleAnimation", 16, expander.DurationMilliseconds/*5000*/, Easing.Linear, (v, c) => { }, () => false);
+            }
+
+            //await _theScrollView.ScrollToAsync(expander, 0, true);
+            //await Task.Delay((int)expander.DurationMilliseconds);
+
+            //await _theScrollView.ScrollToAsync(expander, 0, true);
+            //await Task.Delay(400);
+            //await _theScrollView.ScrollToAsync(expander.Header, 0, true);
+        }
+        else if (e.PropertyName == nameof(ExpanderZero.Width))
+        {
+            double paddingWidth = 0;
+
+            foreach (ExpanderZero item in _expanderList)
+            {
+                paddingWidth += item.PaddingWidth;
+            }
+            _theSpacer.WidthRequest = paddingWidth;
         }
     }
+
+    //private async void Expander_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    //{
+    //    if (e.PropertyName == "Width")
+    //    {
+    //        var expander = (ExpanderZero)sender;
+    //        Debug.WriteLine("2");
+    //         _theScrollView.ScrollToAsync(expander, 0, true);
+    //        //await Task.Delay((int)expander.DurationMilliseconds);
+
+    //        //await _theScrollView.ScrollToAsync(expander, 0, true);
+    //        //await Task.Delay(400);
+    //        //await _theScrollView.ScrollToAsync(expander.Header, 0, true);
+    //    }
+    //}
 }

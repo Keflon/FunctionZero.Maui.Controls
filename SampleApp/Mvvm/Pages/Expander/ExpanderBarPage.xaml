@@ -31,7 +31,7 @@
                 <cz:ExpanderZero Orientation="Horizontal"
                     EaseIn="{x:Static Easing.BounceOut}"
                     EaseOut="{x:Static Easing.BounceOut}"
-                    DurationMilliseconds="400"
+                    DurationMilliseconds="4000"
                 >
                     <cz:ExpanderZero.Header>
                         <Label Text="Lists"/>
@@ -46,9 +46,9 @@
 
                 <!--Trees-->
                 <cz:ExpanderZero  IsExpanded="True" Orientation="Horizontal"
-                    EaseIn="{x:Static Easing.BounceOut}"
-                    EaseOut="{x:Static Easing.BounceOut}"
-                    DurationMilliseconds="1000" 
+                    EaseIn="{x:Static Easing.CubicInOut}"
+                    EaseOut="{x:Static Easing.CubicInOut}"
+                    DurationMilliseconds="500" 
                 >
                     <cz:ExpanderZero.Header>
                         <Label Text="Trees"/>
@@ -63,9 +63,9 @@
 
                 <!--Masks-->
                 <cz:ExpanderZero Orientation="Horizontal"
-                    EaseIn="{x:Static Easing.BounceOut}"
-                    EaseOut="{x:Static Easing.BounceOut}"
-                    DurationMilliseconds="1000" 
+                    EaseIn="{x:Static Easing.CubicInOut}"
+                    EaseOut="{x:Static Easing.CubicInOut}"
+                    DurationMilliseconds="500" 
                 >
                     <cz:ExpanderZero.Header>
                         <Label Text="Masks"/>
@@ -78,9 +78,9 @@
 
                 <!--Expanders-->
                 <cz:ExpanderZero Orientation="Horizontal"
-                    EaseIn="{x:Static Easing.BounceOut}"
-                    EaseOut="{x:Static Easing.BounceOut}"
-                    DurationMilliseconds="1000" 
+                    EaseIn="{x:Static Easing.CubicInOut}"
+                    EaseOut="{x:Static Easing.CubicInOut}"
+                    DurationMilliseconds="500" 
                 >
                     <cz:ExpanderZero.Header>
                         <Label Text="Expanders"/>

@@ -15,7 +15,10 @@
                 DescendantRemoved="TheScrollView_DescendantRemoved"
                 
                 >
-                <ContentPresenter x:Name="TheContent" />
+                <StackLayout Orientation="Horizontal">
+                    <ContentPresenter x:Name="TheContent" />
+                    <Rectangle HeightRequest="15" x:Name="TheSpacer" BackgroundColor="Transparent"/>
+                </StackLayout>
             </ScrollView>
         </ControlTemplate>
     </ContentView.ControlTemplate>

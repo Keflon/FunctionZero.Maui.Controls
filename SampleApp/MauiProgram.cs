@@ -68,7 +68,6 @@ namespace SampleApp
                 .AddSingleton<JayBirthdayPageVm>()
                 .AddSingleton<ExpanderBarPageVm>()
 
-
                 .AddSingleton<LazyListPage>()
                 .AddSingleton<TurbulentListPage>()
                 .AddSingleton<WobblyListPage>()

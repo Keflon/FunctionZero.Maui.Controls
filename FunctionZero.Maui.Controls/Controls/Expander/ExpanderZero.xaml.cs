@@ -145,25 +145,28 @@ public partial class ExpanderZero : ContentView
             if (Orientation == StackOrientation.Horizontal)
             {
                 SizeRequest desiredSize = container.Content.Measure(double.PositiveInfinity, container.Height, MeasureFlags.None);
-
+                PaddingWidth = desiredSize.Request.Width - container.Width;
                 if (isExpanded)
-                    animation = new Animation(w => container.WidthRequest = w, container.Width, desiredSize.Request.Width, EaseIn);
+                    animation = new Animation(w => SetWidth(container, w, desiredSize.Request.Width), container.Width, desiredSize.Request.Width, EaseIn);
                 else
                     animation = new Animation(w => container.WidthRequest = w, container.Width, 0, EaseOut);
             }
             else
             {
-
-
                 SizeRequest desiredSize = container.Content.Measure(container.Width, double.PositiveInfinity, MeasureFlags.None);
                 if (isExpanded)
                     animation = new Animation(h => container.HeightRequest = h, container.Height, desiredSize.Request.Height, EaseIn);
                 else
                     animation = new Animation(h => container.HeightRequest = h, container.Height, 0, EaseOut);
             }
-
             animation.Commit(this, "SimpleAnimation", 16, DurationMilliseconds/*5000*/, Easing.Linear, (v, c) => { }, () => false);
         }
+    }
+    public double PaddingWidth { get; protected set; }
+    private void SetWidth(ContentPresenter container, double currentWidth, double finalWidth)
+    {
+        container.WidthRequest = currentWidth;
+        PaddingWidth = finalWidth - currentWidth;
     }
 
     private void HeaderTapped(object sender, EventArgs e)
