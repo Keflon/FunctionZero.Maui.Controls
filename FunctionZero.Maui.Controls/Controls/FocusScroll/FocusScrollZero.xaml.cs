@@ -52,7 +52,6 @@ public partial class FocusScrollZero : ContentView
         }
     }
 
-
     private void TheScrollView_DescendantAdded(object sender, ElementEventArgs e)
     {
         if (e.Element is ExpanderZero expander)
@@ -61,7 +60,6 @@ public partial class FocusScrollZero : ContentView
             _expanderList.Add(expander);
         }
     }
-
 
     private void TheScrollView_DescendantRemoved(object sender, ElementEventArgs e)
     {
@@ -72,8 +70,7 @@ public partial class FocusScrollZero : ContentView
         }
     }
 
-
-    private async void Expander_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    private async void Expander_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(ExpanderZero.IsExpanded))
         {
@@ -86,18 +83,10 @@ public partial class FocusScrollZero : ContentView
 
             if (_theScrollView.ScrollX < minScrollOffset)
             {
-                //await Task.Delay(5000);
                 this.AbortAnimation("SimpleAnimation");
                 var animation = new Animation(offset => _theScrollView.ScrollToAsync(offset, 0, false), _theScrollView.ScrollX, minScrollOffset, expander.EaseIn);
                 animation.Commit(this, "SimpleAnimation", 16, expander.DurationMilliseconds/*5000*/, Easing.Linear, (v, c) => { }, () => false);
             }
-
-            //await _theScrollView.ScrollToAsync(expander, 0, true);
-            //await Task.Delay((int)expander.DurationMilliseconds);
-
-            //await _theScrollView.ScrollToAsync(expander, 0, true);
-            //await Task.Delay(400);
-            //await _theScrollView.ScrollToAsync(expander.Header, 0, true);
         }
         else if (e.PropertyName == nameof(ExpanderZero.Width))
         {
@@ -110,19 +99,4 @@ public partial class FocusScrollZero : ContentView
             _theSpacer.WidthRequest = paddingWidth;
         }
     }
-
-    //private async void Expander_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-    //{
-    //    if (e.PropertyName == "Width")
-    //    {
-    //        var expander = (ExpanderZero)sender;
-    //        Debug.WriteLine("2");
-    //         _theScrollView.ScrollToAsync(expander, 0, true);
-    //        //await Task.Delay((int)expander.DurationMilliseconds);
-
-    //        //await _theScrollView.ScrollToAsync(expander, 0, true);
-    //        //await Task.Delay(400);
-    //        //await _theScrollView.ScrollToAsync(expander.Header, 0, true);
-    //    }
-    //}
 }
