@@ -7,6 +7,8 @@ namespace FunctionZero.Maui.Controls;
 public partial class FocusScrollZero : ContentView
 {
     private readonly List<ExpanderZero> _expanderList;
+    private ScrollView _theScrollView;
+    private Rectangle _theSpacer;
 
     public FocusScrollZero()
     {
@@ -20,11 +22,8 @@ public partial class FocusScrollZero : ContentView
         base.OnApplyTemplate();
         _theScrollView = (ScrollView)this.GetTemplateChild("TheScrollView");
         _theSpacer = (Rectangle)this.GetTemplateChild("TheSpacer");
-
     }
     public static readonly BindableProperty OrientationProperty = BindableProperty.Create(nameof(Orientation), typeof(StackOrientation), typeof(FocusScrollZero), StackOrientation.Vertical, BindingMode.OneWay, null, OrientationChanged);
-    private ScrollView _theScrollView;
-    private Rectangle _theSpacer;
 
     public StackOrientation Orientation
     {
@@ -70,6 +69,51 @@ public partial class FocusScrollZero : ContentView
         }
     }
 
+    public static Point GetScreenCoords2(VisualElement element)
+    {
+        double x = element.Bounds.Left;
+        double y = element.Bounds.Top;
+
+        element = element.Parent?.Parent as ExpanderZero;
+
+        while (element != null)
+        {
+            x += element.Bounds.Left;
+            y += element.Bounds.Top;
+            if (element is ExpanderZero expander)
+            {
+                x += expander.Header.Width + expander.Header.Margin.HorizontalThickness;
+            }
+            element = element.Parent?.Parent as ExpanderZero;
+
+        }
+        return new Point(x, y);
+    }
+    public Point GetScreenCoords(VisualElement element)
+    {
+        double x = 0;
+        double y = 0;
+
+        while (element != this)
+        {
+            x += element.Bounds.Left;
+            y += element.Bounds.Top;
+
+            if (element is ExpanderZero expander)
+            {
+                x += expander.Header.Width + expander.Header.Margin.HorizontalThickness;
+                Debug.WriteLine($"Error: {expander.Header.Width + expander.Header.Margin.HorizontalThickness - expander.Header.Bounds.Width}");
+            }
+            element = element.Parent as VisualElement;
+        }
+        return new Point(x, y);
+    }
+
+    /*
+
+    [HCC][HCC][H[HCC][HCC]
+    */
+
     private async void Expander_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(ExpanderZero.IsExpanded))
@@ -77,16 +121,25 @@ public partial class FocusScrollZero : ContentView
             var expander = (ExpanderZero)sender;
             await Task.Yield();
 
-            //var thing = MaskZero.GetScreenCoords(expander);
-            var thing = expander.X + expander.Header.Width + expander.Header.Margin.HorizontalThickness;
+            var x = GetScreenCoords(expander).X;
+
+            var thing = x;// + expander.Header.Width + expander.Header.Margin.HorizontalThickness;
+            //var thing = x + expander.Header.Bounds.Width;
             var minScrollOffset = thing + expander.PaddingWidth - _theScrollView.Width;
+
+            //await _theScrollView.ScrollToAsync(x, 0, true);
+            //await Task.Delay(3000);
 
             if (_theScrollView.ScrollX < minScrollOffset)
             {
                 this.AbortAnimation("SimpleAnimation");
                 var animation = new Animation(offset => _theScrollView.ScrollToAsync(offset, 0, false), _theScrollView.ScrollX, minScrollOffset, expander.EaseIn);
-                animation.Commit(this, "SimpleAnimation", 16, expander.DurationMilliseconds/*5000*/, Easing.Linear, (v, c) => { }, () => false);
+                animation.Commit(this, "SimpleAnimation", 16, expander.DurationMilliseconds/*5000*/, Easing.Linear,
+                    (v, c) => Finished(x, expander), () => false);
+
+
             }
+
         }
         else if (e.PropertyName == nameof(ExpanderZero.Width))
         {
@@ -98,5 +151,12 @@ public partial class FocusScrollZero : ContentView
             }
             _theSpacer.WidthRequest = paddingWidth;
         }
+    }
+
+    private void Finished(double x, ExpanderZero expander)
+    {
+        var targetX = x - expander.Header.Width - expander.Header.Margin.HorizontalThickness;
+        if (targetX < _theScrollView.ScrollX)
+            _theScrollView.ScrollToAsync(targetX, 0, true);
     }
 }

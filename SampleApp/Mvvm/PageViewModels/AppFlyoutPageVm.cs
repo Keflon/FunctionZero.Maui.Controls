@@ -108,7 +108,7 @@ namespace SampleApp.Mvvm.PageViewModels
         public override void OnOwnerPageAppearing()
         {
             base.OnOwnerPageAppearing();
-            _pageService.FlyoutController.SetDetailVm(typeof(CircleMaskPageVm), true);
+            _pageService.FlyoutController.SetDetailVm(typeof(ExpanderBarPageVm), true);
         }
     }
 }

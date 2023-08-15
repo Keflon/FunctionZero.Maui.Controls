@@ -44,7 +44,7 @@ public partial class ExpanderZero : ContentView
         }
         else
         {
-            root.HorizontalOptions = LayoutOptions.Start;
+            root.HorizontalOptions = LayoutOptions.Fill;
             root.VerticalOptions = LayoutOptions.Fill;
             if (!IsExpanded)
                 container.WidthRequest = 0;
@@ -147,7 +147,8 @@ public partial class ExpanderZero : ContentView
                 SizeRequest desiredSize = container.Content.Measure(double.PositiveInfinity, container.Height, MeasureFlags.None);
                 PaddingWidth = desiredSize.Request.Width - container.Width;
                 if (isExpanded)
-                    animation = new Animation(w => SetWidth(container, w, desiredSize.Request.Width), container.Width, desiredSize.Request.Width, EaseIn);
+                    animation = new Animation(w => SetWidth(container, w, desiredSize.Request.Width),
+                        container.Width, desiredSize.Request.Width, EaseIn);
                 else
                     animation = new Animation(w => container.WidthRequest = w, container.Width, 0, EaseOut);
             }
@@ -159,9 +160,16 @@ public partial class ExpanderZero : ContentView
                 else
                     animation = new Animation(h => container.HeightRequest = h, container.Height, 0, EaseOut);
             }
-            animation.Commit(this, "SimpleAnimation", 16, DurationMilliseconds/*5000*/, Easing.Linear, (v, c) => { }, () => false);
+            animation.Commit(this, "SimpleAnimation", 16, DurationMilliseconds/*5000*/, Easing.Linear, (v, c) => FinishedExpanding(container, isExpanded), () => false);
         }
     }
+
+    private void FinishedExpanding(ContentPresenter container, bool isExpanded)
+    {
+        if (isExpanded)
+            container.ClearValue(VisualElement.WidthRequestProperty);
+    }
+
     public double PaddingWidth { get; protected set; }
     private void SetWidth(ContentPresenter container, double currentWidth, double finalWidth)
     {

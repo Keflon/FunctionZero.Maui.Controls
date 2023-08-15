@@ -24,9 +24,11 @@
         </Style>
 
     </ContentPage.Resources>
-    <VerticalStackLayout>
-        <cz:FocusScrollZero>
+    <Grid ColumnDefinitions="Auto,*">
+        <Label Grid.Column="0" Text="Bananas"/>
+        <cz:FocusScrollZero Grid.Column="1" HorizontalOptions="Fill">
             <HorizontalStackLayout>
+                <Label Text="Banana"/>
                 <!--Lists-->
                 <cz:ExpanderZero Orientation="Horizontal"
                     EaseIn="{x:Static Easing.BounceOut}"
@@ -68,10 +70,25 @@
                     DurationMilliseconds="500" 
                 >
                     <cz:ExpanderZero.Header>
-                        <Label Text="Masks"/>
+                        <Label Text="Masks" BackgroundColor="Crimson"/>
                     </cz:ExpanderZero.Header>
                     <HorizontalStackLayout  >
-                        <cz:LabelZero Text="Circle" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.CircleMask}"/>
+                        <cz:LabelZero Text="e" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.CircleMask}"/>
+                        <cz:ExpanderZero Orientation="Horizontal" BackgroundColor="Pink"
+                           EaseIn="{x:Static Easing.BounceOut}"
+                           EaseOut="{x:Static Easing.BounceOut}"
+                           DurationMilliseconds="4000"
+           >
+                            <cz:ExpanderZero.Header>
+                                <Label Text="Lists"/>
+                            </cz:ExpanderZero.Header>
+                            <HorizontalStackLayout>
+                                <cz:LabelZero Text="WWWWWW" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.WobblyListView}"/>
+                                <cz:LabelZero Text="XXXXXX" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.WobblyListView}"/>
+                                <cz:LabelZero Text="YYYYYY" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.LazyListView}"/>
+                                <cz:LabelZero Text="ZZZZZZ" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.TurbulentListView}"/>
+                            </HorizontalStackLayout>
+                        </cz:ExpanderZero>
                         <cz:LabelZero Text="Jay" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.Jay}"/>
                     </HorizontalStackLayout>
                 </cz:ExpanderZero>
@@ -91,5 +108,5 @@
                 </cz:ExpanderZero>
             </HorizontalStackLayout>
         </cz:FocusScrollZero>
-    </VerticalStackLayout>
+    </Grid>
 </ContentPage>
