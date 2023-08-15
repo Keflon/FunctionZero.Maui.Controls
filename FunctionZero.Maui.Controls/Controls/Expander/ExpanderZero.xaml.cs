@@ -147,7 +147,8 @@ public partial class ExpanderZero : ContentView
                 SizeRequest desiredSize = container.Content.Measure(double.PositiveInfinity, container.Height, MeasureFlags.None);
                 PaddingWidth = desiredSize.Request.Width - container.Width;
                 if (isExpanded)
-                    animation = new Animation(w => SetWidth(container, w, desiredSize.Request.Width), container.Width, desiredSize.Request.Width, EaseIn);
+                    animation = new Animation(w => SetWidth(container, w, desiredSize.Request.Width), 
+                        container.Width, desiredSize.Request.Width, EaseIn, ()=>container.ClearValue(VisualElement.WidthRequestProperty));
                 else
                     animation = new Animation(w => container.WidthRequest = w, container.Width, 0, EaseOut);
             }

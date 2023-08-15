@@ -12,7 +12,7 @@
                         <TapGestureRecognizer Tapped="HeaderTapped"/>
                     </ContentView.GestureRecognizers>
                 </ContentView>
-                <ContentPresenter x:Name="DetailView"/>
+                <ContentPresenter x:Name="DetailView" />
             </StackLayout>
         </ControlTemplate>
     </ContentView.ControlTemplate>

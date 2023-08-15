@@ -72,6 +72,20 @@
                     </cz:ExpanderZero.Header>
                     <HorizontalStackLayout  >
                         <cz:LabelZero Text="Circle" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.CircleMask}"/>
+                        <cz:ExpanderZero Orientation="Horizontal"
+               EaseIn="{x:Static Easing.BounceOut}"
+               EaseOut="{x:Static Easing.BounceOut}"
+               DurationMilliseconds="4000"
+           >
+                            <cz:ExpanderZero.Header>
+                                <Label Text="Lists"/>
+                            </cz:ExpanderZero.Header>
+                            <HorizontalStackLayout>
+                                <cz:LabelZero Text="Wobbly" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.WobblyListView}"/>
+                                <cz:LabelZero Text="Lazy" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.LazyListView}"/>
+                                <cz:LabelZero Text="Turbulent" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.TurbulentListView}"/>
+                            </HorizontalStackLayout>
+                        </cz:ExpanderZero>
                         <cz:LabelZero Text="Jay" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.Jay}"/>
                     </HorizontalStackLayout>
                 </cz:ExpanderZero>

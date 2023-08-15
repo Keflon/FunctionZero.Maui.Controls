@@ -7,6 +7,8 @@ namespace FunctionZero.Maui.Controls;
 public partial class FocusScrollZero : ContentView
 {
     private readonly List<ExpanderZero> _expanderList;
+    private ScrollView _theScrollView;
+    private Rectangle _theSpacer;
 
     public FocusScrollZero()
     {
@@ -20,11 +22,8 @@ public partial class FocusScrollZero : ContentView
         base.OnApplyTemplate();
         _theScrollView = (ScrollView)this.GetTemplateChild("TheScrollView");
         _theSpacer = (Rectangle)this.GetTemplateChild("TheSpacer");
-
     }
     public static readonly BindableProperty OrientationProperty = BindableProperty.Create(nameof(Orientation), typeof(StackOrientation), typeof(FocusScrollZero), StackOrientation.Vertical, BindingMode.OneWay, null, OrientationChanged);
-    private ScrollView _theScrollView;
-    private Rectangle _theSpacer;
 
     public StackOrientation Orientation
     {
