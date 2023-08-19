@@ -26,9 +26,9 @@
     </ContentPage.Resources>
     <Grid ColumnDefinitions="Auto,*">
         <Label Grid.Column="0" Text="Bananas"/>
-        <cz:FocusScrollZero Grid.Column="1" HorizontalOptions="Fill">
+        <cz:FocusScrollZero Grid.Column="1" HorizontalOptions="Fill" VerticalOptions="Start">
             <HorizontalStackLayout>
-                <Label Text="Banana"/>
+                <Button Text="Theme" Command="{Binding ThemeButtonCommand}"/>
                 <!--Lists-->
                 <cz:ExpanderZero Orientation="Horizontal"
                     EaseIn="{x:Static Easing.BounceOut}"

@@ -69,7 +69,7 @@
                 <!--Masks-->
                 <cz:ExpanderZero Orientation="Horizontal"
                     EaseIn="{x:Static Easing.BounceOut}"
-                    EaseOut="{x:Static Easing.BounceOut}"
+                    EaseOut="{x:Static Easing.BounceOut}" 
                     DurationMilliseconds="1000" 
                 >
                     <cz:ExpanderZero.Header>
