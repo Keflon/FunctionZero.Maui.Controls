@@ -4,7 +4,13 @@
              xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
              xmlns:vm="clr-namespace:SampleApp.Mvvm.PageViewModels"
              x:Class="SampleApp.Mvvm.Pages.Expander.ExpanderBarPage"
-             Title="ExpanderBarPage">
+             Title="ExpanderBarPage"
+             >
+    <ContentPage.ControlTemplate>
+        <ControlTemplate>
+            <ContentPresenter />
+        </ControlTemplate>
+    </ContentPage.ControlTemplate>
     <ContentPage.Resources>
         <Style TargetType="Label" >
             <Style.Setters>

@@ -2,6 +2,7 @@
 using FunctionZero.Maui.MvvmZero;
 using Microsoft.Maui.Platform;
 using SampleApp.Mvvm.PageViewModels;
+using SampleApp.Widgets;
 using System.Diagnostics;
 
 namespace SampleApp
@@ -10,6 +11,7 @@ namespace SampleApp
     {
         public App(IPageServiceZero pageService)
         {
+            var temp = new WidgetContainer("", "", "");
             InitializeComponent();
 
             pageService.Init(this);

@@ -9,6 +9,22 @@
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <ControlTemplate x:Key="GlobalCT">
+                <Grid RowDefinitions="Auto,*" BackgroundColor="Yellow">
+                    <Label Grid.Row="0" Text="Hello!"/>
+                    <ContentPresenter Grid.Row="1" BackgroundColor="Green"/>
+                </Grid>
+            </ControlTemplate>
+
+            <Style TargetType="{x:Type ContentPage}" ApplyToDerivedTypes="True">
+                <Setter Property="ControlTemplate" Value="{DynamicResource GlobalCT}"/>
+                <!--<Setter Property="BackgroundColor" Value="Yellow"/>-->
+            </Style>
+
+
+
         </ResourceDictionary>
+
     </Application.Resources>
 </Application>
