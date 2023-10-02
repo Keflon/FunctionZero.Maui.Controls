@@ -57,6 +57,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Resources\Images\Image1.jpg" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <PackageReference Include="FunctionZero.Maui.MvvmZero" Version="2.0.3" />
 	</ItemGroup>
 
