@@ -25,15 +25,12 @@
 		<PackageProjectUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</RepositoryUrl>
 		<PackageTags>MAUI; ListView; ListViewZero; TreeView; TreeViewZero; MaskView; iOS; WinUI; Windows; Android; Control </PackageTags>
-		<PackageReleaseNotes>
-			Added ExpanderZero and MaskViewZero. Added RemaingItems and RemainingItemsChangedCommand to ListViewZero.
-			Build and run the sample app to see the new controls in action.
-
-		</PackageReleaseNotes>
+		<PackageReleaseNotes>Preview build for .NET 8.</PackageReleaseNotes>
 		<PackageLicenseFile>License.md</PackageLicenseFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>2.3.4.0-pre1</Version>
+		<Version>8.0.0.0-pre1</Version>
+		<PackageIcon>F0 gravatar.png</PackageIcon>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
@@ -45,6 +42,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Include="..\..\FunctionZero.ExpressionParserZero\Images\F0 gravatar.png">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		</None>
 		<None Include="..\License.md">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
