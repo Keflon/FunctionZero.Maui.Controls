@@ -1,15 +1,13 @@
-# Updates  
-Added 2 new controls as temporary workarounds for MAUI bugs that affect the WinUI platform.  
-`AdaptedTabbedPage` fixes a crash when using `ItemsSource` and `ItemsTemplate` on a `TabbedPage`.  
-`AdaptedFlyoutPage` allows a `FlyoutPage` to set `IsPresented` to `false` when a `Popver` flyout is dismissed.  
-[Details](#workarounds)
+# Latest
+### .NET 8 support. Nuget [here](https://www.nuget.org/packages/FunctionZero.Maui.Controls)  
+Use package [8.0.0-pre1](https://www.nuget.org/packages/FunctionZero.Maui.Controls/8.0.0-pre1) if you are building against .NET 8.  
+Use package [2.3.4-pre2](https://www.nuget.org/packages/FunctionZero.Maui.Controls/2.3.4-pre2) if you are building against .NET 7.  
+Use package [2.0.0](https://www.nuget.org/packages/FunctionZero.Maui.Controls/2.0.0) if you are building against .NET 6.  
+# Workarounds  
+If you're having trouble with the MAUI `TabbedPage` or `FlyoutPage` see [below](#workarounds)
 
 # Controls
 [NuGet package](https://www.nuget.org/packages/FunctionZero.Maui.Controls)  
-
-Use package [8.0.0-pre1](https://www.nuget.org/packages/FunctionZero.Maui.Controls/8.0.0-pre1) if you are building against .NET 8 and a bit brave.  
-Use package [2.3.4-pre2](https://www.nuget.org/packages/FunctionZero.Maui.Controls/2.3.4-pre2) if you are building against .NET 7.  
-Use package [2.0.0](https://www.nuget.org/packages/FunctionZero.Maui.Controls/2.0.0) if you are building against .NET 6.  
 
 1. [ListViewZero](#listviewzero)
 1. [TreeViewZero](#treeviewzero)
