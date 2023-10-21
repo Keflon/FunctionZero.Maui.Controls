@@ -90,9 +90,10 @@
                     <cz:ExpanderZero.Header>
                         <Label Text="Expanders"/>
                     </cz:ExpanderZero.Header>
-                    <HorizontalStackLayout  >
+                    <VerticalStackLayout  >
                         <cz:LabelZero Text="Expander Bar" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.ExpanderBar}"/>
-                    </HorizontalStackLayout>
+                        <cz:LabelZero Text="Expander Bar Test" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.ExpanderBarTest}"/>
+                    </VerticalStackLayout>
                 </cz:ExpanderZero>
 
             </VerticalStackLayout>

@@ -36,6 +36,7 @@ namespace SampleApp
                         .MapVmToView<CircleMaskPageVm, CircleMaskPage>()
                         .MapVmToView<JayBirthdayPageVm, JayBirthdayPage>()
                         .MapVmToView<ExpanderBarPageVm, ExpanderBarPage>()
+                        .MapVmToView<ExpanderTestPageVm, ExpanderTestPage>()
                         ;
                     }
                 )
@@ -79,6 +80,12 @@ namespace SampleApp
                 .AddSingleton<CircleMaskPage>()
                 .AddSingleton<JayBirthdayPage>()
                 .AddSingleton<ExpanderBarPage>()
+
+                .AddSingleton<ExpanderTestPage>()
+                .AddSingleton<ExpanderTestPageVm>()
+
+
+
                ;
 
             return builder.Build();

@@ -25,11 +25,11 @@
 		<PackageProjectUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</RepositoryUrl>
 		<PackageTags>MAUI; ListView; ListViewZero; TreeView; TreeViewZero; MaskView; iOS; WinUI; Windows; Android; Control </PackageTags>
-		<PackageReleaseNotes>Preview build for .NET 8.</PackageReleaseNotes>
+		<PackageReleaseNotes>Added experimental MarkupExtension for swapping language translations at runtime.</PackageReleaseNotes>
 		<PackageLicenseFile>License.md</PackageLicenseFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>8.0.0.0-pre1</Version>
+		<Version>8.0.0.1-pre3</Version>
 		<PackageIcon>F0 gravatar.png</PackageIcon>
 	</PropertyGroup>
 

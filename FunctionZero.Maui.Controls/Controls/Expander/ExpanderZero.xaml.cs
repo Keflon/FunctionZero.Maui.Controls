@@ -30,14 +30,14 @@ public partial class ExpanderZero : ContentView
 
     private void SetOrientation()
     {
-        StackLayout root = (StackLayout)this.GetTemplateChild("RootStackLayout");
+        var root = (View)this.GetTemplateChild("RootStackLayout");
 
         ContentPresenter container = _detailView;
 
         if (Orientation == StackOrientation.Vertical)
         {
             root.HorizontalOptions = LayoutOptions.Fill;
-            root.VerticalOptions = LayoutOptions.Start;
+            root.VerticalOptions = LayoutOptions.Fill;
             if (!IsExpanded)
                 container.HeightRequest = 0;
             container.ClearValue(WidthRequestProperty);
@@ -167,7 +167,12 @@ public partial class ExpanderZero : ContentView
     private void FinishedExpanding(ContentPresenter container, bool isExpanded)
     {
         if (isExpanded)
-            container.ClearValue(VisualElement.WidthRequestProperty);
+        {
+            if (Orientation == StackOrientation.Horizontal)
+                container.ClearValue(VisualElement.WidthRequestProperty);
+            else
+                container.ClearValue(VisualElement.HeightRequestProperty);
+        }
     }
 
     public double PaddingWidth { get; protected set; }
@@ -177,7 +182,7 @@ public partial class ExpanderZero : ContentView
         PaddingWidth = finalWidth - currentWidth;
     }
 
-    private void HeaderTapped(object sender, EventArgs e)
+    private void HeaderTapped(object sender, TappedEventArgs e)
     {
         IsExpanded = !IsExpanded;
     }

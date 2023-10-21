@@ -31,7 +31,8 @@ namespace SampleApp.Mvvm.PageViewModels
 
         Jay,
 
-        ExpanderBar
+        ExpanderBar, 
+        ExpanderBarTest
     }
 
 
@@ -96,6 +97,9 @@ namespace SampleApp.Mvvm.PageViewModels
                     break;
                 case AppFlyoutItems.ExpanderBar:
                     _pageService.FlyoutController.SetDetailVm(typeof(ExpanderBarPageVm), true);
+                    break;
+                case AppFlyoutItems.ExpanderBarTest:
+                    _pageService.FlyoutController.SetDetailVm(typeof(ExpanderTestPageVm), true);
                     break;
             }
         }

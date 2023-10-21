@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
+             x:Class="SampleApp.Mvvm.Pages.ExpanderTestPage"
+             Title="ExpanderTest">
+    <ContentPage.Resources>
+        <DataTemplate x:Key="NodeTemplate">
+            <Border StrokeThickness="3" Margin="2" Padding="0" HorizontalOptions="FillAndExpand"
+ VerticalOptions="FillAndExpand">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="4,0,0,8" />
+                </Border.StrokeShape>
+            <cz:ExpanderZero   Margin="5" Orientation="Vertical"
+                    EaseIn="{x:Static Easing.CubicInOut}"
+                    EaseOut="{x:Static Easing.CubicInOut}"
+                    DurationMilliseconds="400"
+                    BackgroundColor="{Binding Color}"
+                    IsExpanded="{Binding IsExpanded, Mode=TwoWay}"
+
+                >
+                    <cz:ExpanderZero.Header>
+                        <Label Text="{TemplateBinding BindingContext.Title}"                
+/>
+                    </cz:ExpanderZero.Header>
+                    <VerticalStackLayout
+
+                        BindableLayout.ItemsSource="{Binding Children}"
+                        BindableLayout.ItemTemplate="{StaticResource NodeTemplate}"/>
+                </cz:ExpanderZero>
+            </Border >
+        </DataTemplate>
+    </ContentPage.Resources>
+        <VerticalStackLayout BindableLayout.ItemsSource="{Binding Children}" BindableLayout.ItemTemplate="{StaticResource NodeTemplate}" BackgroundColor="Yellow" >
+    </VerticalStackLayout>
+</ContentPage>
