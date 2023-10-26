@@ -1,6 +1,6 @@
 # Latest
 ### .NET 8 support. Nuget [here](https://www.nuget.org/packages/FunctionZero.Maui.Controls)  
-Use package [8.0.0-pre1](https://www.nuget.org/packages/FunctionZero.Maui.Controls/8.0.0-pre1) if you are building against .NET 8.  
+Use package [8.0.0](https://www.nuget.org/packages/FunctionZero.Maui.Controls/8.0.0-pre1) and above if you are building against .NET 8.  
 Use package [2.3.4-pre2](https://www.nuget.org/packages/FunctionZero.Maui.Controls/2.3.4-pre2) if you are building against .NET 7.  
 Use package [2.0.0](https://www.nuget.org/packages/FunctionZero.Maui.Controls/2.0.0) if you are building against .NET 6.  
 # Workarounds  
