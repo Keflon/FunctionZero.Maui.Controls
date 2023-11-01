@@ -8,7 +8,9 @@ namespace FunctionZero.Maui.MarkupExtensions
         {
         }
         public TEnum TextId { get; set; }
+        public bool ShowOff { get; set; }
         private string _text;
+
 
         public string Text
         {
@@ -56,24 +58,6 @@ namespace FunctionZero.Maui.MarkupExtensions
         public static readonly BindableProperty LookupProperty =
             BindableProperty.CreateAttached("Lookup", typeof(string[]), typeof(Element), new string[] { "Hello", "World" }, BindingMode.OneWay, null, LookupPropertyChanged);
 
-#if NORMAL
-        private static void LookupPropertyChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            var langHost = GetLangHost(bindable);
-                        string[] lookup = GetLookup(bindable);
-            //string[] lookup = (string[])newValue;
-            if(lookup != null)
-            {
-                string to = "???";
-                if(lookup.Length > (int)langHost.TextId) 
-                {
-                    to = lookup[(int)langHost.TextId];
-                }
-                langHost.Text = GetLookup(bindable)[(int)langHost.TextId];
-            }
-        }
-
-#else
         private static void LookupPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var langHost = GetLangHost(bindable);
@@ -86,7 +70,11 @@ namespace FunctionZero.Maui.MarkupExtensions
                 {
                     to = lookup[(int)(object)langHost.TextId];
                 }
-                CrossFadeText(langHost, to);
+                if (langHost.ShowOff)
+                    CrossFadeText(langHost, to);
+                else
+                    langHost.Text = GetLookup(bindable)[(int)(object)langHost.TextId];
+
             }
         }
 
@@ -109,7 +97,7 @@ namespace FunctionZero.Maui.MarkupExtensions
                 await Task.Delay(16);
             }
         }
-#endif
+
         public static string[] GetLookup(BindableObject view)
         {
             var retval = (string[])view.GetValue(LookupProperty);
