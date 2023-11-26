@@ -4,13 +4,15 @@ namespace FunctionZero.Maui.MarkupExtensions
 {
     public abstract class BaseLanguageExtension<TEnum> : IMarkupExtension<Binding>, INotifyPropertyChanged where TEnum : Enum
     {
-        public BaseLanguageExtension()
+
+        public BaseLanguageExtension(string dynamicResourceName)
         {
+            _dynamicResourceName = dynamicResourceName;
         }
         public TEnum TextId { get; set; }
         public bool ShowOff { get; set; }
         private string _text;
-
+        private readonly string _dynamicResourceName;
 
         public string Text
         {
@@ -39,7 +41,7 @@ namespace FunctionZero.Maui.MarkupExtensions
             var property = provideValueTarget.TargetProperty as BindableProperty;
 
             SetLangHost(target, this);
-            target.SetDynamicResource(LookupProperty, "LocalisedStrings");
+            target.SetDynamicResource(LookupProperty, _dynamicResourceName);
 
             var b = new Binding("Text", mode: BindingMode.OneWay, source: this);
 

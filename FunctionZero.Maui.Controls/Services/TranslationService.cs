@@ -11,11 +11,21 @@ namespace FunctionZero.Maui.Services
     /// </summary>
     public class TranslationService
     {
+        private readonly string _resourceKey;
+        private ResourceDictionary _resourceHost;
         private Dictionary<string, LanguageProvider> _languages;
+        public event EventHandler<LanguageChangedEventArgs> LanguageChanged;
+
         // TODO: Expose an ObsColl of languages, so the app can e.g. download new language packs and the UI can bind to it all.
-        public TranslationService()
+        public TranslationService(string resourceKey = "LocalisedStrings")
         {
+            _resourceKey = resourceKey;
             _languages = new();
+        }
+
+        public void Init(ResourceDictionary resourceHost)
+        {
+            _resourceHost = resourceHost;
         }
 
         public void RegisterLanguage(string id, LanguageProvider language)
@@ -29,13 +39,20 @@ namespace FunctionZero.Maui.Services
         /// <param name="resourceHost"></param>
         /// <param name="id"></param>
         /// <exception cref="Exception"></exception>
-        public void SetLanguage(ResourceDictionary resourceHost, string id)
+        public void SetLanguage(string id)
         {
+            if (_resourceHost == null)
+                throw new InvalidOperationException("You must call Init on the TranslationService before you call SetLanguage(string id), e.g. Init(Application.Current.Resources);");
+
             if (_languages.TryGetValue(id, out var languageService))
-                resourceHost["LocalisedStrings"] = languageService.GetLookup();
+                _resourceHost[_resourceKey] = languageService.GetLookup();
             else
                 throw new Exception($"Register a language before trying to set it. Language: '{id}' ");
+
+            LanguageChanged?.Invoke(this, new LanguageChangedEventArgs(id));
         }
+
+        public string[] CurrentLookup => _resourceHost[_resourceKey] as string[];
         public class LanguageProvider
         {
             public LanguageProvider(Func<string[]> getLookup, string languageName)
