@@ -55,7 +55,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
-		<PackageReference Include="FunctionZero.Maui.MvvmZero" Version="2.0.3" />
+		<PackageReference Include="FunctionZero.Maui.MvvmZero" Version="8.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

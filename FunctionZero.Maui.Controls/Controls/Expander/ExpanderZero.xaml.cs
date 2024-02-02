@@ -8,9 +8,29 @@ namespace FunctionZero.Maui.Controls;
 public partial class ExpanderZero : ContentView
 {
     private ContentPresenter _detailView;
+    private bool _loaded;
+
     public ExpanderZero()
     {
         InitializeComponent();
+        this.Loaded += ExpanderZero_Loaded;
+    }
+
+    
+
+    private void ExpanderZero_Loaded(object sender, EventArgs e)
+    {
+        // This dodges something related to this: https://github.com/dotnet/maui/pull/6364
+        // where
+        // IsExpanded="{z:Bind '!Device.IsDeviceConnected'}"
+        // can cause
+        // System.ArgumentException: Unable to find IAnimationManager for ... (this control)
+        // I guess because z:Bind flips the value when the binding context is set but before the control 
+        // is in the visual tree, meaning there is no IAnimationManager available.
+        // Note, my logic may be incorrect, but the problem we're dodging is specific to the '!' in the zBind expression.
+
+        _loaded = true;
+        UpdateVisualState(IsExpanded);
     }
 
     public static readonly BindableProperty OrientationProperty = BindableProperty.Create(nameof(Orientation), typeof(StackOrientation), typeof(ExpanderZero), StackOrientation.Vertical, BindingMode.OneWay, null, OrientationChanged);
@@ -130,6 +150,8 @@ public partial class ExpanderZero : ContentView
     }
     private void UpdateVisualState(bool isExpanded)
     {
+        if(_loaded == false)
+            return;
 
         ContentPresenter container = _detailView;
         _detailView.IsClippedToBounds = true;
