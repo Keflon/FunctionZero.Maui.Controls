@@ -105,7 +105,7 @@ namespace FunctionZero.Maui.Controls
             var self = (MultiViewZero)bindable;
 
             // TODO: Find the current view.
-
+            bool flag = false;
             foreach (IView item in self)
             {
                 if (item is View theChildView)
@@ -117,12 +117,15 @@ namespace FunctionZero.Maui.Controls
                         {
                             theChildView.IsVisible = true;
                             self.SetTopView(theChildView);
+                            flag = true;
                         }
                         else if (item != self.PreviousView && item != self.CurrentView)
                             theChildView.IsVisible = false;
                     }
                 }
             }
+            if (flag == false)
+                self.SetTopView(null);
         }
 
         private void SetTopView(View theChildView)

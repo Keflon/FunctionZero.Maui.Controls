@@ -10,7 +10,7 @@ namespace SampleApp.Mvvm.PageViewModels.MultiView
 {
     public class MultiViewModalPageVm : BasePageVm
     {
-        private string[] _modalViewNames = { "first", "none", "second", "none" };
+        private string[] _modalViewNames = { "first", "second", "third", "fourth" };
         private int _modalViewIndex = 0;
         private string _topViewName;
 

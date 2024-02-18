@@ -6,7 +6,7 @@
              x:Class="SampleApp.Mvvm.Pages.MultiView.MultiViewModalPage"
              Title="MultiViewModalPage">
     <Grid Grid.RowDefinitions="*,*">
-        <cz:MultiViewZero Grid.Row="0" TopViewName="{Binding TopViewName}" InDuration="400" OutDuration="400" BackgroundColor="Blue">
+        <cz:MultiViewZero Grid.Row="0" TopViewName="{Binding TopViewName}" InDuration="300" OutDuration="300" BackgroundColor="Blue">
 
             <cz:MultiViewZero.InAnimations>
                 <cz:MultiViewAnimation
@@ -16,10 +16,7 @@
                     Expression="CurrentView.Opacity=value,CurrentView.TranslationX=(1-value)*Width/20"
                     FinishedExpression="CurrentView.Opacity=1,CurrentView.TranslationX=0"
                     >
-
                 </cz:MultiViewAnimation>
-
-
             </cz:MultiViewZero.InAnimations>
 
             <cz:MultiViewZero.OutAnimations>
@@ -30,9 +27,7 @@
                     Expression="PreviousView.Opacity=(1-value),PreviousView.TranslationX=value*Width/20"
                     FinishedExpression=""
                     >
-
                 </cz:MultiViewAnimation>
-
 
             </cz:MultiViewZero.OutAnimations>
 
@@ -40,7 +35,8 @@
 
                 <Label Text="First"  FontSize="42" cz:MultiViewZero.MultiName="first"/>
                 <Label Text="Second" FontSize="42" cz:MultiViewZero.MultiName="second"/>
-                <Label Text="None"   FontSize="42" cz:MultiViewZero.MultiName="none"/>
+                <Label Text="Third"   FontSize="42" cz:MultiViewZero.MultiName="third"/>
+                <Label Text="Fourth"   FontSize="42" cz:MultiViewZero.MultiName="fourth"/>
             </cz:MultiViewZero.Children>
 
         </cz:MultiViewZero>
@@ -48,18 +44,16 @@
         
         
         <cz:MultiViewZero Grid.Row="1" TopViewName="{Binding TopViewName}" InDuration="666" OutDuration="666" BackgroundColor="Yellow">
-
+<!--TODO: Add ItemControlTemplate-->
             <cz:MultiViewZero.InAnimations>
                 <cz:MultiViewAnimation
                     From="0"
                     To="1"
-                    EasingFunc="{x:Static Easing.SinInOut}"
+                    EasingFunc="{x:Static Easing.BounceOut}"
                     Expression="CurrentView.Scale=value"
                     FinishedExpression="1"
                     >
-
                 </cz:MultiViewAnimation>
-
 
             </cz:MultiViewZero.InAnimations>
 
@@ -67,7 +61,7 @@
                 <cz:MultiViewAnimation
                     From="1"
                     To="0"
-                    EasingFunc="{x:Static Easing.SinInOut}"
+                    EasingFunc="{x:Static Easing.SpringIn}"
                     Expression="PreviousView.Scale=value"
                     FinishedExpression="1"
                     >
@@ -80,7 +74,7 @@
             <cz:MultiViewZero.Children>
 
                 <Label Text="First Modal"  FontSize="42" Padding="20" TextColor="Black" BackgroundColor="White" cz:MultiViewZero.MultiName="first"  VerticalOptions="Center" HorizontalOptions="Center"/>
-                <Label Text="Second Modal"   FontSize="42" Padding="20" TextColor="Black" BackgroundColor="White" cz:MultiViewZero.MultiName="second"   VerticalOptions="Center" HorizontalOptions="Center"/>
+                <Label Text="Second Modal" FontSize="42" Padding="20" TextColor="Black" BackgroundColor="White" cz:MultiViewZero.MultiName="third"   VerticalOptions="Center" HorizontalOptions="Center"/>
             </cz:MultiViewZero.Children>
 
         </cz:MultiViewZero>
