@@ -111,7 +111,7 @@ public partial class ExpanderZero : ContentView
     public Easing EaseIn
     {
         get => (Easing)GetValue(EaseInProperty);
-        set => SetValue(HeaderProperty, value);
+        set => SetValue(EaseInProperty, value);
     }
 
     public static readonly BindableProperty EaseOutProperty = BindableProperty.Create(nameof(EaseOut), typeof(Easing), typeof(ExpanderZero), Easing.Linear, BindingMode.OneWay, null, EaseOutChanged);
@@ -124,7 +124,7 @@ public partial class ExpanderZero : ContentView
     public Easing EaseOut
     {
         get => (Easing)GetValue(EaseOutProperty);
-        set => SetValue(HeaderProperty, value);
+        set => SetValue(EaseInProperty, value);
     }
 
     public static readonly BindableProperty DurationMillisecondsProperty = BindableProperty.Create(nameof(DurationMilliseconds), typeof(uint), typeof(ExpanderZero), (uint)500, BindingMode.OneWay, null, DurationMillisecondsChanged);

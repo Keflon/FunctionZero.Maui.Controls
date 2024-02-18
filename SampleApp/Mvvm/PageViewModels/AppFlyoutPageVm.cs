@@ -3,6 +3,7 @@ using FunctionZero.Maui.MvvmZero;
 using SampleApp.Mvvm.PageViewModels.Expander;
 using SampleApp.Mvvm.PageViewModels.List;
 using SampleApp.Mvvm.PageViewModels.Mask;
+using SampleApp.Mvvm.PageViewModels.MultiView;
 using SampleApp.Mvvm.PageViewModels.Tree;
 using SampleApp.Mvvm.ViewModels;
 using System;
@@ -32,7 +33,9 @@ namespace SampleApp.Mvvm.PageViewModels
         Jay,
 
         ExpanderBar, 
-        ExpanderBarTest
+        ExpanderBarTest,
+
+        MultiViewModal
     }
 
 
@@ -100,6 +103,9 @@ namespace SampleApp.Mvvm.PageViewModels
                     break;
                 case AppFlyoutItems.ExpanderBarTest:
                     _pageService.FlyoutController.SetDetailVm(typeof(ExpanderTestPageVm), true);
+                    break;
+                case AppFlyoutItems.MultiViewModal:
+                    _pageService.FlyoutController.SetDetailVm(typeof(MultiViewModalPageVm), true);
                     break;
             }
         }

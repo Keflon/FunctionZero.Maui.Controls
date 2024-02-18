@@ -53,13 +53,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
-		<PackageReference Include="FunctionZero.Maui.MvvmZero" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.7" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.7" />
+		<PackageReference Include="FunctionZero.Maui.MvvmZero" Version="8.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\FunctionZero.Maui.Controls\FunctionZero.Maui.Controls.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Mvvm\Pages\MultiView\MultiViewModalPage.xaml.cs">
+	    <DependentUpon>MultiViewModalPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -86,6 +92,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Mvvm\Pages\Mask\JayBirthdayPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Mvvm\Pages\MultiView\MultiViewModalPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Mvvm\Pages\Tree\BasicTreePage.xaml">
 			<Generator>MSBuild:Compile</Generator>

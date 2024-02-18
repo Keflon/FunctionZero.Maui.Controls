@@ -96,6 +96,20 @@
                     </VerticalStackLayout>
                 </cz:ExpanderZero>
 
+                <!--MultiViews-->
+                <cz:ExpanderZero
+                    EaseIn="{x:Static Easing.BounceOut}"
+                    EaseOut="{x:Static Easing.BounceOut}"
+                    DurationMilliseconds="1000" 
+                >
+                    <cz:ExpanderZero.Header>
+                        <Label Text="MultiViews"/>
+                    </cz:ExpanderZero.Header>
+                    <VerticalStackLayout  >
+                        <cz:LabelZero Text="MultiView - Modal" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.MultiViewModal}"/>
+                    </VerticalStackLayout>
+                </cz:ExpanderZero>
+
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

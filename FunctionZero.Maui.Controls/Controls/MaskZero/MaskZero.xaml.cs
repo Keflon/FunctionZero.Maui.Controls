@@ -14,6 +14,7 @@ public partial class MaskZero : ContentView
     private bool _updateRequested = false;
     private View _actualTarget;
     private double _alphaMultiplier;
+    private bool _loaded;
 
     public MaskZero()
     {
@@ -29,9 +30,9 @@ public partial class MaskZero : ContentView
 
         DescendantAdded += MaskZero_DescendantAdded;
         DescendantRemoved += MaskZero_DescendantRemoved;
-
-
     }
+
+
 
     protected override void OnSizeAllocated(double width, double height)
     {
