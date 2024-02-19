@@ -51,7 +51,7 @@
                     To="1"
                     EasingFunc="{x:Static Easing.BounceOut}"
                     Expression="CurrentView.Scale=value"
-                    FinishedExpression="1"
+                    FinishedExpression=""
                     >
                 </cz:MultiViewAnimation>
 
@@ -63,7 +63,7 @@
                     To="0"
                     EasingFunc="{x:Static Easing.SpringIn}"
                     Expression="PreviousView.Scale=value"
-                    FinishedExpression="1"
+                    FinishedExpression=""
                     >
 
                 </cz:MultiViewAnimation>
