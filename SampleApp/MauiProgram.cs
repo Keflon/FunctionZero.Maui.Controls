@@ -1,4 +1,7 @@
-﻿using FunctionZero.Maui.Controls;
+﻿using FunctionZero.ExpressionParserZero.Binding;
+using FunctionZero.ExpressionParserZero.Evaluator;
+using FunctionZero.ExpressionParserZero.Parser;
+using FunctionZero.Maui.Controls;
 using FunctionZero.Maui.MvvmZero;
 using FunctionZero.Maui.Services;
 using SampleApp.Mvvm.Pages;
@@ -120,6 +123,22 @@ namespace SampleApp
         // Example
         private static string[] GetEnglish() => new string[] { "Hello", "World", "Welcome to the Moasure Playground!" };
         private static string[] GetGerman() => new string[] { "Hallo", "Welt", "Willkommen auf dem Moasure Spielplatz!" };
+
+        //private static List<(ExpressionTree, string)> GetEnglish2()
+        //{
+        //    var retval = new List<(ExpressionTree, string)>();
+
+        //    var parser = ExpressionParserFactory.GetExpressionParser();
+
+        //    retval.Add((parser.Parse("NumBananas == 0"), "There are no bananas!"));
+
+        //    retval.Add((parser.Parse("NumBananas == 1"), "There is one banana!"));
+        //    retval.Add((parser.Parse("NumBananas == 2"), "There are two bananas!"));
+        //    retval.Add((parser.Parse("NumBananas < 10"), "There are {NumBananas} bananas!"));       // TODO: {NumBananas}
+        //    retval.Add((parser.Parse("true"), "There are loads of bananas!"));
+
+        //    return retval;
+        //}
 
         #endregion
     }
