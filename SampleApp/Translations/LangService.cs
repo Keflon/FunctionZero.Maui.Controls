@@ -1,4 +1,5 @@
 ﻿using FunctionZero.Maui.MarkupExtensions;
+using FunctionZero.Maui.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,7 @@ using System.Threading.Tasks;
 
 namespace SampleApp.Translations
 {
-    public class LangExtension : BaseLanguageExtension<LangStrings>
+    public class LangService : BaseLanguageService<LangStrings>
     {
-        public LangExtension() : base("languageResource")
-        {
-
-        }
     }
 }

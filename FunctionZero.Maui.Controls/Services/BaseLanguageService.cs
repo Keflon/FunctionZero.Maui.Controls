@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FunctionZero.Maui.MarkupExtensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace FunctionZero.Maui.Services
     /// <summary>
     /// Goal. To be decoupled enough to allow downloading and selection of new or updated language packs on the fly.
     /// </summary>
-    public class TranslationService : INotifyPropertyChanged
+    public abstract partial class BaseLanguageService<TEnum> : INotifyPropertyChanged where TEnum : Enum
     {
         private readonly string _resourceKey;
         private ResourceDictionary _resourceHost;
@@ -19,22 +20,23 @@ namespace FunctionZero.Maui.Services
         public event EventHandler<LanguageChangedEventArgs> LanguageChanged;
 
         // INPC raised by SetLanguage(..)
-        public string CurrentLanguageId => _resourceHost[_resourceKey] as string;
+        public string CurrentLanguageId { get; protected set; }
 
 
         public event PropertyChangedEventHandler PropertyChanged;
 
 
         // TODO: Expose an ObsColl of languages, so the app can e.g. download new language packs and the UI can bind to it all.
-        public TranslationService(string resourceKey = "LocalisedStrings")
+        public BaseLanguageService(string resourceKey = "languageResource")
         {
             _resourceKey = resourceKey;
             _languages = new();
         }
 
-        public void Init(ResourceDictionary resourceHost)
+        public void Init(ResourceDictionary resourceHost, string initialLanguage)
         {
             _resourceHost = resourceHost;
+            SetLanguage(initialLanguage);
         }
 
         public void RegisterLanguage(string id, LanguageProvider language)
@@ -51,27 +53,25 @@ namespace FunctionZero.Maui.Services
         public void SetLanguage(string id)
         {
             if (_resourceHost == null)
-                throw new InvalidOperationException("You must call Init on the TranslationService before you call SetLanguage(string id), e.g. Init(Application.Current.Resources);");
+                throw new InvalidOperationException("You must call Init on the LanguageService before you call SetLanguage(string id), e.g. Init(Application.Current.Resources);");
 
             if (_languages.TryGetValue(id, out var languageService))
                 _resourceHost[_resourceKey] = languageService.GetLookup();
             else
                 throw new Exception($"Register a language before trying to set it. Language: '{id}' ");
 
+            CurrentLanguageId = id;
+
             LanguageChanged?.Invoke(this, new LanguageChangedEventArgs(id));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentLanguageId)));
         }
 
         public string[] CurrentLookup => _resourceHost[_resourceKey] as string[];
-        public class LanguageProvider
+
+        public string GetText(TEnum textId)
         {
-            public LanguageProvider(Func<string[]> getLookup, string languageName)
-            {
-                GetLookup = getLookup;
-                LanguageName = languageName;
-            }
-            public Func<string[]> GetLookup { get; }
-            public string LanguageName { get; }
+            var retval = _languages[CurrentLanguageId].GetLookup()[(int)(object)textId];
+            return retval;
         }
     }
 }

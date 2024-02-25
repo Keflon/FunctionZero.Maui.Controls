@@ -1,5 +1,6 @@
 ﻿using FunctionZero.Maui.Controls;
 using FunctionZero.Maui.MvvmZero;
+using FunctionZero.Maui.Services;
 using SampleApp.Mvvm.Pages;
 using SampleApp.Mvvm.Pages.Expander;
 using SampleApp.Mvvm.Pages.List;
@@ -14,6 +15,7 @@ using SampleApp.Mvvm.PageViewModels.Mask;
 using SampleApp.Mvvm.PageViewModels.MultiView;
 using SampleApp.Mvvm.PageViewModels.Translations;
 using SampleApp.Mvvm.PageViewModels.Tree;
+using SampleApp.Translations;
 
 namespace SampleApp
 {
@@ -98,10 +100,27 @@ namespace SampleApp
                 .AddSingleton<TranslationHomePage>()
                 .AddSingleton<TranslationHomePageVm>()
 
+                .AddSingleton<LangService>(GetConfiguredLanguageService)
 
                ;
 
             return builder.Build();
         }
+
+        #region Language translation setup
+        private static LangService GetConfiguredLanguageService(IServiceProvider provider)
+        {
+            var translationService = new LangService();
+            translationService.RegisterLanguage("english", new LanguageProvider(GetEnglish, "English"));
+            translationService.RegisterLanguage("german", new LanguageProvider(GetGerman, "Deutsch"));
+
+            return translationService;
+        }
+
+        // Example
+        private static string[] GetEnglish() => new string[] { "Hello", "World", "Welcome to the Moasure Playground!" };
+        private static string[] GetGerman() => new string[] { "Hallo", "Welt", "Willkommen auf dem Moasure Spielplatz!" };
+
+        #endregion
     }
 }
