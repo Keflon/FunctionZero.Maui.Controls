@@ -4,6 +4,7 @@ using SampleApp.Mvvm.PageViewModels.Expander;
 using SampleApp.Mvvm.PageViewModels.List;
 using SampleApp.Mvvm.PageViewModels.Mask;
 using SampleApp.Mvvm.PageViewModels.MultiView;
+using SampleApp.Mvvm.PageViewModels.Translations;
 using SampleApp.Mvvm.PageViewModels.Tree;
 using SampleApp.Mvvm.ViewModels;
 using System;
@@ -22,20 +23,16 @@ namespace SampleApp.Mvvm.PageViewModels
         WobblyListView = 0,
         LazyListView,
         TurbulentListView,
-
         BasicTree,
         TemplateSelectorTree,
         SelfEnumerableTree,
         TurbulentTree,
-
         CircleMask,
-
         Jay,
-
         ExpanderBar, 
         ExpanderBarTest,
-
-        MultiViewModal
+        MultiViewModal,
+        TranslationHome
     }
 
 
@@ -106,6 +103,9 @@ namespace SampleApp.Mvvm.PageViewModels
                     break;
                 case AppFlyoutItems.MultiViewModal:
                     _pageService.FlyoutController.SetDetailVm(typeof(MultiViewModalPageVm), true);
+                    break;
+                case AppFlyoutItems.TranslationHome:
+                    _pageService.FlyoutController.SetDetailVm(typeof(TranslationHomePageVm), true);
                     break;
             }
         }

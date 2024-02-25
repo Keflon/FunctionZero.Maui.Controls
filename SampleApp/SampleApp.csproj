@@ -96,6 +96,9 @@
 		<MauiXaml Update="Mvvm\Pages\MultiView\MultiViewModalPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Mvvm\Pages\Translations\TranslationHomePage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Mvvm\Pages\Tree\BasicTreePage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>

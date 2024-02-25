@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SampleApp.Mvvm.ViewModels
 {
-    public class BasePageVm : MvvmZeroBasePageVm
+    public abstract class BasePageVm : MvvmZeroBasePageVm
     {
     }
 }

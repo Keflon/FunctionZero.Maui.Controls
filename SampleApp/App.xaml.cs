@@ -20,5 +20,24 @@ namespace SampleApp
             var flyoutPage = pageService.GetFlyoutPage<AppFlyoutPageVm>();
             MainPage = flyoutPage;
         }
+
+        protected override Window CreateWindow(IActivationState activationState)
+        {
+            var window = base.CreateWindow(activationState);
+
+            window.Width = 1000;
+            window.Height = 800;
+            //window.SizeChanged += Window_SizeChanged;
+
+            return window;
+        }
+
+        private void Window_SizeChanged(object? sender, EventArgs e)
+        {
+            // TODO: Implement this using platform handlers to do this properly and remove the flicker.
+            var window = (Window)sender;
+            window.Width = 1000;
+            window.Height = 800;
+        }
     }
 }

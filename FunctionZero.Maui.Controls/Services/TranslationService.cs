@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,12 +11,19 @@ namespace FunctionZero.Maui.Services
     /// <summary>
     /// Goal. To be decoupled enough to allow downloading and selection of new or updated language packs on the fly.
     /// </summary>
-    public class TranslationService
+    public class TranslationService : INotifyPropertyChanged
     {
         private readonly string _resourceKey;
         private ResourceDictionary _resourceHost;
         private Dictionary<string, LanguageProvider> _languages;
         public event EventHandler<LanguageChangedEventArgs> LanguageChanged;
+
+        // INPC raised by SetLanguage(..)
+        public string CurrentLanguageId => _resourceHost[_resourceKey] as string;
+
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
 
         // TODO: Expose an ObsColl of languages, so the app can e.g. download new language packs and the UI can bind to it all.
         public TranslationService(string resourceKey = "LocalisedStrings")
@@ -50,6 +59,7 @@ namespace FunctionZero.Maui.Services
                 throw new Exception($"Register a language before trying to set it. Language: '{id}' ");
 
             LanguageChanged?.Invoke(this, new LanguageChangedEventArgs(id));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentLanguageId)));
         }
 
         public string[] CurrentLookup => _resourceHost[_resourceKey] as string[];
