@@ -67,7 +67,7 @@ namespace FunctionZero.Maui.Services.Localisation
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentLanguageId)));
         }
 
-        public string[] CurrentLookup => _resourceHost[_resourceKey] as string[];
+        //public string[] CurrentLookup => _resourceHost[_resourceKey] as string[];
 
         public string GetText(TEnum textId, IBackingStore host)
         {

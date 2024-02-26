@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using FunctionZero.ExpressionParserZero.BackingStore;
+using FunctionZero.ExpressionParserZero.Evaluator;
+using System.ComponentModel;
 
 namespace FunctionZero.Maui.MarkupExtensions
 {
@@ -58,18 +60,35 @@ namespace FunctionZero.Maui.MarkupExtensions
 
 
         public static readonly BindableProperty LookupProperty =
-            BindableProperty.CreateAttached("Lookup", typeof(string[]), typeof(Element), new string[] { "Hello", "World" }, BindingMode.OneWay, null, LookupPropertyChanged);
+            BindableProperty.CreateAttached("Lookup", typeof(List<List<(ExpressionTree, string)>>), typeof(Element), null, BindingMode.OneWay, null, LookupPropertyChanged);
 
         private static void LookupPropertyChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var langHost = GetLangHost(bindable);
 
-            string[] lookup = GetLookup(bindable);
+            List<List<(ExpressionTree, string)>> lookup = GetLookup(bindable);
             if (lookup != null)
             {
                 string to = "???";
-                if (lookup.Length > (int)(object)langHost.TextId)
+                if (lookup.Count > (int)(object)langHost.TextId)
                 {
+                    List<(ExpressionTree, string)> thing =  lookup[(int)(object)langHost.TextId];
+
+
+
+
+                        foreach ((ExpressionTree, string) item in thing)
+                        {
+                            var result = item.Item1.Evaluate(host).Pop();
+                            if (result.Type == ExpressionParserZero.Operands.OperandType.Bool)
+                                if ((bool)result.GetValue() == true)
+                                    return item.Item2;
+                        }
+                        return $"textId {textId} not found.";
+
+
+
+
                     to = lookup[(int)(object)langHost.TextId];
                 }
                 if (langHost.ShowOff)
@@ -100,13 +119,13 @@ namespace FunctionZero.Maui.MarkupExtensions
             }
         }
 
-        public static string[] GetLookup(BindableObject view)
+        public static List<List<(ExpressionTree, string)>> GetLookup(BindableObject view)
         {
-            var retval = (string[])view.GetValue(LookupProperty);
+            var retval = (List<List<(ExpressionTree, string)>>)view.GetValue(LookupProperty);
             return retval;
         }
 
-        public static void SetLookup(BindableObject view, bool value)
+        public static void SetLookup(BindableObject view, List<List<(ExpressionTree, string)>> value)
         {
             view.SetValue(LookupProperty, value);
         }
