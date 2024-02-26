@@ -1,4 +1,5 @@
 ﻿using FunctionZero.ExpressionParserZero.BackingStore;
+using FunctionZero.ExpressionParserZero.Evaluator;
 using FunctionZero.Maui.zBind.z;
 using Microsoft.Maui.Layouts;
 using System.Diagnostics;
@@ -10,14 +11,12 @@ namespace FunctionZero.Maui.Controls
     {
         private readonly PocoBackingStore _backingStore;
 
-        private static int _instanceCount = 0;
         public MultiViewZero()
         {
             InAnimations = new List<MultiViewAnimation>();
             OutAnimations = new List<MultiViewAnimation>();
 
             _backingStore = new PocoBackingStore(this);
-            _instanceCount++;
 
         }
         protected override ILayoutManager CreateLayoutManager()
@@ -130,6 +129,8 @@ namespace FunctionZero.Maui.Controls
 
         private void SetTopView(View theChildView)
         {
+            (PreviousView as View)?.AbortAnimation("PreviousAnimation");
+            (CurrentView as View)?.AbortAnimation("CurrentAnimation");
 
             PreviousView = CurrentView;
             CurrentView = theChildView;
@@ -142,7 +143,7 @@ namespace FunctionZero.Maui.Controls
                 // Workaround for https://github.com/dotnet/maui/issues/18433
                 if (previousViewAsView.IsLoaded)
                 {
-                    previousViewAsView.AbortAnimation("PreviousAnimation"+ _instanceCount.ToString());
+                    previousViewAsView.AbortAnimation("PreviousAnimation");
 
                     var a = new Animation();
 
@@ -150,20 +151,24 @@ namespace FunctionZero.Maui.Controls
                     {
                         // TODO: Horribly inefficient!
                         var compiledExpression = ep.Parse(anim.Expression);
+                        var compiledStartingExpression = ep.Parse(anim.StartingExpression);
                         var compiledFinishedExpression = ep.Parse(anim.FinishedExpression);
 
-                        a.Add(0, 1, new Animation(val => { value = val; compiledExpression.Evaluate(_backingStore); }, anim.From, anim.To, anim.EasingFunc, () => compiledFinishedExpression.Evaluate(_backingStore)));
+                        TryEvaluate(compiledStartingExpression, _backingStore);
+
+                        a.Add(0, 1, new Animation(val => { value = val; TryEvaluate(compiledExpression, _backingStore); }, anim.From, anim.To, anim.EasingFunc, () => TryEvaluate(compiledFinishedExpression,_backingStore)));
                     }
-                    a.Commit(this, "PreviousAnimation" + _instanceCount.ToString(), 16, OutDuration, null, null, () => false);
+                    a.Commit(this, "PreviousAnimation", 16, OutDuration, null, null, () => false);
                 }
                 else
                 {
                     foreach (var anim in OutAnimations)
                     {
+                        // TODO: Call compiledStartingExpression, compiledFinishedExpression
                         // TODO: Horribly inefficient!
                         var compiledExpression = ep.Parse(anim.Expression);
                         value = 1.0;
-                        compiledExpression.Evaluate(_backingStore);
+                        TryEvaluate(compiledExpression, _backingStore);
                     }
                 }
             }
@@ -171,7 +176,7 @@ namespace FunctionZero.Maui.Controls
             {
                 if (currentViewAsView.IsLoaded)
                 {
-                    currentViewAsView.AbortAnimation("CurrentAnimation" + _instanceCount.ToString());
+                    currentViewAsView.AbortAnimation("CurrentAnimation");
 
                     var a = new Animation();
 
@@ -179,26 +184,45 @@ namespace FunctionZero.Maui.Controls
                     {
                         // TODO: Horribly inefficient!
                         var compiledExpression = ep.Parse(anim.Expression);
+                        var compiledStartingExpression = ep.Parse(anim.StartingExpression);
                         var compiledFinishedExpression = ep.Parse(anim.FinishedExpression);
-                        a.Add(0, 1, new Animation(val => { value = val; compiledExpression.Evaluate(_backingStore); }, anim.From, anim.To, anim.EasingFunc,()=> compiledFinishedExpression.Evaluate(_backingStore)));
+
+                        TryEvaluate(compiledStartingExpression,_backingStore);
+
+                        a.Add(0, 1, new Animation(val => { value = val; TryEvaluate(compiledExpression,_backingStore); }, anim.From, anim.To, anim.EasingFunc, () => TryEvaluate(compiledFinishedExpression,_backingStore)));
                     }
-                    a.Commit(this, "CurrentAnimation" + _instanceCount.ToString(), 16, InDuration, null, null, () => false);
+                    a.Commit(this, "CurrentAnimation", 16, InDuration, null, null, () => false);
 
                 }
                 else
                 {
+                    // TODO: Call compiledStartingExpression, compiledFinishedExpression
                     foreach (var anim in InAnimations)
                     {
                         // TODO: Horribly inefficient!
                         var compiledExpression = ep.Parse(anim.Expression);
                         value = 1.0;
-                        compiledExpression.Evaluate(_backingStore);
+                        TryEvaluate(compiledExpression,_backingStore);
                     }
                 }
             }
 
             // Visibilty has changed, so arrange it, in case it wasn't visible for the initial arrange call.
             (this as IView).InvalidateArrange();
+        }
+
+        private bool TryEvaluate(ExpressionTree compiledExpression, PocoBackingStore backingStore)
+        {
+            try
+            {
+                compiledExpression.Evaluate(_backingStore);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
         }
 
         #endregion
