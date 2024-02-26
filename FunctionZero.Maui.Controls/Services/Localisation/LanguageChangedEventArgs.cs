@@ -1,4 +1,4 @@
-﻿namespace FunctionZero.Maui.Services
+﻿namespace FunctionZero.Maui.Services.Localisation
 {
     public class LanguageChangedEventArgs : EventArgs
     {

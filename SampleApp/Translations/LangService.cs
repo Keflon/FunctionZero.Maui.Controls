@@ -1,5 +1,5 @@
 ﻿using FunctionZero.Maui.MarkupExtensions;
-using FunctionZero.Maui.Services;
+using FunctionZero.Maui.Services.Localisation;
 using System;
 using System.Collections.Generic;
 using System.Linq;

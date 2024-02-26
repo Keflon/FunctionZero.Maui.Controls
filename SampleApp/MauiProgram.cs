@@ -1,9 +1,11 @@
 ﻿using FunctionZero.ExpressionParserZero.Binding;
 using FunctionZero.ExpressionParserZero.Evaluator;
+using FunctionZero.ExpressionParserZero.Operands;
 using FunctionZero.ExpressionParserZero.Parser;
 using FunctionZero.Maui.Controls;
 using FunctionZero.Maui.MvvmZero;
 using FunctionZero.Maui.Services;
+using FunctionZero.Maui.Services.Localisation;
 using SampleApp.Mvvm.Pages;
 using SampleApp.Mvvm.Pages.Expander;
 using SampleApp.Mvvm.Pages.List;
@@ -49,7 +51,7 @@ namespace SampleApp
                         .MapVmToView<MultiViewModalPageVm, MultiViewModalPage>()
                         .MapVmToView<TranslationHomePageVm, TranslationHomePage>()
 
-                        
+
                         ;
                     }
                 )
@@ -121,21 +123,101 @@ namespace SampleApp
         }
 
         // Example
-        private static string[] GetEnglish() => new string[] { "Hello", "World", "Welcome to the Moasure Playground!" };
-        private static string[] GetGerman() => new string[] { "Hallo", "Welt", "Willkommen auf dem Moasure Spielplatz!" };
+        //private static string[] GetEnglish() => new string[] { "Hello", "World", "Welcome to the Moasure Playground!" };
+        private static string[] GetGerman() => new string[] { "Bananas", "Hallo", "Welt", "Willkommen auf dem Moasure Spielplatz!" };
 
-        //private static List<(ExpressionTree, string)> GetEnglish2()
+        private static List<List<(ExpressionTree, string)>> GetEnglish()
+        {
+            var parser = ExpressionParserFactory.GetExpressionParser();
+            var trueExpression = parser.Parse("true");
+
+            var retval = new List<List<(ExpressionTree, string)>>();
+
+            {
+                var item = new List<(ExpressionTree, string)>();
+
+                item.Add((parser.Parse("NumBananas == 0"), "There are no bananas!"));
+                item.Add((parser.Parse("NumBananas == 1"), "There is one banana!"));
+                item.Add((parser.Parse("NumBananas == 2"), "There are two bananas!"));
+                item.Add((parser.Parse("NumBananas < 10"), "There are {NumBananas} bananas!"));       // TODO: {NumBananas}
+                item.Add((parser.Parse("true"), "There are loads of bananas!"));
+
+                //HashSet<string> dependsOn = new HashSet<string>();
+
+                //foreach(var tuple in item)
+                //    foreach(var token in tuple.Item1.RpnTokens)
+                //        if(token is Operand op)
+                //            if(op.Type == OperandType.Variable)
+                //                dependsOn.Add((string)op.GetValue());
+
+                retval.Add(item);
+            }
+            {
+                var item = new List<(ExpressionTree, string)>();
+
+                item.Add((trueExpression, "Hello!"));
+
+                retval.Add(item);
+            }
+            {
+                var item = new List<(ExpressionTree, string)>();
+
+                item.Add((trueExpression, "World"));
+
+                retval.Add(item);
+            }
+            {
+                var item = new List<(ExpressionTree, string)>();
+
+                item.Add((trueExpression, "This is a demonstration of FunctionZero Translation Service"));
+
+                retval.Add(item);
+            }
+
+
+            return retval;
+        }
+
+        //private static List<List<(ExpressionTree, string)>> GetGerman()
         //{
-        //    var retval = new List<(ExpressionTree, string)>();
-
         //    var parser = ExpressionParserFactory.GetExpressionParser();
+        //    var trueExpression = parser.Parse("true");
 
-        //    retval.Add((parser.Parse("NumBananas == 0"), "There are no bananas!"));
+        //    var retval = new List<List<(ExpressionTree, string)>>();
 
-        //    retval.Add((parser.Parse("NumBananas == 1"), "There is one banana!"));
-        //    retval.Add((parser.Parse("NumBananas == 2"), "There are two bananas!"));
-        //    retval.Add((parser.Parse("NumBananas < 10"), "There are {NumBananas} bananas!"));       // TODO: {NumBananas}
-        //    retval.Add((parser.Parse("true"), "There are loads of bananas!"));
+        //    {
+        //        var item = new List<(ExpressionTree, string)>();
+
+        //        item.Add((parser.Parse("NumBananas == 0"), "Es gibt keine Bananen!"));
+        //        item.Add((parser.Parse("NumBananas == 1"), "Es gibt eine Banane!"));
+        //        item.Add((parser.Parse("NumBananas == 2"), "Es gibt zwei Bananen!"));
+        //        item.Add((parser.Parse("NumBananas < 10"), "Es gibt {NumBananas} Bananen!"));       // TODO: {NumBananas}
+        //        item.Add((parser.Parse("true"), "Es gibt jede Menge Bananen!"));
+
+        //        retval.Add(item);
+        //    }
+        //    {
+        //        var item = new List<(ExpressionTree, string)>();
+
+        //        item.Add((trueExpression, "Hallo!"));
+
+        //        retval.Add(item);
+        //    }
+        //    {
+        //        var item = new List<(ExpressionTree, string)>();
+
+        //        item.Add((trueExpression, "Welt"));
+
+        //        retval.Add(item);
+        //    }
+        //    {
+        //        var item = new List<(ExpressionTree, string)>();
+
+        //        item.Add((trueExpression, "Dies ist eine Demonstration des FunctionZero Translation Service"));
+
+        //        retval.Add(item);
+        //    }
+
 
         //    return retval;
         //}

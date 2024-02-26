@@ -29,7 +29,7 @@
 		<PackageLicenseFile>License.md</PackageLicenseFile>
 		<IncludeSymbols>True</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>8.0.0.2-pre6</Version>
+		<Version>8.0.0.2-pre8</Version>
 		<PackageIcon>F0 gravatar.png</PackageIcon>
 	</PropertyGroup>
 

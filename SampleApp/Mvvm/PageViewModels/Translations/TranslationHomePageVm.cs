@@ -1,4 +1,5 @@
 ﻿using FunctionZero.CommandZero;
+using FunctionZero.ExpressionParserZero.BackingStore;
 using FunctionZero.Maui.MvvmZero;
 using FunctionZero.Maui.Services;
 using SampleApp.Mvvm.ViewModels;
@@ -23,6 +24,8 @@ namespace SampleApp.Mvvm.PageViewModels.Translations
         {
             _langService = langService;
 
+            var thisAsPocoBackingStore = new PocoBackingStore(this);
+
             SetLanguageCommand = new CommandBuilder()
                 .AddGuard(this)
                 .SetExecute(SetLanguageCommandExecute)
@@ -31,9 +34,18 @@ namespace SampleApp.Mvvm.PageViewModels.Translations
             DoTheThingCommand = new CommandBuilder()
                 .AddGuard(this)
                 .SetExecute(DoTheThingCommandExecute)
-                .SetName(() => langService.GetText(LangStrings.E_World))
+                .SetName(() => langService.GetText(LangStrings.E_Bananas, thisAsPocoBackingStore))
                 .AddObservedProperty(langService, nameof(LangService.CurrentLanguageId))
                 .Build();
+
+            NumBananas = 1;
+        }
+
+        private int _numBananas;
+        public int NumBananas
+        {
+            get => _numBananas;
+            set => SetProperty(ref _numBananas, value);
         }
 
         private void DoTheThingCommandExecute()

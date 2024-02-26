@@ -12,8 +12,9 @@ namespace SampleApp.Translations
     /// </summary>
     public enum LangStrings
     {
+        E_Bananas,
         E_Hello,
         E_World,
-        E_Welcome
+        E_Welcome,
     }
 }

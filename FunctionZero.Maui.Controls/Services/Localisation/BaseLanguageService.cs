@@ -1,4 +1,5 @@
-﻿using FunctionZero.Maui.MarkupExtensions;
+﻿using FunctionZero.ExpressionParserZero.BackingStore;
+using FunctionZero.Maui.MarkupExtensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -7,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FunctionZero.Maui.Services
+namespace FunctionZero.Maui.Services.Localisation
 {
     /// <summary>
     /// Goal. To be decoupled enough to allow downloading and selection of new or updated language packs on the fly.
@@ -68,10 +69,18 @@ namespace FunctionZero.Maui.Services
 
         public string[] CurrentLookup => _resourceHost[_resourceKey] as string[];
 
-        public string GetText(TEnum textId)
+        public string GetText(TEnum textId, IBackingStore host)
         {
-            var retval = _languages[CurrentLanguageId].GetLookup()[(int)(object)textId];
-            return retval;
+            var lookup = _languages[CurrentLanguageId].GetLookup()[(int)(object)textId];
+
+            foreach (var item in lookup)
+            {
+                var result = item.Item1.Evaluate(host).Pop();
+                if (result.Type == ExpressionParserZero.Operands.OperandType.Bool)
+                    if ((bool)result.GetValue() == true)
+                        return item.Item2;
+            }
+            return $"textId {textId} not found.";
         }
     }
 }
