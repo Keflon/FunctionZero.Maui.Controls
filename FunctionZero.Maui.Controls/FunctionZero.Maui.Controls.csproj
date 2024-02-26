@@ -25,11 +25,11 @@
 		<PackageProjectUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</RepositoryUrl>
 		<PackageTags>MAUI; ListView; ListViewZero; TreeView; TreeViewZero; MaskView; iOS; WinUI; Windows; Android; Control </PackageTags>
-		<PackageReleaseNotes>Added a preview of a MultiView control.</PackageReleaseNotes>
+		<PackageReleaseNotes>Added StartingExpressionProperty to MultiViewAnimation used by the preview MultiView control.</PackageReleaseNotes>
 		<PackageLicenseFile>License.md</PackageLicenseFile>
-		<IncludeSymbols>True</IncludeSymbols>
+		<IncludeSymbols>False</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>8.0.0.2-pre6</Version>
+		<Version>8.0.0.2-pre7</Version>
 		<PackageIcon>F0 gravatar.png</PackageIcon>
 	</PropertyGroup>
 

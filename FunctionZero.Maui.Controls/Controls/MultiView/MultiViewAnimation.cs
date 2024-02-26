@@ -44,24 +44,6 @@ namespace FunctionZero.Maui.Controls
 
         #endregion
 
-        //#region DurationProperty
-
-        //public static readonly BindableProperty DurationProperty = BindableProperty.Create(nameof(Duration), typeof(double), typeof(MultiViewAnimation), 0.0, BindingMode.OneWay, null, DurationChanged);
-
-        //public double Duration
-        //{
-        //    get { return (double)GetValue(DurationProperty); }
-        //    set { SetValue(DurationProperty, value); }
-        //}
-
-        //private static void DurationChanged(BindableObject bindable, object oldValue, object newValue)
-        //{
-        //    var self = (MultiViewAnimation)bindable;
-
-        //}
-
-        //#endregion
-
         #region EasingFuncProperty
 
         public static readonly BindableProperty EasingFuncProperty = BindableProperty.Create(nameof(EasingFunc), typeof(Easing), typeof(MultiViewAnimation), Easing.Linear, BindingMode.OneWay, null, EasingFuncChanged);
@@ -96,6 +78,24 @@ namespace FunctionZero.Maui.Controls
         }
 
         #endregion
+
+        #region StartingExpressionProperty
+
+        public static readonly BindableProperty StartingExpressionProperty = BindableProperty.Create(nameof(StartingExpression), typeof(string), typeof(MultiViewAnimation), string.Empty, BindingMode.OneWay, null, StartingExpressionChanged);
+
+        public string StartingExpression
+        {
+            get { return (string)GetValue(StartingExpressionProperty); }
+            set { SetValue(StartingExpressionProperty, value); }
+        }
+
+        private static void StartingExpressionChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var self = (MultiViewAnimation)bindable;
+        }
+
+        #endregion
+
 
         #region FinishedExpressionProperty
 
