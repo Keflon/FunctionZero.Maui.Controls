@@ -5,16 +5,22 @@
              xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
              x:Class="SampleApp.Mvvm.Pages.MultiView.MultiViewModalPage"
              Title="MultiViewModalPage">
-    <Grid Grid.RowDefinitions="*,*">
-        <cz:MultiViewZero Grid.Row="0" TopViewName="{Binding TopViewName}" InDuration="300" OutDuration="300" BackgroundColor="Blue">
+    <Grid Grid.RowDefinitions="*,*,Auto">
+        <cz:MultiViewZero 
+            Grid.Row="0" 
+            TopViewName="{Binding TopViewName}" 
+            InDuration="300" OutDuration="300" 
+            CreatedExpression="View.Opacity=0"
+            BackgroundColor="Blue">
 
             <cz:MultiViewZero.InAnimations>
                 <cz:MultiViewAnimation
                     From="0"
                     To="1"
+                    StartingExpression="View.ZIndex=View.ZIndex+1"
                     EasingFunc="{x:Static Easing.SinIn}"
-                    Expression="CurrentView.Opacity=value,CurrentView.TranslationX=(1-value)*Width/20"
-                    FinishedExpression="CurrentView.Opacity=1,CurrentView.TranslationX=0"
+                    Expression="View.Opacity=value,View.TranslationX=(1-value)*Width/20"
+                    FinishedExpression="View.Opacity=1,View.TranslationX=0"
                     >
                 </cz:MultiViewAnimation>
             </cz:MultiViewZero.InAnimations>
@@ -24,8 +30,8 @@
                     From="0"
                     To="1"
                     EasingFunc="{x:Static Easing.SinIn}"
-                    Expression="PreviousView.Opacity=(1-value),PreviousView.TranslationX=value*Width/20"
-                    FinishedExpression=""
+                    Expression="View.Opacity=(1-value),View.TranslationX=value*Width/20"
+                    FinishedExpression="View.ZIndex=View.ZIndex-1"
                     >
                 </cz:MultiViewAnimation>
 
@@ -43,15 +49,21 @@
         
         
         
-        <cz:MultiViewZero Grid.Row="1" TopViewName="{Binding TopViewName}" InDuration="6666" OutDuration="6666" BackgroundColor="Yellow">
+        <cz:MultiViewZero 
+            Grid.Row="1" 
+            TopViewName="{Binding TopViewName}" 
+            InDuration="1866" 
+            OutDuration="1866" 
+            CreatedExpression="View.IsVisible=false"
+            BackgroundColor="Yellow">
 <!--TODO: Add ItemControlTemplate-->
             <cz:MultiViewZero.InAnimations>
                 <cz:MultiViewAnimation
                     From="0"
                     To="1"
                     EasingFunc="{x:Static Easing.BounceOut}"
-                    StartingExpression="CurrentView.Scale=value"
-                    Expression="CurrentView.Scale=value"
+                    StartingExpression="View.IsVisible=true,View.Scale=value, View.ZIndex=View.ZIndex+1"
+                    Expression="View.Scale=value"
                     FinishedExpression=""
                     >
                 </cz:MultiViewAnimation>
@@ -63,8 +75,9 @@
                     From="1"
                     To="0"
                     EasingFunc="{x:Static Easing.SpringIn}"
-                    Expression="PreviousView.Scale=value"
-                    FinishedExpression=""
+                    StartingExpression=""
+                    Expression="View.Scale=value"
+                    FinishedExpression="View.ZIndex=View.ZIndex-1"
                     >
 
                 </cz:MultiViewAnimation>
@@ -75,11 +88,12 @@
             <cz:MultiViewZero.Children>
 
                 <Label Text="First Modal"  FontSize="42" Padding="20" TextColor="Black" BackgroundColor="White" cz:MultiViewZero.MultiName="first"  VerticalOptions="Center" HorizontalOptions="Center"/>
-                <Label Text="Second Modal" FontSize="42" Padding="20" TextColor="Black" BackgroundColor="White" cz:MultiViewZero.MultiName="third"   VerticalOptions="Center" HorizontalOptions="Center"/>
+                <Label Text="Second Modal" FontSize="42" Padding="20" TextColor="Red" BackgroundColor="White" cz:MultiViewZero.MultiName="third"   VerticalOptions="Center" HorizontalOptions="Center"/>
             </cz:MultiViewZero.Children>
 
         </cz:MultiViewZero>
 
+        <Label Grid.Row="2" Text="{Binding TopViewName}"/>
     </Grid>
 </ContentPage>
     

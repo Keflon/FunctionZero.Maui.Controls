@@ -1,5 +1,8 @@
-﻿using System;
+﻿using FunctionZero.ExpressionParserZero.Evaluator;
+using FunctionZero.ExpressionParserZero.Parser;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,6 +11,17 @@ namespace FunctionZero.Maui.Controls
 {
     public class MultiViewAnimation : BindableObject
     {
+        private static ExpressionTree _dudExpression;
+        private static object MakeDud(BindableObject bindable)
+        {
+            if (_dudExpression == null)
+            {
+                var ep = ExpressionParserZero.Binding.ExpressionParserFactory.GetExpressionParser();
+                _dudExpression = ep.Parse("");
+            }
+            return _dudExpression;
+        }
+
         #region FromProperty
 
         public static readonly BindableProperty FromProperty = BindableProperty.Create(nameof(From), typeof(double), typeof(MultiViewAnimation), 0.0, BindingMode.OneWay, null, FromChanged);
@@ -64,11 +78,12 @@ namespace FunctionZero.Maui.Controls
 
         #region ExpressionProperty
 
-        public static readonly BindableProperty ExpressionProperty = BindableProperty.Create(nameof(Expression), typeof(string), typeof(MultiViewAnimation), string.Empty, BindingMode.OneWay, null, ExpressionChanged);
+        public static readonly BindableProperty ExpressionProperty = BindableProperty.Create(nameof(Expression), typeof(ExpressionTree), typeof(MultiViewAnimation), null, BindingMode.OneWay, null, ExpressionChanged,null,null, MakeDud);
 
-        public string Expression
+        [TypeConverter(typeof(ExpressionTreeTypeConverter))]
+        public ExpressionTree Expression
         {
-            get { return (string)GetValue(ExpressionProperty); }
+            get { return (ExpressionTree)GetValue(ExpressionProperty); }
             set { SetValue(ExpressionProperty, value); }
         }
 
@@ -81,11 +96,12 @@ namespace FunctionZero.Maui.Controls
 
         #region StartingExpressionProperty
 
-        public static readonly BindableProperty StartingExpressionProperty = BindableProperty.Create(nameof(StartingExpression), typeof(string), typeof(MultiViewAnimation), string.Empty, BindingMode.OneWay, null, StartingExpressionChanged);
+        public static readonly BindableProperty StartingExpressionProperty = BindableProperty.Create(nameof(StartingExpression), typeof(ExpressionTree), typeof(MultiViewAnimation), _dudExpression, BindingMode.OneWay, null, StartingExpressionChanged, null, null, MakeDud);
 
-        public string StartingExpression
+        [TypeConverter(typeof(ExpressionTreeTypeConverter))]
+        public ExpressionTree StartingExpression
         {
-            get { return (string)GetValue(StartingExpressionProperty); }
+            get { return (ExpressionTree)GetValue(StartingExpressionProperty); }
             set { SetValue(StartingExpressionProperty, value); }
         }
 
@@ -99,11 +115,12 @@ namespace FunctionZero.Maui.Controls
 
         #region FinishedExpressionProperty
 
-        public static readonly BindableProperty FinishedExpressionProperty = BindableProperty.Create(nameof(FinishedExpression), typeof(string), typeof(MultiViewAnimation), string.Empty, BindingMode.OneWay, null, FinishedExpressionChanged);
+        public static readonly BindableProperty FinishedExpressionProperty = BindableProperty.Create(nameof(FinishedExpression), typeof(ExpressionTree), typeof(MultiViewAnimation), _dudExpression, BindingMode.OneWay, null, FinishedExpressionChanged, null, null, MakeDud);
 
-        public string FinishedExpression
+        [TypeConverter(typeof(ExpressionTreeTypeConverter))]
+        public ExpressionTree FinishedExpression
         {
-            get { return (string)GetValue(FinishedExpressionProperty); }
+            get { return (ExpressionTree)GetValue(FinishedExpressionProperty); }
             set { SetValue(FinishedExpressionProperty, value); }
         }
 

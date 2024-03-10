@@ -11,7 +11,7 @@ namespace SampleApp.Mvvm.PageViewModels.MultiView
     public class MultiViewModalPageVm : BasePageVm
     {
         private string[] _modalViewNames = { "first", "second", "third", "fourth" };
-        private int _modalViewIndex = 0;
+        private int _modalViewIndex = -1;
         private string _topViewName;
 
         public string TopViewName { get => _topViewName; set => SetProperty(ref _topViewName, value); }

@@ -2,6 +2,7 @@
 using FunctionZero.ExpressionParserZero.Evaluator;
 using FunctionZero.Maui.zBind.z;
 using Microsoft.Maui.Layouts;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
@@ -10,22 +11,39 @@ namespace FunctionZero.Maui.Controls
     public class MultiViewZero : Layout
     {
         private readonly PocoBackingStore _backingStore;
+        private IView _currentView;
+        private IView _previousView;
+        public IView View { get; private set; }
 
         public MultiViewZero()
         {
             InAnimations = new List<MultiViewAnimation>();
             OutAnimations = new List<MultiViewAnimation>();
-
             _backingStore = new PocoBackingStore(this);
-
+            this.Loaded += MultiViewZero_Loaded;
         }
+
+        private void MultiViewZero_Loaded(object sender, EventArgs e)
+        {
+            var oldCurrentView = _currentView;
+
+            if (oldCurrentView != null)
+            {
+                Debug.WriteLine("Got you!");
+            }
+            foreach (IView item in this)
+            {
+                // Temporarily set _currentView so expressions can reference 'View' e.g. View.IsVisible=...
+                _currentView = item;
+                TryEvaluate(CreatedExpression, _backingStore, true);
+            }
+            _currentView = oldCurrentView;
+        }
+
         protected override ILayoutManager CreateLayoutManager()
         {
             return new MultiViewZeroLayoutManager(this);
         }
-
-        public IView CurrentView { get; private set; }
-        public IView PreviousView { get; private set; }
 
         #region InDurationProperty
 
@@ -61,6 +79,7 @@ namespace FunctionZero.Maui.Controls
 
         #endregion
 
+        #region EaseInProperty
 
         public static readonly BindableProperty EaseInProperty = BindableProperty.Create(nameof(EaseIn), typeof(Easing), typeof(MultiViewZero), Easing.Linear, BindingMode.OneWay, null, EaseInChanged);
 
@@ -75,6 +94,10 @@ namespace FunctionZero.Maui.Controls
             set => SetValue(EaseInProperty, value);
         }
 
+        #endregion
+
+        #region EaseOutProperty
+
         public static readonly BindableProperty EaseOutProperty = BindableProperty.Create(nameof(EaseOut), typeof(Easing), typeof(MultiViewZero), Easing.Linear, BindingMode.OneWay, null, EaseOutChanged);
 
         private static void EaseOutChanged(BindableObject bindable, object oldValue, object newValue)
@@ -87,7 +110,7 @@ namespace FunctionZero.Maui.Controls
             get => (Easing)GetValue(EaseOutProperty);
             set => SetValue(EaseInProperty, value);
         }
-
+        #endregion
 
         #region TopViewNameProperty
 
@@ -114,12 +137,12 @@ namespace FunctionZero.Maui.Controls
                     {
                         if (itemName == self.TopViewName)
                         {
-                            theChildView.IsVisible = true;
+                            //theChildView.IsVisible = true;
                             self.SetTopView(theChildView);
                             flag = true;
                         }
-                        else if (item != self.PreviousView && item != self.CurrentView)
-                            theChildView.IsVisible = false;
+                        //else if (item != self.PreviousView && item != self.CurrentView)
+                        //    theChildView.IsVisible = false;
                     }
                 }
             }
@@ -129,81 +152,70 @@ namespace FunctionZero.Maui.Controls
 
         private void SetTopView(View theChildView)
         {
-            (PreviousView as View)?.AbortAnimation("PreviousAnimation");
-            (CurrentView as View)?.AbortAnimation("CurrentAnimation");
+            if (_previousView is View outgoingPreviousViewAsView)
+            {
+                if (outgoingPreviousViewAsView.AnimationIsRunning("PreviousAnimation"))
+                {
+                    outgoingPreviousViewAsView.AbortAnimation("PreviousAnimation");
 
-            PreviousView = CurrentView;
-            CurrentView = theChildView;
+                    foreach (var anim in OutAnimations)
+                        TryEvaluate(anim.FinishedExpression, _backingStore, false);
+                }
+            }
+            if (_currentView is View outgoingCurrentViewAsView)
+            {
+                if (outgoingCurrentViewAsView.AnimationIsRunning("CurrentAnimation"))
+                {
+                    outgoingCurrentViewAsView.AbortAnimation("CurrentAnimation");
 
-            var ep = ExpressionParserZero.Binding.ExpressionParserFactory.GetExpressionParser();
+                    foreach (var anim in InAnimations)
+                        TryEvaluate(anim.FinishedExpression, _backingStore, true);
+                }
+            }
 
+            _previousView = _currentView;
+            _currentView = theChildView;
 
-            if (PreviousView is View previousViewAsView)
+            if (_previousView is View previousViewAsView)
             {
                 // Workaround for https://github.com/dotnet/maui/issues/18433
                 if (previousViewAsView.IsLoaded)
                 {
-                    previousViewAsView.AbortAnimation("PreviousAnimation");
-
                     var a = new Animation();
 
-                    foreach (var anim in OutAnimations)
+                    foreach (MultiViewAnimation anim in OutAnimations)
                     {
-                        // TODO: Horribly inefficient!
-                        var compiledExpression = ep.Parse(anim.Expression);
-                        var compiledStartingExpression = ep.Parse(anim.StartingExpression);
-                        var compiledFinishedExpression = ep.Parse(anim.FinishedExpression);
+                        TryEvaluate(anim.StartingExpression, _backingStore, false);
 
-                        TryEvaluate(compiledStartingExpression, _backingStore);
-
-                        a.Add(0, 1, new Animation(val => { value = val; TryEvaluate(compiledExpression, _backingStore); }, anim.From, anim.To, anim.EasingFunc, () => TryEvaluate(compiledFinishedExpression,_backingStore)));
+                        a.Add(0, 1, new Animation(val => { value = val; TryEvaluate(anim.Expression, _backingStore, false); }, anim.From, anim.To, anim.EasingFunc, () => TryEvaluate(anim.FinishedExpression, _backingStore, false)));
                     }
-                    a.Commit(this, "PreviousAnimation", 16, OutDuration, null, null, () => false);
+                    a.Commit(previousViewAsView, "PreviousAnimation", 16, OutDuration, null, null, () => false);
                 }
                 else
                 {
+                    value = 1.0;
                     foreach (var anim in OutAnimations)
-                    {
-                        // TODO: Call compiledStartingExpression, compiledFinishedExpression
-                        // TODO: Horribly inefficient!
-                        var compiledExpression = ep.Parse(anim.Expression);
-                        value = 1.0;
-                        TryEvaluate(compiledExpression, _backingStore);
-                    }
+                        TryEvaluate(anim.Expression, _backingStore, false);
                 }
             }
-            if (CurrentView is View currentViewAsView)
+            if (_currentView is View currentViewAsView)
             {
                 if (currentViewAsView.IsLoaded)
                 {
-                    currentViewAsView.AbortAnimation("CurrentAnimation");
-
                     var a = new Animation();
 
                     foreach (var anim in InAnimations)
                     {
-                        // TODO: Horribly inefficient!
-                        var compiledExpression = ep.Parse(anim.Expression);
-                        var compiledStartingExpression = ep.Parse(anim.StartingExpression);
-                        var compiledFinishedExpression = ep.Parse(anim.FinishedExpression);
-
-                        TryEvaluate(compiledStartingExpression,_backingStore);
-
-                        a.Add(0, 1, new Animation(val => { value = val; TryEvaluate(compiledExpression,_backingStore); }, anim.From, anim.To, anim.EasingFunc, () => TryEvaluate(compiledFinishedExpression,_backingStore)));
+                        TryEvaluate(anim.StartingExpression, _backingStore, true);
+                        a.Add(0, 1, new Animation(val => { value = val; TryEvaluate(anim.Expression, _backingStore, true); }, anim.From, anim.To, anim.EasingFunc, () => TryEvaluate(anim.FinishedExpression, _backingStore, true)));
                     }
-                    a.Commit(this, "CurrentAnimation", 16, InDuration, null, null, () => false);
-
+                    a.Commit(currentViewAsView, "CurrentAnimation", 16, InDuration, null, null, () => false);
                 }
                 else
                 {
-                    // TODO: Call compiledStartingExpression, compiledFinishedExpression
+                    value = 1.0;
                     foreach (var anim in InAnimations)
-                    {
-                        // TODO: Horribly inefficient!
-                        var compiledExpression = ep.Parse(anim.Expression);
-                        value = 1.0;
-                        TryEvaluate(compiledExpression,_backingStore);
-                    }
+                        TryEvaluate(anim.Expression, _backingStore, true);
                 }
             }
 
@@ -211,11 +223,12 @@ namespace FunctionZero.Maui.Controls
             (this as IView).InvalidateArrange();
         }
 
-        private bool TryEvaluate(ExpressionTree compiledExpression, PocoBackingStore backingStore)
+        private bool TryEvaluate(ExpressionTree compiledExpression, PocoBackingStore backingStore, bool isInAnimation)
         {
+            View = isInAnimation ? _currentView : _previousView;
             try
             {
-                compiledExpression.Evaluate(_backingStore);
+                compiledExpression.Evaluate(backingStore);
                 return true;
             }
             catch (Exception ex)
@@ -257,6 +270,35 @@ namespace FunctionZero.Maui.Controls
         }
 
         private static void OutAnimationsChanged(BindableObject bindable, object oldValue, object newValue)
+        {
+            var self = (MultiViewZero)bindable;
+        }
+
+        #endregion
+
+        #region CreatedExpressionProperty
+
+        public static readonly BindableProperty CreatedExpressionProperty = BindableProperty.Create(nameof(CreatedExpression), typeof(ExpressionTree), typeof(MultiViewZero), _dudExpression, BindingMode.OneWay, null, CreatedExpressionChanged, null, null, MakeDud);
+
+        [TypeConverter(typeof(ExpressionTreeTypeConverter))]
+        public ExpressionTree CreatedExpression
+        {
+            get { return (ExpressionTree)GetValue(CreatedExpressionProperty); }
+            set { SetValue(CreatedExpressionProperty, value); }
+        }
+
+        private static ExpressionTree _dudExpression;
+        private static object MakeDud(BindableObject bindable)
+        {
+            if (_dudExpression == null)
+            {
+                var ep = ExpressionParserZero.Binding.ExpressionParserFactory.GetExpressionParser();
+                _dudExpression = ep.Parse("");
+            }
+            return _dudExpression;
+        }
+
+        private static void CreatedExpressionChanged(BindableObject bindable, object oldValue, object newValue)
         {
             var self = (MultiViewZero)bindable;
         }
