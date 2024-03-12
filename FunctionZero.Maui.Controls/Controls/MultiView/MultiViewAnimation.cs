@@ -24,11 +24,12 @@ namespace FunctionZero.Maui.Controls
 
         #region FromProperty
 
-        public static readonly BindableProperty FromProperty = BindableProperty.Create(nameof(From), typeof(double), typeof(MultiViewAnimation), 0.0, BindingMode.OneWay, null, FromChanged);
+        public static readonly BindableProperty FromProperty = BindableProperty.Create(nameof(From), typeof(ExpressionTree), typeof(MultiViewAnimation), _dudExpression, BindingMode.OneWay, null, FromChanged, null, null, MakeDud);
 
-        public double From
+        [TypeConverter(typeof(ExpressionTreeTypeConverter))]
+        public ExpressionTree From
         {
-            get { return (double)GetValue(FromProperty); }
+            get { return (ExpressionTree)GetValue(FromProperty); }
             set { SetValue(FromProperty, value); }
         }
 
@@ -42,11 +43,12 @@ namespace FunctionZero.Maui.Controls
 
         #region ToViewNameProperty
 
-        public static readonly BindableProperty ToProperty = BindableProperty.Create(nameof(To), typeof(double), typeof(MultiViewAnimation), 0.0, BindingMode.OneWay, null, ToChanged);
+        public static readonly BindableProperty ToProperty = BindableProperty.Create(nameof(To), typeof(ExpressionTree), typeof(MultiViewAnimation), _dudExpression, BindingMode.OneWay, null, ToChanged, null, null, MakeDud);
 
-        public double To
+        [TypeConverter(typeof(ExpressionTreeTypeConverter))]
+        public ExpressionTree To
         {
-            get { return (double)GetValue(ToProperty); }
+            get { return (ExpressionTree)GetValue(ToProperty); }
             set { SetValue(ToProperty, value); }
         }
 

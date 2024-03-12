@@ -64,6 +64,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Controls\TransformContentPresenter\BackdropContentContainer.xaml.cs">
+	    <DependentUpon>BackdropContentContainer.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 		<MauiXaml Update="Controls\Chevron.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -81,6 +87,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Controls\MaskZero\MaskZero.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Controls\TransformContentPresenter\BackdropContentContainer.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Controls\TreeView\TreeViewZero.xaml">
 			<Generator>MSBuild:Compile</Generator>

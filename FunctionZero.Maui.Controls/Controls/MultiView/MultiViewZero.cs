@@ -1,5 +1,8 @@
-﻿using FunctionZero.ExpressionParserZero.BackingStore;
+﻿using FunctionZero.ExpressionParserZero;
+using FunctionZero.ExpressionParserZero.BackingStore;
 using FunctionZero.ExpressionParserZero.Evaluator;
+using FunctionZero.ExpressionParserZero.Operands;
+using FunctionZero.ExpressionParserZero.Parser;
 using FunctionZero.Maui.zBind.z;
 using Microsoft.Maui.Layouts;
 using System.ComponentModel;
@@ -11,9 +14,15 @@ namespace FunctionZero.Maui.Controls
     public class MultiViewZero : Layout
     {
         private readonly PocoBackingStore _backingStore;
-        private IView _currentView;
-        private IView _previousView;
+
+        // Every expression acts on 'this' and has a 'View' property that refers to its target.
+        // View will use *magic* to always have the right value for any Animation that is running.
+        // E.g. 'View.Opacity = value' will set the Opacity of the target View to the animation value during the animation.
         public IView View { get; private set; }
+
+        // A *magic* property that is set to the easing-function value for each Animation.
+        // E.g. 'View.Opacity = value' will set the Opacity of the target View to the animation value during the animation.
+        public double value { get; protected set; }
 
         public MultiViewZero()
         {
@@ -25,19 +34,11 @@ namespace FunctionZero.Maui.Controls
 
         private void MultiViewZero_Loaded(object sender, EventArgs e)
         {
-            var oldCurrentView = _currentView;
+            // Once only ever.
+            this.Loaded -= MultiViewZero_Loaded;
 
-            if (oldCurrentView != null)
-            {
-                Debug.WriteLine("Got you!");
-            }
             foreach (IView item in this)
-            {
-                // Temporarily set _currentView so expressions can reference 'View' e.g. View.IsVisible=...
-                _currentView = item;
-                TryEvaluate(CreatedExpression, _backingStore, true);
-            }
-            _currentView = oldCurrentView;
+                TryEvaluate(CreatedExpression, _backingStore, item);
         }
 
         protected override ILayoutManager CreateLayoutManager()
@@ -149,73 +150,81 @@ namespace FunctionZero.Maui.Controls
             if (flag == false)
                 self.SetTopView(null);
         }
+        View _topView;
 
         private void SetTopView(View theChildView)
         {
-            if (_previousView is View outgoingPreviousViewAsView)
+            if (_topView == theChildView)
+                return;
+
+            // If there is something to animate out ...
+            if (_topView != null)
             {
-                if (outgoingPreviousViewAsView.AnimationIsRunning("PreviousAnimation"))
+                if (_topView.IsLoaded)
                 {
-                    outgoingPreviousViewAsView.AbortAnimation("PreviousAnimation");
+                    // If there's an old animation it'll be on its way in. Kill it.
+                    if (_topView.AnimationIsRunning("TheAnimation"))
+                    {
+                        _topView.AbortAnimation("TheAnimation");
 
-                    foreach (var anim in OutAnimations)
-                        TryEvaluate(anim.FinishedExpression, _backingStore, false);
-                }
-            }
-            if (_currentView is View outgoingCurrentViewAsView)
-            {
-                if (outgoingCurrentViewAsView.AnimationIsRunning("CurrentAnimation"))
-                {
-                    outgoingCurrentViewAsView.AbortAnimation("CurrentAnimation");
+                        foreach (var anim in InAnimations)
+                            TryEvaluate(anim.FinishedExpression, _backingStore, _topView);
+                    }
 
-                    foreach (var anim in InAnimations)
-                        TryEvaluate(anim.FinishedExpression, _backingStore, true);
-                }
-            }
-
-            _previousView = _currentView;
-            _currentView = theChildView;
-
-            if (_previousView is View previousViewAsView)
-            {
-                // Workaround for https://github.com/dotnet/maui/issues/18433
-                if (previousViewAsView.IsLoaded)
-                {
                     var a = new Animation();
 
-                    foreach (MultiViewAnimation anim in OutAnimations)
-                    {
-                        TryEvaluate(anim.StartingExpression, _backingStore, false);
+                    var localTopView = _topView;
 
-                        a.Add(0, 1, new Animation(val => { value = val; TryEvaluate(anim.Expression, _backingStore, false); }, anim.From, anim.To, anim.EasingFunc, () => TryEvaluate(anim.FinishedExpression, _backingStore, false)));
+                    // Animate the old topview out ...
+                    foreach (var anim in OutAnimations)
+                    {
+                        TryEvaluate(anim.StartingExpression, _backingStore, _topView);
+                        a.Add(0, 1, new Animation(val => { value = val; View = localTopView; TryEvaluate(anim.Expression, _backingStore, localTopView); }, EvaluateDouble(anim.From, _backingStore, localTopView), EvaluateDouble(anim.To, _backingStore, localTopView), anim.EasingFunc, () => TryEvaluate(anim.FinishedExpression, _backingStore, localTopView)));
                     }
-                    a.Commit(previousViewAsView, "PreviousAnimation", 16, OutDuration, null, null, () => false);
+                    a.Commit(_topView, "TheAnimation", 16, InDuration, null, null, () => false);
                 }
                 else
                 {
                     value = 1.0;
                     foreach (var anim in OutAnimations)
-                        TryEvaluate(anim.Expression, _backingStore, false);
+                        TryEvaluate(anim.Expression, _backingStore, _topView);
                 }
+
             }
-            if (_currentView is View currentViewAsView)
+
+            _topView = theChildView;
+
+            // If there is something to animate in ...
+            if (_topView != null)
             {
-                if (currentViewAsView.IsLoaded)
+                if (_topView.IsLoaded)
                 {
+                    // If there's an old animation it'll be on its way out. Kill it.
+                    if (_topView.AnimationIsRunning("TheAnimation"))
+                    {
+                        _topView.AbortAnimation("TheAnimation");
+
+                        foreach (var anim in OutAnimations)
+                            TryEvaluate(anim.FinishedExpression, _backingStore, _topView);
+                    }
+
                     var a = new Animation();
 
+                    var localTopView = _topView;
+
+                    // Animate the old topview out ...
                     foreach (var anim in InAnimations)
                     {
-                        TryEvaluate(anim.StartingExpression, _backingStore, true);
-                        a.Add(0, 1, new Animation(val => { value = val; TryEvaluate(anim.Expression, _backingStore, true); }, anim.From, anim.To, anim.EasingFunc, () => TryEvaluate(anim.FinishedExpression, _backingStore, true)));
+                        TryEvaluate(anim.StartingExpression, _backingStore, localTopView);
+                        a.Add(0, 1, new Animation(val => { value = val; View = localTopView; TryEvaluate(anim.Expression, _backingStore, localTopView); }, EvaluateDouble(anim.From, _backingStore, localTopView), EvaluateDouble(anim.To, _backingStore, localTopView), anim.EasingFunc, () => TryEvaluate(anim.FinishedExpression, _backingStore, localTopView)));
                     }
-                    a.Commit(currentViewAsView, "CurrentAnimation", 16, InDuration, null, null, () => false);
+                    a.Commit(_topView, "TheAnimation", 16, InDuration, null, null, () => false);
                 }
                 else
                 {
                     value = 1.0;
                     foreach (var anim in InAnimations)
-                        TryEvaluate(anim.Expression, _backingStore, true);
+                        TryEvaluate(anim.Expression, _backingStore, _topView);
                 }
             }
 
@@ -223,24 +232,41 @@ namespace FunctionZero.Maui.Controls
             (this as IView).InvalidateArrange();
         }
 
-        private bool TryEvaluate(ExpressionTree compiledExpression, PocoBackingStore backingStore, bool isInAnimation)
+        private double EvaluateDouble(ExpressionTree expression, PocoBackingStore backingStore, IView view)
         {
-            View = isInAnimation ? _currentView : _previousView;
+            View = view;
             try
             {
-                compiledExpression.Evaluate(backingStore);
-                return true;
+                OperandStack result = expression.Evaluate(backingStore);
+                IOperand operand = OperatorActions.PopAndResolve(result, backingStore);
+                double retval = Convert.ToDouble(operand.GetValue());
+                return retval;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                return false;
+                return 0;
+            }
+        }
+
+        private OperandStack TryEvaluate(ExpressionTree compiledExpression, PocoBackingStore backingStore, IView view)
+        {
+            //View = isInAnimation ? _currentView : _previousView;
+            View = view;
+
+            try
+            {
+                OperandStack retval = compiledExpression.Evaluate(backingStore);
+                return retval;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return null;
             }
         }
 
         #endregion
-
-        public double value { get; protected set; }
 
         #region InAnimationsProperty
 
@@ -304,7 +330,6 @@ namespace FunctionZero.Maui.Controls
         }
 
         #endregion
-
 
         #region AttachedProperties
 
