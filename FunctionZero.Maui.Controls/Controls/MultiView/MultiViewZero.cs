@@ -32,13 +32,21 @@ namespace FunctionZero.Maui.Controls
             this.Loaded += MultiViewZero_Loaded;
         }
 
+        protected override void OnChildAdded(Element child)
+        {
+            base.OnChildAdded(child);
+            if (child is View view)
+                TryEvaluate(CreatedExpression, _backingStore, view);
+            else
+                throw new InvalidOperationException();
+        }
+
         private void MultiViewZero_Loaded(object sender, EventArgs e)
         {
-            // Once only ever.
-            this.Loaded -= MultiViewZero_Loaded;
+            //// Once only ever.
+            //this.Loaded -= MultiViewZero_Loaded;
 
-            foreach (IView item in this)
-                TryEvaluate(CreatedExpression, _backingStore, item);
+            ApplyTopViewName();
         }
 
         protected override ILayoutManager CreateLayoutManager()
@@ -127,19 +135,28 @@ namespace FunctionZero.Maui.Controls
         {
             var self = (MultiViewZero)bindable;
 
+            self.ApplyTopViewName();
+        }
+
+        private void ApplyTopViewName()
+        {
+            // Do nothing until we're loaded.
+            if (IsLoaded == false)
+                return;
+
             // TODO: Find the current view.
             bool flag = false;
-            foreach (IView item in self)
+            foreach (IView item in this)
             {
                 if (item is View theChildView)
                 {
                     var itemName = GetMultiName(theChildView);
                     if (itemName != null)
                     {
-                        if (itemName == self.TopViewName)
+                        if (itemName == this.TopViewName)
                         {
                             //theChildView.IsVisible = true;
-                            self.SetTopView(theChildView);
+                            this.SetTopView(theChildView);
                             flag = true;
                         }
                         //else if (item != self.PreviousView && item != self.CurrentView)
@@ -148,8 +165,9 @@ namespace FunctionZero.Maui.Controls
                 }
             }
             if (flag == false)
-                self.SetTopView(null);
+                this.SetTopView(null);
         }
+
         View _topView;
 
         private void SetTopView(View theChildView)
@@ -187,7 +205,10 @@ namespace FunctionZero.Maui.Controls
                 {
                     value = 1.0;
                     foreach (var anim in OutAnimations)
+                    {
+                        value = EvaluateDouble(anim.To, _backingStore, _topView);
                         TryEvaluate(anim.Expression, _backingStore, _topView);
+                    }
                 }
 
             }

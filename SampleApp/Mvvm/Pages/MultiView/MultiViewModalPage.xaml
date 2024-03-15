@@ -5,9 +5,10 @@
              xmlns:cz="clr-namespace:FunctionZero.Maui.Controls;assembly=FunctionZero.Maui.Controls"
              x:Class="SampleApp.Mvvm.Pages.MultiView.MultiViewModalPage"
              Title="MultiViewModalPage">
-    <Grid Grid.RowDefinitions="*,*,*,Auto">
+    <Grid Grid.RowDefinitions="*,*,*,Auto" ColumnDefinitions="*,*">
         <cz:MultiViewZero 
             Grid.Row="0" 
+            Grid.Column="0"
             TopViewName="{Binding TopViewName}" 
             InDuration="300" OutDuration="300" 
             CreatedExpression="View.Opacity=0"
@@ -49,6 +50,7 @@
 
         <cz:MultiViewZero 
             Grid.Row="1" 
+            Grid.Column="0"
             TopViewName="{Binding TopViewName}" 
             InDuration="500" 
             OutDuration="500" 
@@ -88,7 +90,50 @@
         </cz:MultiViewZero>
 
         <cz:MultiViewZero 
+            Grid.Row="1" 
+            Grid.Column="1"
+            TopViewName="initial" 
+            InDuration="500" 
+            OutDuration="500" 
+            CreatedExpression="View.Content.Scale=0,View.BackdropOpacity=0"
+            BackgroundColor="Purple">
+            <!--TODO: Add ItemControlTemplate-->
+            <cz:MultiViewZero.InAnimations>
+                <cz:MultiViewAnimation
+                    From="0"
+                    To="1"
+                    EasingFunc="{x:Static Easing.BounceOut}"
+                    StartingExpression="View.ZIndex=View.ZIndex-1"
+                    Expression="View.Content.Scale=value,View.BackdropOpacity=value/2"
+                    FinishedExpression=""
+                    />
+            </cz:MultiViewZero.InAnimations>
+
+            <cz:MultiViewZero.OutAnimations>
+                <cz:MultiViewAnimation
+                    From="1"
+                    To="0.1"
+                    EasingFunc="{x:Static Easing.SpringIn}"
+                    StartingExpression=""
+                    Expression="View.Content.Scale=value,View.BackdropOpacity=value/2"
+                    FinishedExpression="View.ZIndex=View.ZIndex+1"
+                    />
+            </cz:MultiViewZero.OutAnimations>
+
+            <cz:MultiViewZero.Children>
+
+                <cz:BackdropContentContainer  cz:MultiViewZero.MultiName="initial" >
+                    <Label Text="Initial Item"  FontSize="42" Padding="20" TextColor="Red" BackgroundColor="White"  VerticalOptions="Center" HorizontalOptions="Center"/>
+                </cz:BackdropContentContainer>
+
+            </cz:MultiViewZero.Children>
+
+        </cz:MultiViewZero>
+
+        <cz:MultiViewZero 
             Grid.Row="2" 
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
             TopViewName="{Binding TopViewName}" 
             InDuration="500" 
             OutDuration="500" 
