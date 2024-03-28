@@ -20,16 +20,16 @@
 		<Title>FunctionZero Controls library including TreeViewZero</Title>
 		<Authors>Keith Pickford</Authors>
 		<Company>FunctionZero Ltd</Company>
-		<Description>A MAUI Controls library featuring a cross-platform virtualizing TreeView and ListView and a really cool MaskControl and more, for WinUI, iOS, Mac and Android.</Description>
+		<Description>A MAUI Controls library featuring a cross-platform virtualizing TreeView and ListView and Expander and a really cool MaskControl and more, for all MAUI platforms.</Description>
 		<Copyright>FunctionZero Ltd</Copyright>
 		<PackageProjectUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</RepositoryUrl>
 		<PackageTags>MAUI; ListView; ListViewZero; TreeView; TreeViewZero; MaskView; iOS; WinUI; Windows; Android; Control </PackageTags>
-		<PackageReleaseNotes>MultiViewZero is getting ready for mainstream. </PackageReleaseNotes>
+		<PackageReleaseNotes>MultiviewZero is stable and outrageously versatile. Localisation has been moved to a new LocalisationZero library.</PackageReleaseNotes>
 		<PackageLicenseFile>License.md</PackageLicenseFile>
 		<IncludeSymbols>False</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>8.0.0.3-pre3</Version>
+		<Version>8.0.0.4</Version>
 		<PackageIcon>F0 gravatar.png</PackageIcon>
 	</PropertyGroup>
 
@@ -57,9 +57,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FunctionZero.Maui.zBind" Version="8.0.2" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.7" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.7" />
+		<PackageReference Include="FunctionZero.Maui.zBind" Version="8.1.1" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.14" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.14" />
 		<PackageReference Include="FunctionZero.TreeListItemsSourceZero" Version="1.1.0-beta" />
 	</ItemGroup>
 

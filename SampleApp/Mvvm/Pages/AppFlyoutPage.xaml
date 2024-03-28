@@ -110,21 +110,7 @@
                     </VerticalStackLayout>
                 </cz:ExpanderZero>
 
-                <!--Translation-->
-                <cz:ExpanderZero
-                    EaseIn="{x:Static Easing.SinInOut}"
-                    EaseOut="{x:Static Easing.SinInOut}"
-                    DurationMilliseconds="1000" 
-                >
-                    <cz:ExpanderZero.Header>
-                        <Label Text="Translation"/>
-                    </cz:ExpanderZero.Header>
-                    <VerticalStackLayout  >
-                        <cz:LabelZero Text="Translation Home" Command="{Binding ItemTappedCommand}" CommandParameter="{x:Static vm:AppFlyoutItems.TranslationHome}"/>
-                    </VerticalStackLayout>
-                </cz:ExpanderZero>
 
-                
             </VerticalStackLayout>
         </ScrollView>
     </Grid>
