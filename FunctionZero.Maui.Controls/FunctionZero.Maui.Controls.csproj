@@ -20,7 +20,7 @@
 		<Title>FunctionZero Controls library including TreeViewZero</Title>
 		<Authors>Keith Pickford</Authors>
 		<Company>FunctionZero Ltd</Company>
-		<Description>A MAUI Controls library featuring a cross-platform virtualizing TreeView and ListView and Expander and a really cool MaskControl and more, for all MAUI platforms.</Description>
+		<Description>A MAUI Controls library featuring a cross-platform virtualizing TreeView and ListView and Expander and a really cool MaskControl and MultiView more, for all MAUI platforms.</Description>
 		<Copyright>FunctionZero Ltd</Copyright>
 		<PackageProjectUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/Keflon/FunctionZero.Maui.Controls</RepositoryUrl>
@@ -29,7 +29,7 @@
 		<PackageLicenseFile>License.md</PackageLicenseFile>
 		<IncludeSymbols>False</IncludeSymbols>
 		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-		<Version>8.0.0.4</Version>
+		<Version>8.0.0.5</Version>
 		<PackageIcon>F0 gravatar.png</PackageIcon>
 	</PropertyGroup>
 
@@ -94,6 +94,10 @@
 		<MauiXaml Update="Controls\TreeView\TreeViewZero.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="MarkupExtensions\" />
 	</ItemGroup>
 
 </Project>
